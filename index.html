@@ -3,60 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>许智宁 | 个人主页与作品集</title>
+    <title>许智宁 | 个人主页与作品集 - AI 内容操盘手</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         body { font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #2c3e50; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
-        header { text-align: center; padding: 50px 0; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
-        h1 { color: #1a252f; margin-bottom: 5px; font-size: 2.5em; letter-spacing: 2px; }
-        .subtitle { color: #7f8c8d; font-size: 1.2em; font-weight: 300; }
-        section { background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
-        h2 { color: #3498db; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-top: 0; }
-        .tag { display: inline-block; background: #e8f4f8; color: #2980b9; padding: 6px 14px; border-radius: 20px; font-size: 0.9em; margin: 8px 8px 0 0; font-weight: 500; }
-        .project { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px dashed #ecf0f1; }
-        .project:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .project h3 { margin-bottom: 10px; color: #2c3e50; }
-        .contact-info { font-size: 1.1em; }
-        footer { text-align: center; padding: 20px; color: #95a5a6; font-size: 0.9em; }
+        
+        header { text-align: center; padding: 60px 0; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        
+        /* 证件照动态效果：平滑过渡 */
+        .avatar {
+            width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 5px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 加入了更 Q 弹的动画曲线 */
+            cursor: pointer;
+        }
+        /* 鼠标滑过证件照：放大并微微旋转 */
+        .avatar:hover {
+            transform: scale(1.08) rotate(3deg); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
+        }
+        
+        h1 { color: #1a252f; margin: 0 0 10px 0; font-size: 2.8em; letter-spacing: 2px; }
+        .subtitle { color: #7f8c8d; font-size: 1.3em; font-weight: 300; margin: 0; }
+
+        section { background: #ffffff; padding: 45px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        h2 { color: #3498db; border-bottom: 2px solid #ecf0f1; padding-bottom: 12px; margin-top: 0; font-size: 2em; }
+        .tag { display: inline-block; background: #e8f4f8; color: #2980b9; padding: 7px 16px; border-radius: 20px; font-size: 0.9em; margin: 8px 8px 0 0; font-weight: 500; }
+        
+        .project-list { margin-top: 25px; }
+        .project-item { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px dashed #ecf0f1; }
+        .project-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .project-item h3 { margin: 0 0 8px 0; color: #2c3e50; font-size: 1.3em; }
+        .project-item p { margin: 0; color: #7f8c8d; }
+
+        /* 联系方式图标区域与动态效果 */
+        .contact-icons {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .contact-icon-a {
+            display: inline-block;
+            margin: 0 25px;
+            color: #95a5a6; 
+            font-size: 2.8em; 
+            text-decoration: none;
+            transition: all 0.3s ease; 
+        }
+
+        /* 鼠标滑过图标：变色并向上浮动 */
+        .contact-icon-a:hover {
+            color: #3498db; 
+            transform: translateY(-8px); 
+        }
+        
+        /* 点击图标：轻微缩小的按压感 */
+        .contact-icon-a:active {
+            transform: scale(0.9) translateY(-4px); 
+        }
+
+        footer { text-align: center; padding: 30px; color: #95a5a6; font-size: 0.95em; }
     </style>
 </head>
 <body>
     <header>
+        <img src="xu-photo.jpg" alt="许智宁 证件照" class="avatar">
+        
         <h1>许智宁</h1>
-        <p class="subtitle">AI 硬件企业 IP 操盘手 / 新媒体内容策略专家 / 数据分析师</p>
+        <p class="subtitle">AI 硬件企业 IP 操盘手 / 新媒体策略专家 / 数据分析师</p>
     </header>
 
     <section>
         <h2>关于我</h2>
-        <p>我是深圳大学网络与新媒体专业的学生，具备强烈的商业敏锐度与技术落地能力。我深耕于 <strong>AI 硬件与解决方案的企业 IP 孵化与内容营销</strong>，擅长策划包含“工作流提效”、“AI 产品深度测评”与“供应链管理洞察”的立体化内容矩阵。同时，我具备扎实的数据挖掘基础，熟练掌握社交媒体平台的数据抓取、清洗与分析，坚持以数据驱动业务增长。</p>
+        <p>我是深圳大学网络与新媒体专业的学生，深耕于 <strong>AIGC (AI 内容生成) 与全能运营</strong> 分野。我具备千万级播放量自媒体账号的成功实操经验，专注于将强大的技术（Sora2/Midjourney 等视觉创作工具、TikTok 数据抓取与分析）落地于企业级品牌叙事和项目营销，是一位懂技术、擅运营、重数据的复合型新媒体专业选手。</p>
         <div>
-            <span class="tag">AIGC 视觉创作 (Sora2/Midjourney)</span>
-            <span class="tag">千万级 IP 矩阵运营</span>
-            <span class="tag">商业数据分析 (SPSS/Excel)</span>
-            <span class="tag">AI 行业深度研报</span>
+            <span class="tag">AIGC 视觉创作 (Sora2/MJ)</span>
+            <span class="tag">千万级 IP 运营</span>
+            <span class="tag">数据清洗与量化研究</span>
+            <span class="tag">社媒矩阵运营</span>
         </div>
     </section>
 
     <section>
         <h2>核心项目与实战</h2>
-        <div class="project">
-            <h3>自媒体千万级矩阵运营 & 商业 IP 孵化</h3>
-            <p>独立操盘及合伙运营“我叫言小急”等账号，全网累计播放超千万。深度结合平台算法，输出高价值行业解读，具备从 0 到 1 的完整流量运营与企业 IP 操盘能力。</p>
-        </div>
-        <div class="project">
-            <h3>AIGC 视觉与视频内容创作大赛</h3>
-            <p>熟练运用 Sora2 完成全运会创意策划与视觉生成，荣获“最佳城市宣传奖”；参与阿里巴巴旗下堆友 AI 视觉创作大赛，斩获“最佳人气奖”。能高效将 AI 工具融入实际业务流。</p>
-        </div>
-        <div class="project">
-            <h3>社媒大数据清洗与量化研究</h3>
-            <p>在国海证券担任传媒研究所研究助理，紧跟 AI 应用与人机交互赛道动态。独立完成多维平台数据清洗与可视化展现，并赴头部科技企业进行实地调研。</p>
+        <div class="project-list">
+            <div class="project-item">
+                <h3>AIGC 视觉与视频内容创作集</h3>
+                <p>熟练运用 Sora2 完成全运会创意视频生成（荣获最佳城市宣传奖）；参加阿里巴巴旗下堆友 AI 视觉创作大赛，斩获最佳人气奖。</p>
+            </div>
+            <div class="project-item">
+                <h3>千萬級播量自媒體矩陣操盤</h3>
+                <p>操盘及合伙运营“我叫言小急”等账号，全网播放量过千万。结合平台算法与用户喜好，输出财经解读与校园生活等多元内容，精准捕捉爆款趋势。</p>
+            </div>
+            <div class="project-item">
+                <h3>AI 应用赛道数据研究与调研</h3>
+                <p>在国海证券担任传媒所研究助理，紧跟 AI 应用与人机交互动态，赴 MiniMax、智谱 AI 等头部科技企业进行实地走访调研与量化数据清洗。</p>
+            </div>
         </div>
     </section>
 
-    <section>
+    <section id="contact">
         <h2>联系方式</h2>
-        <div class="contact-info">
-            <p>📧 Email: anglina0514@qq.com</p>
-            <p>📱 Phone: 13247630198</p>
+        <p style="text-align: center; color: #7f8c8d; margin-bottom: 20px;">期待与您的交流与合作</p>
+        
+        <div class="contact-icons">
+            <a href="mailto:anglina0514@gmail.com" title="发送邮件给许智宁" class="contact-icon-a">
+                <i class="fas fa-envelope"></i>
+            </a>
+            
+            <a href="tel:13247630198" title="拨打许智宁的电话" class="contact-icon-a">
+                <i class="fas fa-phone-alt"></i>
+            </a>
         </div>
     </section>
 
