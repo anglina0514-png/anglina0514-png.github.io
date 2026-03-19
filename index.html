@@ -8,34 +8,42 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        html { scroll-behavior: smooth; }
         body { font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #2c3e50; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
         
-        header { text-align: center; padding: 60px 0 40px 0; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        header { text-align: center; padding: 60px 0 30px 0; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
         
-        .avatar { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 5px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
+        .avatar { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 5px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .avatar:hover { transform: scale(1.08) rotate(3deg); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
         
         h1 { color: #1a252f; margin: 0 0 10px 0; font-size: 2.8em; letter-spacing: 2px; }
         .subtitle { color: #7f8c8d; font-size: 1.3em; font-weight: 300; margin: 0 0 20px 0; }
 
-        /* 顶部导航栏 */
-        .nav-links { padding-top: 20px; border-top: 1px dashed #ecf0f1; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .nav-links a { color: #3498db; text-decoration: none; font-weight: bold; font-size: 1.05em; transition: all 0.3s ease; padding: 5px 10px; border-radius: 8px; }
-        .nav-links a:hover { background-color: #e8f4f8; color: #1a252f; }
-
-        section { background: #ffffff; padding: 45px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
-        h2 { color: #3498db; border-bottom: 2px solid #ecf0f1; padding-bottom: 12px; margin-top: 0; font-size: 2em; display: flex; align-items: center; gap: 10px; }
+        /* ⚠️ 分页导航栏样式升级 ⚠️ */
+        .nav-links { padding-top: 20px; border-top: 1px dashed #ecf0f1; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .nav-links a { color: #3498db; text-decoration: none; font-weight: bold; font-size: 1.1em; transition: all 0.3s ease; padding: 8px 16px; border-radius: 25px; cursor: pointer; border: 1px solid transparent; }
         
+        /* 鼠标滑过和被选中时的导航按钮状态 */
+        .nav-links a:hover { background-color: #f0f8ff; }
+        .nav-links a.active-nav { background-color: #3498db; color: #ffffff; box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); }
+
+        /* ⚠️ 分页容器魔法（默认隐藏所有 section，只显示 active-page） ⚠️ */
+        .page-section { display: none; background: #ffffff; padding: 45px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; animation: fadeIn 0.5s ease-in-out; }
+        .page-section.active-page { display: block; }
+        
+        /* 页面切换时的淡入动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 { color: #3498db; border-bottom: 2px solid #ecf0f1; padding-bottom: 12px; margin-top: 0; font-size: 2em; display: flex; align-items: center; gap: 10px; }
         .highlight-text { background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); background-repeat: no-repeat; background-size: 100% 0.3em; background-position: 0 88%; font-weight: bold; }
 
-        /* 内容列表样式（通用） */
         .content-list { margin-top: 25px; }
         .content-item { margin-bottom: 25px; padding: 25px; border-radius: 10px; background: #fafbfc; border: 1px solid #edf2f7; transition: all 0.3s ease; }
         .content-item:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-color: #dbeafe; background: #ffffff; }
         .content-item:last-child { margin-bottom: 0; }
         
-        /* 标题与副标题对齐 */
         .item-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 12px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 10px; }
         .item-header h3 { margin: 0; color: #2d3748; font-size: 1.3em; display: flex; align-items: center; gap: 8px; }
         .item-header .meta { color: #718096; font-size: 0.9em; font-weight: 500; background: #edf2f7; padding: 4px 10px; border-radius: 20px; }
@@ -43,11 +51,9 @@
         .content-item ul { margin: 0; padding-left: 20px; color: #4a5568; }
         .content-item li { margin-bottom: 8px; }
         
-        /* 技能标签 */
         .skill-tags { margin-top: 15px; display: flex; flex-wrap: wrap; gap: 8px; }
         .tag { background: #e8f4f8; color: #2980b9; padding: 6px 14px; border-radius: 20px; font-size: 0.85em; font-weight: 500; border: 1px solid #bae6fd; }
 
-        /* 联系方式底部图标 */
         .contact-icons { margin-top: 30px; text-align: center; }
         .contact-icon-a { display: inline-block; margin: 0 25px; color: #a0aec0; font-size: 2.5em; text-decoration: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .contact-icon-a:hover { color: #3498db; transform: translateY(-8px) scale(1.1); }
@@ -63,14 +69,14 @@
         <p class="subtitle">AI 内容操盘手 / 传媒行研分析 / 千万级社媒运营</p>
         
         <nav class="nav-links">
-            <a href="#about"><i class="fas fa-user"></i> 关于我</a>
-            <a href="#internships"><i class="fas fa-briefcase"></i> 实习经历</a>
-            <a href="#projects"><i class="fas fa-rocket"></i> 项目实战</a>
-            <a href="#contact"><i class="fas fa-envelope"></i> 联系方式</a>
+            <a onclick="switchPage(event, 'about')" class="active-nav"><i class="fas fa-user"></i> 关于我</a>
+            <a onclick="switchPage(event, 'internships')"><i class="fas fa-briefcase"></i> 实习经历</a>
+            <a onclick="switchPage(event, 'projects')"><i class="fas fa-rocket"></i> 项目实战</a>
+            <a onclick="switchPage(event, 'contact')"><i class="fas fa-envelope"></i> 联系方式</a>
         </nav>
     </header>
 
-    <section id="about">
+    <section id="about" class="page-section active-page">
         <h2><i class="fas fa-id-card"></i> 关于我</h2>
         <p>我是<span class="highlight-text">深圳大学网络与新媒体专业</span>在读学生，专业成绩优异（GPA 3.89/4.5，前 10%），辅修人际传播专业（人工智能方向）。</p>
         <p>我具备极强的自驱力与跨界整合能力，深耕于 <strong>AIGC 技术落地、新媒体流量操盘与二级市场量化投研</strong> 分野。熟练运用 Sora2、Midjourney 等工具赋能商业内容创作，拥有全网千万级播放量自媒体矩阵实操经验，并具备扎实的 SPSS/Excel 数据清洗与商业化行研逻辑。</p>
@@ -83,10 +89,9 @@
         </div>
     </section>
 
-    <section id="internships">
+    <section id="internships" class="page-section">
         <h2><i class="fas fa-building"></i> 核心实习经历</h2>
         <div class="content-list">
-            
             <div class="content-item">
                 <div class="item-header">
                     <h3><i class="fas fa-chart-pie" style="color: #e67e22;"></i> 国海证券 传媒研究所</h3>
@@ -98,7 +103,6 @@
                     <li><strong>企业实地调研：</strong> 赴 MiniMax、智谱 AI、汇量科技等 10+ 家头部科技企业现场走访，拆解核心业务与盈利预测模型，独立撰写 3 篇公司调研分析初稿。</li>
                 </ul>
             </div>
-
             <div class="content-item">
                 <div class="item-header">
                     <h3><i class="fas fa-video" style="color: #9b59b6;"></i> 云天励飞 营销部</h3>
@@ -110,14 +114,12 @@
                     <li><strong>私域社群增长：</strong> 维护核心粉丝群，策划高转化互动活动，实现新增粉丝 3000+，活跃度提升 20%。</li>
                 </ul>
             </div>
-
         </div>
     </section>
 
-    <section id="projects">
+    <section id="projects" class="page-section">
         <h2><i class="fas fa-laptop-code"></i> 重点项目与实战</h2>
         <div class="content-list">
-            
             <div class="content-item">
                 <div class="item-header">
                     <h3><i class="fas fa-fire" style="color: #e74c3c;"></i> 千万级自媒体矩阵运营</h3>
@@ -128,7 +130,6 @@
                     <li>结合平台算法与数据清洗技术分析用户喜好，精准输出财经解读与校园生活内容，实现高粘性粉丝转化。</li>
                 </ul>
             </div>
-
             <div class="content-item">
                 <div class="item-header">
                     <h3><i class="fas fa-magic" style="color: #3498db;"></i> AIGC 视觉与数字内容创作</h3>
@@ -139,7 +140,6 @@
                     <li><strong>堆友 AI 视觉创作大赛：</strong> 深度应用 Midjourney、Stable Diffusion 等工具完成全流程视觉创作，荣获阿里“中国神兽复兴计划”<strong>最佳人气奖</strong>。</li>
                 </ul>
             </div>
-
             <div class="content-item">
                 <div class="item-header">
                     <h3><i class="fas fa-chart-line" style="color: #2ecc71;"></i> 个人二级市场独立投资</h3>
@@ -151,14 +151,12 @@
                     <li>累计撰写个股研究笔记与行业跟踪报告 20+ 篇，沉淀了极具纪律性的成长股决策体系。</li>
                 </ul>
             </div>
-
         </div>
     </section>
 
-    <section id="contact">
+    <section id="contact" class="page-section">
         <h2><i class="fas fa-paper-plane"></i> 联系方式</h2>
         <p style="text-align: center; color: #718096; margin-bottom: 20px;">期待与您共同探讨 AI 应用与新媒体商业化的无限可能</p>
-        
         <div class="contact-icons">
             <a href="mailto:anglina0514@gmail.com" title="发送邮件" class="contact-icon-a">
                 <i class="fas fa-envelope-open-text"></i>
@@ -172,5 +170,28 @@
     <footer>
         <p>© 2026 许智宁. All rights reserved.</p>
     </footer>
+
+    <script>
+        function switchPage(event, targetId) {
+            // 1. 找到所有的页面板块，把它们全部隐藏
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(section => {
+                section.classList.remove('active-page');
+            });
+
+            // 2. 找到你要去的那个页面，把它显示出来
+            const targetSection = document.getElementById(targetId);
+            targetSection.classList.add('active-page');
+
+            // 3. 把导航栏上所有按钮的“选中颜色”去掉
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.classList.remove('active-nav');
+            });
+
+            // 4. 给当前点击的这个导航按钮加上“选中颜色”
+            event.currentTarget.classList.add('active-nav');
+        }
+    </script>
 </body>
 </html>
