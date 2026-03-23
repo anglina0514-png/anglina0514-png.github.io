@@ -27,14 +27,14 @@
             --particle-line: rgba(37, 99, 235, 0.1);
         }
 
-        /* ⚠️ 2. 赛博朋克暗黑模式变量 (Neon Cyberpunk) ⚠️ */
+        /* 赛博朋克暗黑模式变量 */
         body.cyberpunk {
             --bg: #050508;            
             --surface: rgba(13, 13, 18, 0.85);       
             --text-main: #e2e8f0;     
             --text-muted: #94a3b8;    
-            --primary: #00f3ff;       /* 霓虹青 */
-            --secondary: #ff00ff;     /* 霓虹紫 */
+            --primary: #00f3ff;       
+            --secondary: #ff00ff;     
             --border-color: rgba(0, 243, 255, 0.3);
             --glow: 0 0 15px rgba(0, 243, 255, 0.2), inset 0 0 10px rgba(255, 0, 255, 0.05);
             --particle-color: rgba(0, 243, 255, 0.5);
@@ -42,9 +42,41 @@
         }
 
         html { scroll-behavior: smooth; font-family: 'Helvetica Neue', 'PingFang SC', sans-serif; }
-        body { margin: 0; padding: 0; background-color: var(--bg); color: var(--text-main); line-height: 1.6; overflow-x: hidden; transition: background-color 0.5s ease; }
+        body { margin: 0; padding: 0; background-color: var(--bg); color: var(--text-main); line-height: 1.6; overflow-x: hidden; transition: background-color 0.1s ease; }
 
-        /* ⚠️ 3. 背景交互 Canvas ⚠️ */
+        /* ⚠️ 独家黑科技：黑客转场遮罩 ⚠️ */
+        #cyber-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #050508; z-index: 99999; pointer-events: none;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden;
+        }
+        #cyber-overlay::before {
+            content: attr(data-text); color: #00f3ff; font-family: 'Courier New', Courier, monospace;
+            font-size: 2.5em; font-weight: bold; text-align: center; padding: 0 20px;
+            text-shadow: 0 0 20px #00f3ff, 4px 4px 0px #ff00ff, -4px -4px 0px #2563eb;
+            animation: glitchText 0.15s infinite;
+        }
+        /* 转场覆盖与褪去动画 */
+        #cyber-overlay.scan-active { visibility: visible; animation: cyberWipe 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        @keyframes cyberWipe {
+            0% { clip-path: inset(50% 0 50% 0); opacity: 0; background: #ffffff; }
+            10% { clip-path: inset(48% 0 48% 0); opacity: 1; background: var(--primary); filter: invert(1);}
+            20% { clip-path: inset(0 0 0 0); opacity: 1; background: #050508; filter: none;}
+            80% { clip-path: inset(0 0 0 0); opacity: 1; }
+            100% { clip-path: inset(100% 0 0 0); opacity: 0; }
+        }
+        @keyframes glitchText {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 3px); }
+            40% { transform: translate(5px, -3px); }
+            60% { transform: translate(-3px, 5px); }
+            80% { transform: translate(3px, -5px); }
+            100% { transform: translate(0); }
+        }
+
+        /* 背景交互 Canvas */
         #particle-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
 
         /* 毛玻璃导航栏 */
@@ -69,7 +101,6 @@
         body.cyberpunk .nav-links a.active-nav { color: #000; text-shadow: none; box-shadow: 0 0 15px var(--primary); }
         .nav-links a.active-nav::before { transform: scaleX(1); transform-origin: left; }
 
-        /* 模式切换按钮 */
         .theme-toggle { margin-left: 15px; cursor: pointer; color: var(--text-main); font-size: 1.3em; transition: transform 0.3s; }
         .theme-toggle:hover { transform: rotate(30deg); color: var(--primary); }
 
@@ -83,7 +114,7 @@
         
         h1 { font-size: 2.8em; margin: 15px 0 5px; color: var(--text-main); font-weight: 800; letter-spacing: 2px; }
         
-        /* ⚠️ 1. 终端打字机特效 ⚠️ */
+        /* 终端打字机特效 */
         .typewriter-box { 
             font-family: 'Courier New', Courier, monospace; font-size: 1.15em; font-weight: bold;
             color: var(--primary); min-height: 28px; margin: 10px 0 20px 0; text-shadow: 0 0 5px rgba(37,99,235,0.4);
@@ -103,7 +134,7 @@
         body.cyberpunk .data-card strong { text-shadow: 0 0 10px var(--primary); }
         .data-card span { font-size: 0.85em; color: var(--text-muted); font-weight: 600; margin-top: 5px; }
 
-        /* 页面切换动画与容器 */
+        /* 页面切换动画 */
         .page-section { display: none; background: var(--surface); border: 1px solid var(--border-color); padding: 45px; border-radius: 24px; box-shadow: var(--glow); margin-bottom: 30px; backdrop-filter: blur(10px); }
         .page-section.active-page { display: block; animation: scaleFadeIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
         @keyframes scaleFadeIn { 0% { opacity: 0; transform: translateY(20px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
@@ -176,12 +207,15 @@
             .page-section { padding: 25px; }
             .data-card { padding: 12px; width: calc(50% - 30px); min-width: auto; }
             .fab-container { bottom: 20px; right: 20px; }
+            #cyber-overlay::before { font-size: 1.5em; } /* 手机端字体调小 */
         }
     </style>
 </head>
 <body>
 
     <canvas id="particle-canvas"></canvas>
+
+    <div id="cyber-overlay" data-text="SYSTEM OVERRIDE // NEON MODE"></div>
 
     <nav class="glass-nav">
         <div class="nav-links">
@@ -318,20 +352,37 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- 3. 赛博朋克暗黑模式切换 ---
+        // --- 3. ⚠️ 黑客入侵转场与模式切换核心逻辑 ⚠️ ---
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('theme-icon');
-            body.classList.toggle('cyberpunk');
-            if(body.classList.contains('cyberpunk')) {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-                initParticles(true); // 切换为霓虹粒子
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-                initParticles(false); // 切换为常规粒子
-            }
+            const overlay = document.getElementById('cyber-overlay');
+            
+            // 步骤一：激活黑客遮罩动画
+            overlay.classList.remove('scan-active');
+            void overlay.offsetWidth; // 触发浏览器重绘
+            overlay.classList.add('scan-active');
+
+            // 步骤二：在遮罩完全挡住屏幕的瞬间（约 300 毫秒），在底层“偷天换日”切换模式
+            setTimeout(() => {
+                body.classList.toggle('cyberpunk');
+                if(body.classList.contains('cyberpunk')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                    initParticles(true); 
+                    overlay.setAttribute('data-text', 'SYSTEM OVERRIDE // NEON MODE'); // 改变下次点击的文字
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                    initParticles(false); 
+                    overlay.setAttribute('data-text', 'REBOOTING // LIGHT MODE'); // 改变下次点击的文字
+                }
+            }, 300);
+
+            // 步骤三：动画结束后清理状态
+            setTimeout(() => {
+                overlay.classList.remove('scan-active');
+            }, 1200); // 对应 CSS 动画的时长 1.2s
         }
 
         // --- 4. 神经网络粒子交互特效 ---
