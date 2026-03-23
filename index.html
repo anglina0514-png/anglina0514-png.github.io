@@ -72,4 +72,236 @@
 
         /* 履历列表交互 */
         .content-list { margin-top: 25px; }
-        .content-item { padding: 25px; border-radius: 16px; background: #f8fafc; border: 1px solid #f1f5f9; margin-bottom: 24px; transition: all
+        .content-item { padding: 25px; border-radius: 16px; background: #f8fafc; border: 1px solid #f1f5f9; margin-bottom: 24px; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .content-item::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(to bottom, var(--primary), var(--secondary)); transform: scaleY(0); transition: transform 0.3s ease; transform-origin: bottom; }
+        .content-item:hover { transform: translateX(8px); background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.06); border-color: #e2e8f0; }
+        .content-item:hover::before { transform: scaleY(1); }
+        
+        .item-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 12px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 10px; }
+        .item-header h3 { margin: 0; color: #1e293b; font-size: 1.3em; display: flex; align-items: center; gap: 8px; }
+        .item-header .meta { color: #475569; font-size: 0.85em; font-weight: 600; background: #e2e8f0; padding: 4px 12px; border-radius: 20px; }
+        .content-item ul { margin: 0; padding-left: 20px; color: #475569; }
+
+        /* 作品集网格特效 */
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px; }
+        .portfolio-item { background: var(--surface); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.04); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #f1f5f9; cursor: pointer; }
+        .portfolio-item:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(37,99,235,0.1); }
+        .portfolio-item img { width: 100%; height: 180px; object-fit: cover; transition: transform 0.6s ease; }
+        .portfolio-item:hover img { transform: scale(1.05); }
+        .portfolio-item-content { padding: 18px; position: relative; background: var(--surface); z-index: 2; }
+        .portfolio-item h3 { margin: 0; font-size: 1.1em; color: var(--text-main); }
+        .portfolio-item p { margin: 5px 0 0 0; font-size: 0.9em; color: var(--text-muted); }
+
+        /* 视频专属放映厅 */
+        .video-wrapper { margin-top: 30px; background: #f8fafc; padding: 20px; border-radius: 20px; border: 1px solid #e2e8f0; transition: all 0.3s ease; }
+        .video-wrapper:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-color: #cbd5e1; }
+        .video-wrapper h3 { margin-top: 0; color: var(--text-main); display: flex; align-items: center; gap: 10px; font-size: 1.25em;}
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); background: #000; margin-top: 15px; }
+        .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        /* 高级文件下载区 */
+        .ppt-downloads { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 20px; }
+        .file-link {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #ffffff; padding: 16px 20px; border-radius: 12px; font-size: 1.05em; font-weight: bold; text-decoration: none; 
+            border: 1px solid #e2e8f0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .file-link.ppt { color: #dc2626; border-left: 4px solid #dc2626; }
+        .file-link.pdf { color: #ea580c; border-left: 4px solid #ea580c; }
+        .file-link:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        .file-link i.icon-type { font-size: 1.4em; margin-right: 12px; }
+        .file-link i.fa-download { color: #cbd5e1; transition: color 0.3s; }
+        .file-link:hover i.fa-download { color: inherit; }
+
+        /* 底部联系方式动效 */
+        .contact-icons { display: flex; justify-content: center; gap: 30px; margin-top: 40px; }
+        .contact-icon-a {
+            width: 65px; height: 65px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted); font-size: 2em; text-decoration: none; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .contact-icon-a:hover { background: var(--primary); color: #fff; transform: translateY(-10px) scale(1.1); box-shadow: 0 15px 30px rgba(37,99,235,0.3); }
+        
+        footer { text-align: center; padding: 40px 0; color: #94a3b8; font-size: 0.9em; }
+
+        @media (max-width: 768px) {
+            .main-container { margin-top: 120px; }
+            .page-section { padding: 25px; }
+            .nav-links { padding: 10px; }
+            .nav-links a { font-size: 0.95em; padding: 6px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="glass-nav">
+        <div class="nav-links">
+            <a onclick="switchPage(event, 'about')" class="active-nav"><i class="fas fa-user-astronaut"></i> 关于我</a>
+            <a onclick="switchPage(event, 'internships')"><i class="fas fa-briefcase"></i> 核心履历</a>
+            <a onclick="switchPage(event, 'aigc_works')"><i class="fas fa-magic"></i> AIGC 视觉</a>
+            <a onclick="switchPage(event, 'video_3d_works')"><i class="fas fa-cube"></i> 3D & 动画</a>
+            <a onclick="switchPage(event, 'ip_strategy')"><i class="fas fa-chart-line"></i> 社媒与行研</a>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        
+        <header>
+            <img src="xu-photo.jpg" alt="许智宁 证件照" class="avatar">
+            <h1>许智宁</h1>
+            <p class="subtitle"><span class="subtitle-highlight">AI 内容操盘手</span> / 虚幻五建模 / 传媒行研 / 千万级流量</p>
+        </header>
+
+        <section id="about" class="page-section active-page">
+            <h2><i class="fas fa-fingerprint"></i> 关于我</h2>
+            <p>我是<span style="font-weight: bold; color: var(--primary);">深圳大学网络与新媒体专业</span>在读学生，专业成绩优异（GPA 3.89/4.5，前 10%），辅修人际传播专业（人工智能方向）。深耕于 <strong>AIGC 技术落地、虚幻五建模与动画实战、千万级自媒体运营与二级市场研报</strong> 的复合型人才。</p>
+            <p>我具备极强的自驱力与跨界整合能力。熟练运用 Sora2、Midjourney 完成商业视觉创作并获奖；在云天励飞操盘 IP 直播间及产出 10 万+ 科普；亦在国海证券进行传媒赛道深度研究，具备 SPSS 量化数据清洗与商业行研逻辑。坚持以数据驱动内容，以技术创新商业叙事。</p>
+        </section>
+
+        <section id="internships" class="page-section">
+            <h2><i class="fas fa-building"></i> 核心实习经历</h2>
+            <div class="content-list">
+                <div class="content-item">
+                    <div class="item-header">
+                        <h3><i class="fas fa-chart-pie" style="color: #ea580c;"></i> 国海证券 传媒研究所</h3>
+                        <span class="meta">研究助理 | 2026.01 - 2026.04</span>
+                    </div>
+                    <ul>
+                        <li>追踪 AI 应用与传媒动态，搭建 30+ 标准化数据库。 SPSS 数据清洗建模，撰写深度报告初稿。走访 10+ 头部科技企业拆解业务模型。</li>
+                    </ul>
+                </div>
+                <div class="content-item">
+                    <div class="item-header">
+                        <h3><i class="fas fa-video" style="color: #8b5cf6;"></i> 云天励飞 营销部</h3>
+                        <span class="meta">新媒体运营 | 2025.07 - 2025.09</span>
+                    </div>
+                    <ul>
+                        <li>操盘 IP 直播间，单条视频播放破 10 万+。结合 AI 工具实现私域社群高质量增长，新增粉丝 3000+。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="aigc_works" class="page-section">
+            <h2><i class="fas fa-magic"></i> AIGC 视觉与视频生成</h2>
+            <p style="color: var(--text-muted); margin-bottom: 25px;">通过 Midjourney、Stable Diffusion 赋能的获奖视觉创作，以及运用 Sora2 打造的城市宣传片。</p>
+            
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <img src="midjourny创作1获奖作品.jpg" alt="获奖作品1">
+                    <div class="portfolio-item-content"><h3>神兽复兴：最佳人气奖</h3><p>Midjourney 视觉创作</p></div>
+                </div>
+                <div class="portfolio-item">
+                    <img src="midjourny创作3获奖作品.jpg" alt="获奖作品2">
+                    <div class="portfolio-item-content"><h3>神兽复兴：视觉概念</h3><p>堆友 AI 视觉创作大赛</p></div>
+                </div>
+                <div class="portfolio-item">
+                    <img src="midjourny创作4获奖作品.jpg" alt="获奖作品3">
+                    <div class="portfolio-item-content"><h3>神兽复兴：全流程视觉</h3><p>Stable Diffusion 创作</p></div>
+                </div>
+                <div class="portfolio-item">
+                    <img src="aigc龙方向创作.jpg" alt="龙方向视觉">
+                    <div class="portfolio-item-content"><h3>龙形 AIGC 创作</h3><p>视觉概念设计与延展</p></div>
+                </div>
+            </div>
+
+            <div class="video-wrapper">
+                <h3><i class="fas fa-film" style="color: #ec4899;"></i> Sora2 生成：全运会创意宣传片</h3>
+                <div class="video-container">
+                    <video controls preload="metadata">
+                        <source src="全运会宣传视频.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </section>
+
+        <section id="video_3d_works" class="page-section">
+            <h2><i class="fas fa-cube"></i> 3D 建模与视频动画实战</h2>
+            <p style="color: var(--text-muted); margin-bottom: 25px;">通过虚幻五 (UE5) 等专业软件完成的人物建模、场景搭建及动画制作。从骨骼绑定到光影渲染，全方位呈现次世代引擎的开发管线。</p>
+
+            <div class="video-wrapper">
+                <h3><i class="fas fa-rocket" style="color: #3b82f6;"></i> 视觉动画作品 (3月21日实录)</h3>
+                <div class="video-container">
+                    <video controls preload="metadata">
+                        <source src="3月21日.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </section>
+
+        <section id="ip_strategy" class="page-section">
+            <h2><i class="fas fa-hashtag"></i> 社媒矩阵运营与深度行研</h2>
+            <div class="content-list">
+                
+                <div class="content-item">
+                    <div class="item-header">
+                        <h3><i class="fas fa-fire-alt" style="color: #ef4444;"></i> 千萬級播量自媒體矩陣操盤</h3>
+                    </div>
+                    <p style="margin-top: 10px;">独立及合伙运营小红书财经账号「我叫言小急」、「伊起上学」，<strong>全网累积播放量超千万</strong>，累积点赞 117.5w+。结合数据清洗与平台算法，精准捕捉爆款趋势，实现高粘性粉丝转化。</p>
+                </div>
+                
+                <div class="content-item" style="background: var(--surface);">
+                    <div class="item-header">
+                        <h3><i class="fas fa-folder-open" style="color: var(--primary);"></i> 核心作品集与策略框架下载</h3>
+                    </div>
+                    <p style="color: var(--text-muted);">这里展示的是我的新媒体运营履历实证，以及在券商实习期间撰写的深度行业报告。<strong>点击下方卡片即可直接下载完整版 PDF/PPT：</strong></p>
+                    
+                    <div class="ppt-downloads">
+                        <a href="新媒体运营经历-许智宁.pdf" download class="file-link pdf">
+                            <div><i class="fas fa-file-pdf icon-type"></i> <span>新媒体运营作品集与账号数据</span></div>
+                            <i class="fas fa-download"></i>
+                        </a>
+
+                        <a href="【国海传媒】汇量科技：高成长的AI+程序化广告龙头.pptx" download class="file-link ppt">
+                            <div><i class="fas fa-file-powerpoint icon-type"></i> <span>【国海传媒】汇量科技：AI+广告龙头深度研报</span></div>
+                            <i class="fas fa-download"></i>
+                        </a>
+                        
+                        <a href="AI短剧漫剧出海框架.pptx" download class="file-link ppt">
+                            <div><i class="fas fa-file-powerpoint icon-type"></i> <span>AI 短剧漫剧出海业务框架分析</span></div>
+                            <i class="fas fa-download"></i>
+                        </a>
+                        
+                        <a href="AI短剧漫剧出海框架收费模式.pptx" download class="file-link ppt">
+                            <div><i class="fas fa-file-powerpoint icon-type"></i> <span>AI 短剧漫剧出海：收费模式与商业逻辑</span></div>
+                            <i class="fas fa-download"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-icons">
+                <a href="mailto:anglina0514@gmail.com" title="发送邮件给许智宁" class="contact-icon-a">
+                    <i class="fas fa-envelope"></i>
+                </a>
+                <a href="tel:13247630198" title="拨打许智宁的电话" class="contact-icon-a">
+                    <i class="fas fa-phone-alt"></i>
+                </a>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>© 2026 许智宁. Crafted with Code & Passion.</p>
+    </footer>
+
+    <script>
+        function switchPage(event, targetId) {
+            var videos = document.querySelectorAll('video');
+            videos.forEach(function(vid) { vid.pause(); });
+
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(section => { section.classList.remove('active-page'); });
+            
+            const targetSection = document.getElementById(targetId);
+            targetSection.classList.add('active-page');
+            
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => { link.classList.remove('active-nav'); });
+            
+            event.currentTarget.classList.add('active-nav');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
