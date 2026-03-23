@@ -13,191 +13,170 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- 默认明亮模式变量 --- */
+        /* =========================================
+           ☀️ 白天模式 (Apple Light Mode) 
+           ========================================= */
         :root {
-            --bg: #f8fafc;            
-            --surface: rgba(255, 255, 255, 0.9);       
-            --text-main: #0f172a;     
-            --text-muted: #64748b;    
-            --primary: #2563eb;       
-            --secondary: #8b5cf6;
-            --border-color: #e2e8f0;
-            --glow: none;
-            --particle-color: rgba(37, 99, 235, 0.2);
-            --particle-line: rgba(37, 99, 235, 0.1);
+            --bg: #f5f5f7; /* 苹果经典灰底 */
+            --surface: rgba(255, 255, 255, 0.85);       
+            --text-main: #1d1d1f;     
+            --text-muted: #86868b;    
+            --primary: #0066cc; /* 苹果蓝 */      
+            --secondary: #5e5ce6;
+            --border-color: rgba(0, 0, 0, 0.05);
+            --shadow-base: 0 4px 20px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --particle-color: rgba(0, 102, 204, 0.15);
+            --particle-line: rgba(0, 102, 204, 0.08);
         }
 
-        /* 赛博朋克暗黑模式变量 */
+        /* =========================================
+           🌙 夜间模式 (Apple Dark Mode + 赛博微光)
+           ========================================= */
         body.cyberpunk {
-            --bg: #050508;            
-            --surface: rgba(13, 13, 18, 0.85);       
-            --text-main: #e2e8f0;     
-            --text-muted: #94a3b8;    
-            --primary: #00f3ff;       
-            --secondary: #ff00ff;     
-            --border-color: rgba(0, 243, 255, 0.3);
-            --glow: 0 0 15px rgba(0, 243, 255, 0.2), inset 0 0 10px rgba(255, 0, 255, 0.05);
-            --particle-color: rgba(0, 243, 255, 0.5);
-            --particle-line: rgba(255, 0, 255, 0.3);
+            --bg: #000000;            
+            --surface: rgba(28, 28, 30, 0.85); /* 苹果经典夜间卡片色 */      
+            --text-main: #f5f5f7;     
+            --text-muted: #86868b;    
+            --primary: #0a84ff;       
+            --secondary: #bf5af2;     
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-base: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 10px 30px rgba(10, 132, 255, 0.2);
+            --particle-color: rgba(10, 132, 255, 0.3);
+            --particle-line: rgba(191, 90, 242, 0.15);
         }
 
-        html { scroll-behavior: smooth; font-family: 'Helvetica Neue', 'PingFang SC', sans-serif; }
-        body { margin: 0; padding: 0; background-color: var(--bg); color: var(--text-main); line-height: 1.6; overflow-x: hidden; transition: background-color 0.1s ease; }
-
-        /* ⚠️ 灵魂 1: WebGL 液体转场 Canvas ⚠️ */
-        #gl-canvas {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: 99999; pointer-events: none; opacity: 0; /* 默认隐藏 */
-        }
-        #gl-canvas.active { animation: glWipeOut 0.8s ease-in forwards; }
-        @keyframes glWipeOut { 0% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; } }
+        /* 基础平滑设定 */
+        html { scroll-behavior: smooth; font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC', sans-serif; }
+        body { margin: 0; padding: 0; background-color: var(--bg); color: var(--text-main); line-height: 1.6; overflow-x: hidden; transition: background-color 0.6s ease; }
 
         /* 背景交互 Canvas */
         #particle-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
 
+        /* --- Apple 级物理按压交互引擎 --- */
+        /* 任何带有链接、按钮、卡片属性的元素，按下瞬间极速收缩 */
+        a, .fab-btn, .file-link, .portfolio-item, .data-card {
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.3, 1);
+        }
+        a:active, .fab-btn:active, .file-link:active, .portfolio-item:active, .theme-toggle:active {
+            transform: scale(0.92) !important;
+            transition: transform 0.1s ease-out !important; 
+            opacity: 0.8;
+        }
+
         /* 毛玻璃导航栏 */
         .glass-nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-            background: var(--surface); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border-color); display: flex; justify-content: center; padding: 15px 0;
-            box-shadow: var(--glow); transition: all 0.5s ease;
+            background: var(--surface); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid var(--border-color); display: flex; justify-content: center; padding: 12px 0;
+            box-shadow: var(--shadow-base); transition: all 0.6s ease;
         }
         .nav-links { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; padding: 0 20px; align-items: center;}
         .nav-links a { 
             color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 1.05em; 
-            padding: 8px 18px; border-radius: 30px; cursor: pointer; position: relative; overflow: hidden; transition: all 0.4s ease;
+            padding: 8px 18px; border-radius: 30px; cursor: pointer; display: flex; align-items: center; gap: 6px;
         }
-        .nav-links a::before { 
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
-            z-index: -1; transform: scaleX(0); transform-origin: right; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 30px; 
-        }
-        .nav-links a:hover { color: var(--primary); }
-        .nav-links a.active-nav { color: #fff; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); background: transparent;}
-        body.cyberpunk .nav-links a.active-nav { color: #000; text-shadow: none; box-shadow: 0 0 15px var(--primary); }
-        .nav-links a.active-nav::before { transform: scaleX(1); transform-origin: left; }
-
-        .theme-toggle { margin-left: 15px; cursor: pointer; color: var(--text-main); font-size: 1.3em; transition: transform 0.3s; }
-        .theme-toggle:hover { transform: rotate(30deg); color: var(--primary); }
+        .nav-links a:hover { color: var(--text-main); background: rgba(0,0,0,0.05); }
+        body.cyberpunk .nav-links a:hover { background: rgba(255,255,255,0.1); }
+        .nav-links a.active-nav { color: #fff; background: var(--primary); box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3); }
+        
+        .theme-toggle { margin-left: 15px; cursor: pointer; color: var(--text-main); font-size: 1.4em; padding: 5px; }
 
         .main-container { max-width: 1000px; margin: 100px auto 40px auto; padding: 0 20px; }
         
-        /* ⚠️ 灵魂 2: 全员图标高压脉冲动效 ⚠️ */
-        i { display: inline-block; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        a:hover i, .fab-btn:hover i, .file-link:hover i { transform: translateY(-3px); }
-        body.cyberpunk a:hover i, body.cyberpunk .fab-btn:hover i, body.cyberpunk .file-link:hover i { text-shadow: 0 0 10px var(--primary); }
-
-        i.click-active {
-            animation: iconOverloadPulse 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards !important;
-        }
-
-        @keyframes iconOverloadPulse {
-            0% { transform: scale(1); filter: brightness(1); color: inherit; }
-            20% { transform: scale(0.6) translateY(3px); filter: brightness(1.8) drop-shadow(0 0 5px var(--secondary)); color: var(--secondary); }
-            60% { transform: scale(1.3) translateY(-2px); filter: brightness(2) drop-shadow(0 0 15px var(--primary)); color: var(--primary); }
-            100% { transform: scale(1) translateY(0); filter: brightness(1); color: inherit; }
-        }
-
         /* 头部信息 */
-        header { text-align: center; padding: 50px 20px 40px 20px; background: var(--surface); border: 1px solid var(--border-color); border-radius: 24px; box-shadow: var(--glow); margin-bottom: 40px; position: relative; backdrop-filter: blur(10px); transition: all 0.5s ease;}
-        .avatar { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); box-shadow: 0 0 20px rgba(37,99,235,0.3); transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        body.cyberpunk .avatar { box-shadow: 0 0 30px var(--primary), inset 0 0 20px var(--secondary); filter: contrast(1.1); }
-        .avatar:hover { transform: scale(1.1) rotate(5deg); }
+        header { text-align: center; padding: 50px 20px 40px 20px; background: var(--surface); border: 1px solid var(--border-color); border-radius: 24px; box-shadow: var(--shadow-base); margin-bottom: 40px; backdrop-filter: saturate(180%) blur(20px); transition: all 0.6s ease;}
+        .avatar { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 4px solid var(--bg); box-shadow: var(--shadow-base); transition: transform 0.4s cubic-bezier(0.25, 1, 0.3, 1); }
+        .avatar:hover { transform: scale(1.05); }
         
         h1 { font-size: 2.8em; margin: 15px 0 5px; color: var(--text-main); font-weight: 800; letter-spacing: 2px; }
         
-        /* 终端打字机特效 */
-        .typewriter-box { 
-            font-family: 'Courier New', Courier, monospace; font-size: 1.15em; font-weight: bold;
-            color: var(--primary); min-height: 28px; margin: 10px 0 20px 0; text-shadow: 0 0 5px rgba(37,99,235,0.4);
-        }
-        body.cyberpunk .typewriter-box { color: var(--primary); text-shadow: 0 0 8px var(--primary); }
-        .cursor { display: inline-block; width: 10px; height: 1.2em; background-color: var(--primary); vertical-align: bottom; animation: blink 1s step-end infinite; }
+        .typewriter-box { font-family: -apple-system, monospace; font-size: 1.15em; font-weight: bold; color: var(--primary); min-height: 28px; margin: 10px 0 20px 0; }
+        .cursor { display: inline-block; width: 8px; height: 1.2em; background-color: var(--primary); vertical-align: bottom; animation: blink 1s step-end infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* 数据看板 */
-        .data-dashboard { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 25px; transition: opacity 0.4s ease, transform 0.4s ease; }
+        /* 动态数据看板 */
+        .data-dashboard { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 25px; transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.25, 1, 0.3, 1); }
         .data-card {
-            background: var(--bg); padding: 18px 25px; border-radius: 12px; border: 1px solid var(--border-color);
-            text-align: center; display: flex; flex-direction: column; transition: all 0.3s ease;
+            background: rgba(0,0,0,0.02); padding: 20px 25px; border-radius: 16px; border: 1px solid var(--border-color);
+            text-align: center; display: flex; flex-direction: column; flex: 1; min-width: 160px;
         }
-        .data-card:hover { transform: translateY(-5px); box-shadow: var(--glow); border-color: var(--primary); }
+        body.cyberpunk .data-card { background: rgba(255,255,255,0.03); }
+        .data-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: var(--primary); }
         .data-card strong { font-size: 1.8em; color: var(--primary); font-weight: 800; line-height: 1.1; }
-        body.cyberpunk .data-card strong { text-shadow: 0 0 10px var(--primary); }
         .data-card span { font-size: 0.85em; color: var(--text-muted); font-weight: 600; margin-top: 5px; }
 
-        /* 页面切换动画 */
-        .page-section { display: none; background: var(--surface); border: 1px solid var(--border-color); padding: 45px; border-radius: 24px; box-shadow: var(--glow); margin-bottom: 30px; backdrop-filter: blur(10px); }
-        .page-section.active-page { display: block; animation: smoothFadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-        @keyframes smoothFadeIn { 0% { opacity: 0; transform: translateY(15px); } 100% { opacity: 1; transform: translateY(0); } }
+        /* ⚠️ Apple iOS 级丝滑转场动画 ⚠️ */
+        .page-section { display: none; background: var(--surface); border: 1px solid var(--border-color); padding: 45px; border-radius: 24px; box-shadow: var(--shadow-base); margin-bottom: 30px; backdrop-filter: saturate(180%) blur(20px); transition: all 0.6s ease; }
+        .page-section.active-page { display: block; animation: appleSlideUp 0.65s cubic-bezier(0.25, 1, 0.3, 1) forwards; }
+        
+        @keyframes appleSlideUp { 
+            0% { opacity: 0; transform: translateY(30px) scale(0.97); filter: blur(8px); } 
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 
+        }
 
-        h2 { color: var(--text-main); font-size: 2em; margin-top: 0; border-bottom: 1px dashed var(--border-color); padding-bottom: 15px; display: flex; align-items: center; gap: 12px; }
+        h2 { color: var(--text-main); font-size: 2em; margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; display: flex; align-items: center; gap: 12px; }
         h2 i { color: var(--primary); }
-        body.cyberpunk h2 i { text-shadow: 0 0 10px var(--primary); }
 
-        /* 履历列表交互 */
+        /* 履历列表 */
         .content-list { margin-top: 25px; }
-        .content-item { padding: 25px; border-radius: 16px; background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); margin-bottom: 24px; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .content-item { padding: 25px; border-radius: 16px; background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); margin-bottom: 24px; position: relative; overflow: hidden; transition: transform 0.4s cubic-bezier(0.25, 1, 0.3, 1), box-shadow 0.4s ease; }
         body.cyberpunk .content-item { background: rgba(255,255,255,0.02); }
         .content-item::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(to bottom, var(--primary), var(--secondary)); transform: scaleY(0); transition: transform 0.3s ease; transform-origin: bottom; }
-        .content-item:hover { transform: translateX(8px); background: var(--surface); box-shadow: var(--glow); border-color: var(--primary); }
+        .content-item:hover { transform: translateX(6px); box-shadow: var(--shadow-hover); }
         .content-item:hover::before { transform: scaleY(1); }
         .item-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 10px; }
         .item-header h3 { margin: 0; font-size: 1.25em; display: flex; align-items: center; gap: 8px; }
-        .item-header .meta { font-size: 0.85em; font-weight: 600; background: rgba(100,116,139,0.1); padding: 4px 12px; border-radius: 20px; color: var(--primary);}
+        .item-header .meta { font-size: 0.85em; font-weight: 600; background: rgba(120,120,128,0.12); padding: 4px 12px; border-radius: 20px; color: var(--text-main);}
 
-        /* 作品集网格特效 */
+        /* 作品集网格 */
         .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px; }
-        .portfolio-item { background: var(--surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); transition: all 0.3s ease; cursor: pointer; }
-        .portfolio-item:hover { transform: translateY(-5px); box-shadow: var(--glow); border-color: var(--secondary); }
-        .portfolio-item img { width: 100%; height: 180px; object-fit: cover; transition: transform 0.6s ease; filter: brightness(0.95); }
-        body.cyberpunk .portfolio-item img { filter: brightness(0.8) contrast(1.2); }
-        .portfolio-item:hover img { transform: scale(1.05); filter: brightness(1); }
+        .portfolio-item { background: var(--surface); border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); cursor: pointer; }
+        .portfolio-item:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+        .portfolio-item img { width: 100%; height: 180px; object-fit: cover; transition: transform 0.6s cubic-bezier(0.25, 1, 0.3, 1); }
+        .portfolio-item:hover img { transform: scale(1.05); }
         .portfolio-item-content { padding: 15px; position: relative; background: var(--surface); z-index: 2; }
         .portfolio-item h3 { margin: 0; font-size: 1.1em; }
 
-        /* 视频专属放映厅 */
-        .video-wrapper { margin-top: 30px; background: rgba(0,0,0,0.02); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); transition: all 0.3s ease; }
-        body.cyberpunk .video-wrapper { background: rgba(0,243,255,0.02); }
-        .video-wrapper:hover { box-shadow: var(--glow); border-color: var(--primary); }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background: #000; margin-top: 15px; border: 1px solid #333;}
-        body.cyberpunk .video-container { box-shadow: 0 0 15px rgba(0,243,255,0.3); }
+        /* 视频区 */
+        .video-wrapper { margin-top: 30px; background: rgba(0,0,0,0.02); padding: 20px; border-radius: 20px; border: 1px solid var(--border-color); transition: all 0.4s ease; }
+        body.cyberpunk .video-wrapper { background: rgba(255,255,255,0.02); }
+        .video-wrapper:hover { box-shadow: var(--shadow-hover); }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; background: #000; margin-top: 15px; border: 1px solid var(--border-color);}
         .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; object-fit: cover;}
 
-        /* 高级文件下载区 */
+        /* 文件下载卡片 */
         .ppt-downloads { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 20px; }
         .file-link {
             display: flex; align-items: center; justify-content: space-between;
-            background: var(--surface); padding: 16px 20px; border-radius: 10px; font-weight: bold; text-decoration: none; 
-            border: 1px solid var(--border-color); transition: all 0.3s ease; color: var(--text-main);
+            background: var(--surface); padding: 16px 20px; border-radius: 14px; font-weight: bold; text-decoration: none; 
+            border: 1px solid var(--border-color); color: var(--text-main); cursor: pointer;
         }
-        .file-link.ppt i.icon-type { color: #dc2626; }
-        .file-link.pdf i.icon-type { color: #ea580c; }
-        body.cyberpunk .file-link.ppt i.icon-type { color: #ff4757; text-shadow: 0 0 8px #ff4757; }
-        body.cyberpunk .file-link.pdf i.icon-type { color: #ffa502; text-shadow: 0 0 8px #ffa502; }
-        
-        .file-link:hover { transform: translateY(-4px); box-shadow: var(--glow); border-color: var(--primary); color: var(--primary); }
+        .file-link.ppt i.icon-type { color: #ff3b30; }
+        .file-link.pdf i.icon-type { color: #ff9500; }
+        .file-link:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: var(--primary); color: var(--primary); }
         .file-link i.icon-type { font-size: 1.4em; margin-right: 12px; }
-        @keyframes bounceDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
-        .file-link:hover i.fa-download { animation: bounceDown 1s infinite; color: var(--primary); }
 
-        /* 右下角悬浮操作台 */
+        /* 悬浮操作台 */
         .fab-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 9999; }
         .fab-btn {
             width: 55px; height: 55px; border-radius: 50%; background: var(--surface);
             display: flex; align-items: center; justify-content: center; color: var(--text-main); font-size: 1.4em; text-decoration: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid var(--border-color); transition: all 0.3s ease;
+            box-shadow: var(--shadow-base); border: 1px solid var(--border-color); cursor: pointer;
+            backdrop-filter: saturate(180%) blur(20px);
         }
         .fab-btn.resume-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; }
-        body.cyberpunk .fab-btn.resume-btn { box-shadow: 0 0 20px var(--primary); color: #fff; text-shadow: 0 0 5px #fff; }
-        .fab-btn:hover { transform: scale(1.15) translateY(-5px); box-shadow: var(--glow); color: var(--primary); border-color: var(--primary); }
+        .fab-btn:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); color: var(--primary); }
+        .fab-btn.resume-btn:hover { color: #fff; box-shadow: 0 10px 25px rgba(0, 102, 204, 0.4); }
 
-        footer { text-align: center; padding: 40px 0 80px 0; color: var(--text-muted); font-size: 0.9em; font-family: monospace;}
+        footer { text-align: center; padding: 40px 0 80px 0; color: var(--text-muted); font-size: 0.9em; font-family: -apple-system, monospace;}
         
         @media (max-width: 768px) {
             .main-container { margin-top: 120px; }
             .page-section { padding: 25px; }
-            .data-card { padding: 12px; width: calc(50% - 30px); min-width: auto; }
+            .data-card { padding: 12px; width: calc(50% - 20px); min-width: auto; }
+            .data-card strong { font-size: 1.4em; }
             .fab-container { bottom: 20px; right: 20px; }
         }
     </style>
@@ -205,8 +184,6 @@
 <body>
 
     <canvas id="particle-canvas"></canvas>
-    
-    <canvas id="gl-canvas"></canvas>
 
     <nav class="glass-nav">
         <div class="nav-links">
@@ -215,33 +192,25 @@
             <a onclick="switchPage(event, 'aigc_works')"><i class="fas fa-magic"></i> 视觉生成</a>
             <a onclick="switchPage(event, 'video_3d_works')"><i class="fas fa-cube"></i> 虚拟现实</a>
             <a onclick="switchPage(event, 'ip_strategy')"><i class="fas fa-network-wired"></i> 矩阵行研</a>
-            <i class="fas fa-moon theme-toggle" id="theme-icon" onclick="toggleTheme()" title="切换赛博朋克模式"></i>
+            <i class="fas fa-moon theme-toggle" id="theme-icon" onclick="toggleTheme()" title="切换 UI 模式"></i>
         </div>
     </nav>
 
     <div class="fab-container">
-        <a href="新媒体运营经历-许智宁.pdf" download title="提取数据: 简历与作品集" class="fab-btn resume-btn">
-            <i class="fas fa-file-download"></i>
-        </a>
-        <a href="mailto:anglina0514@gmail.com" title="建立加密通信" class="fab-btn">
-            <i class="fas fa-envelope"></i>
-        </a>
+        <a href="新媒体运营经历-许智宁.pdf" download title="下载简历" class="fab-btn resume-btn"><i class="fas fa-arrow-down"></i></a>
+        <a href="mailto:anglina0514@gmail.com" title="发送邮件" class="fab-btn"><i class="fas fa-envelope"></i></a>
     </div>
 
     <div class="main-container">
-        
         <header>
             <img src="xu-photo.jpg" alt="许智宁 证件照" class="avatar">
             <h1>许智宁</h1>
-            
-            <div class="typewriter-box">
-                <span id="type-text"></span><span class="cursor"></span>
-            </div>
+            <div class="typewriter-box"><span id="type-text"></span><span class="cursor"></span></div>
             
             <div class="data-dashboard" id="dynamic-dashboard">
                 <div class="data-card"><strong>1000W+</strong><span>全网流量级</span></div>
                 <div class="data-card"><strong>GPA3.9</strong><span>绩点前 10%</span></div>
-                <div class="data-card"><strong>30+</strong><span>行研标的库</span></div>
+                <div class="data-card"><strong>50%+</strong><span>A股阿尔法收益</span></div>
                 <div class="data-card"><strong>UE5/AI</strong><span>次世代视觉引擎</span></div>
             </div>
         </header>
@@ -257,14 +226,14 @@
             <div class="content-list">
                 <div class="content-item">
                     <div class="item-header">
-                        <h3><i class="fas fa-chart-pie" style="color: #ea580c;"></i> 国海证券 传媒研究所</h3>
+                        <h3><i class="fas fa-chart-pie" style="color: #ff9500;"></i> 国海证券 传媒研究所</h3>
                         <span class="meta">研究助理 | 2026.01 - 2026.04</span>
                     </div>
                     <ul><li>追踪 AI 应用与传媒动态，搭建 30+ 标准化数据库。 SPSS 数据清洗建模，撰写深度报告初稿。走访 10+ 头部科技企业拆解业务模型。</li></ul>
                 </div>
                 <div class="content-item">
                     <div class="item-header">
-                        <h3><i class="fas fa-video" style="color: #8b5cf6;"></i> 云天励飞 营销部</h3>
+                        <h3><i class="fas fa-video" style="color: #5e5ce6;"></i> 云天励飞 营销部</h3>
                         <span class="meta">新媒体运营 | 2025.07 - 2025.09</span>
                     </div>
                     <ul><li>操盘 IP 直播间，单条视频播放破 10 万+。结合 AI 工具实现私域社群高质量增长，新增粉丝 3000+。</li></ul>
@@ -281,7 +250,7 @@
                 <div class="portfolio-item"><img src="midjourny创作4获奖作品.jpg"><div class="portfolio-item-content"><h3>神兽复兴：全流程</h3><p>Stable Diffusion</p></div></div>
             </div>
             <div class="video-wrapper">
-                <h3><i class="fas fa-film" style="color: #ec4899;"></i> Sora2: 城市宣传片生成</h3>
+                <h3><i class="fas fa-film" style="color: #ff2d55;"></i> Sora2: 城市宣传片生成</h3>
                 <div class="video-container"><video controls preload="metadata" poster="midjourny创作1获奖作品.jpg"><source src="全运会宣传视频.mp4" type="video/mp4"></video></div>
             </div>
         </section>
@@ -289,7 +258,7 @@
         <section id="video_3d_works" class="page-section">
             <h2><i class="fas fa-cube"></i> Engine.UE5()</h2>
             <div class="video-wrapper">
-                <h3><i class="fas fa-rocket" style="color: #3b82f6;"></i> 视觉动画作品实录</h3>
+                <h3><i class="fas fa-rocket" style="color: #007aff;"></i> 视觉动画作品实录</h3>
                 <div class="video-container"><video controls preload="metadata" poster="midjourny创作3获奖作品.jpg"><source src="3月21日.mp4" type="video/mp4"></video></div>
             </div>
         </section>
@@ -298,8 +267,8 @@
             <h2><i class="fas fa-hashtag"></i> Network.Strategy()</h2>
             <div class="content-list">
                 <div class="content-item">
-                    <div class="item-header"><h3><i class="fas fa-fire-alt" style="color: #ef4444;"></i> 千萬級播量自媒體矩阵操盤</h3></div>
-                    <div style="float: right; width: 45%; margin-left: 20px; margin-bottom: 10px;"><img src="堆友Ai创作 (2).jpg" style="width: 100%; border-radius: 8px; border: 1px solid var(--border-color);"></div>
+                    <div class="item-header"><h3><i class="fas fa-fire-alt" style="color: #ff3b30;"></i> 千萬級播量自媒體矩阵操盤</h3></div>
+                    <div style="float: right; width: 45%; margin-left: 20px; margin-bottom: 10px;"><img src="堆友Ai创作 (2).jpg" style="width: 100%; border-radius: 12px; border: 1px solid var(--border-color);"></div>
                     <p style="margin-top: 10px;">独立及合伙运营小红书财经账号，<strong>全网累积播放量超千万</strong>，累积点赞 117.5w+. 结合数据清洗与平台算法，精准捕捉爆款趋势，实现高粘性粉丝转化。</p>
                     <div style="clear: both;"></div>
                 </div>
@@ -317,7 +286,7 @@
         </section>
     </div>
 
-    <footer><p>> System.exit(0); // © 2026 许智宁</p></footer>
+    <footer><p>Designed with Apple UX Logic // © 2026 许智宁</p></footer>
 
     <script>
         // --- 1. 动态数据引擎配置 ---
@@ -354,48 +323,51 @@
             ]
         };
 
-        const typeString = "> Initializing...\n> Role: 全栈内容操盘手\n> Skills: [AIGC, UE5, 行研]\n> Status: Ready.";
+        const typeString = "Hello, I'm Xu Zhining.\n> Role: 全栈内容操盘手\n> Status: Online.";
         const typeEl = document.getElementById('type-text');
         let typeI = 0;
         function typing() {
             if (typeI < typeString.length) {
                 typeEl.innerHTML += typeString.charAt(typeI) === '\n' ? '<br>' : typeString.charAt(typeI);
                 typeI++;
-                setTimeout(typing, 50); 
+                setTimeout(typing, 40); 
             }
         }
         setTimeout(typing, 500);
 
-        // --- 2. 页面控制与数据流同步切换 ---
+        // --- 2. Apple 级页面切换与数据流同步 ---
         function switchPage(event, targetId) {
             document.querySelectorAll('video').forEach(vid => vid.pause());
-            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active-page'));
             
-            const targetSection = document.getElementById(targetId);
-            targetSection.classList.add('active-page');
+            // 隐藏旧页面
+            document.querySelectorAll('.page-section').forEach(sec => {
+                sec.classList.remove('active-page');
+            });
+            
+            // 延迟极短时间后注入新页面（给渲染引擎留出计算空间，保证丝滑）
+            setTimeout(() => {
+                document.getElementById(targetId).classList.add('active-page');
+            }, 10);
             
             document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active-nav'));
             event.currentTarget.classList.add('active-nav');
             
-            // ⚠️ 灵魂 1: 触发 WebGL 液体转场 ⚠️
-            triggerLiquidTransition();
-
-            // ⚠️ 更新动态数据看板的文字流 ⚠️
+            // 数据看板柔和替换
             const dash = document.getElementById('dynamic-dashboard');
             dash.style.opacity = 0;
-            dash.style.transform = 'translateY(8px)';
+            dash.style.transform = 'scale(0.98)';
             
             setTimeout(() => {
                 const data = dashboardData[targetId];
                 dash.innerHTML = data.map(d => `<div class="data-card"><strong>${d.val}</strong><span>${d.label}</span></div>`).join('');
                 dash.style.opacity = 1;
-                dash.style.transform = 'translateY(0)';
-            }, 350);
+                dash.style.transform = 'scale(1)';
+            }, 300);
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- 3. 白天/夜间切换逻辑 ---
+        // --- 3. 苹果深色模式柔和切换 ---
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('theme-icon');
@@ -413,18 +385,7 @@
             }
         }
 
-        // --- 4. ⚠️ 灵魂 2: 全局图标高压点击监听 ⚠️ ---
-        document.addEventListener('mousedown', function(e) {
-            let targetIcon = e.target.closest('i');
-            if (targetIcon && targetIcon.tagName === 'I') {
-                targetIcon.classList.remove('click-active');
-                void targetIcon.offsetWidth; 
-                targetIcon.classList.add('click-active');
-                setTimeout(() => targetIcon.classList.remove('click-active'), 500);
-            }
-        });
-
-        // --- 粒子交互特效 ---
+        // --- 4. 轻量级流体粒子系统 (类似 Siri 背景) ---
         const pCanvas = document.getElementById('particle-canvas');
         const pCtx = pCanvas.getContext('2d');
         let particles = [];
@@ -434,82 +395,27 @@
 
         class Particle {
             constructor(x, y, isCyber) {
-                this.x = x; this.y = y; this.size = Math.random() * 2 + 1;
-                this.baseX = this.x; this.baseY = this.y; this.density = (Math.random() * 30) + 1; this.isCyber = isCyber;
+                this.x = x; this.y = y; this.size = Math.random() * 3 + 1;
+                this.baseX = this.x; this.baseY = this.y; this.density = (Math.random() * 20) + 1; this.isCyber = isCyber;
             }
             draw() {
-                pCtx.fillStyle = this.isCyber ? 'rgba(0, 243, 255, 0.8)' : 'rgba(37, 99, 235, 0.3)';
+                pCtx.fillStyle = this.isCyber ? 'rgba(10, 132, 255, 0.4)' : 'rgba(0, 102, 204, 0.15)';
                 pCtx.beginPath(); pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2); pCtx.closePath(); pCtx.fill();
             }
             update() {
                 let dx = mouse.x - this.x; let dy = mouse.y - this.y;
                 let distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < mouse.radius) { pCtx.strokeStyle = document.body.classList.contains('cyberpunk') ? 'rgba(255,0,255,0.2)' : 'rgba(37,99,235,0.05)'; pCtx.lineWidth = 1; pCtx.beginPath(); pCtx.moveTo(this.x, this.y); pCtx.lineTo(mouse.x, mouse.y); pCtx.stroke(); }
-                if (this.x !== this.baseX) { this.x -= (this.x - this.baseX)/10; }
-                if (this.y !== this.baseY) { this.y -= (this.y - this.baseY)/10; }
+                if (distance < mouse.radius) { 
+                    pCtx.strokeStyle = document.body.classList.contains('cyberpunk') ? 'rgba(191, 90, 242, 0.15)' : 'rgba(0, 102, 204, 0.05)'; 
+                    pCtx.lineWidth = 1; pCtx.beginPath(); pCtx.moveTo(this.x, this.y); pCtx.lineTo(mouse.x, mouse.y); pCtx.stroke(); 
+                }
+                if (this.x !== this.baseX) { this.x -= (this.x - this.baseX)/15; }
+                if (this.y !== this.baseY) { this.y -= (this.y - this.baseY)/15; }
             }
         }
-        function initParticles(isCyber) { pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight; particles = []; let numberOfParticles = (pCanvas.width * pCanvas.height) / 9000; for (let i = 0; i < numberOfParticles; i++) { particles.push(new Particle(Math.random() * pCanvas.width, Math.random() * pCanvas.height, isCyber)); } }
+        function initParticles(isCyber) { pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight; particles = []; let numberOfParticles = (pCanvas.width * pCanvas.height) / 12000; for (let i = 0; i < numberOfParticles; i++) { particles.push(new Particle(Math.random() * pCanvas.width, Math.random() * pCanvas.height, isCyber)); } }
         function animateParticles() { pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height); for (let i = 0; i < particles.length; i++) { particles[i].update(); particles[i].draw(); } requestAnimationFrame(animateParticles); }
         initParticles(false); animateParticles();
-
-        // --- 5. ⚠️ 灵魂 1: 硬件级原生 WebGL 液体转场引擎 ⚠️ ---
-        const glCanvas = document.getElementById('gl-canvas');
-        const gl = glCanvas.getContext('webgl');
-        let program; let positionBuffer; let timeLocation; let progressLocation; let resolutionLocation; let mouseLocation; let transStartTime = 0;
-
-        const vs = `attribute vec4 a_position; void main() { gl_Position = a_position; }`;
-        // 核心 Shader: 生成噪声并进行液体形变扰动
-        const fs = `precision highp float; uniform float u_time; uniform float u_progress; uniform vec2 u_resolution; uniform vec2 u_mouse;
-        float noise(vec2 p){ return sin(p.x*10.0)*sin(p.y*10.0); } // 简单的极客噪声
-        void main() {
-            vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-            vec2 p = uv * 2.0 - 1.0;
-            p.x *= u_resolution.x / u_resolution.y;
-            vec2 distToMouse = uv - (u_mouse / u_resolution); // 扰动方向随鼠标
-            // ⚠️ 核心液体算法：噪声 + 时间 + 进度扭曲 ⚠️
-            float d = noise(p * (2.0 + u_progress * 5.0) + vec2(u_time * 0.2)) * u_progress;
-            vec2 warpedUv = uv + distToMouse * d * 0.3; // 液体扭曲
-            
-            // 明亮/暗黑模式下呈现不同的“水银”颜色
-            vec3 neonBlue = vec3(0.0, 0.95, 1.0); vec3 neonPink = vec3(1.0, 0.0, 1.0); vec3 geekBlue = vec3(0.14, 0.38, 0.92);
-            vec3 mercuryColor = (sin(u_time * 0.5) > 0.0) ? neonBlue : neonPink;
-            mercuryColor = (u_resolution.x > 1000.0) ? geekBlue : mercuryColor; // 极客彩蛋
-            
-            float alpha = smoothstep(1.0, 0.0, u_progress); // 进度淡出
-            gl_FragColor = vec4(mercuryColor, d * 0.8 * alpha); // 将扭曲作为水银质感呈现
-        }`;
-
-        function createShader(gl, type, source) { let shader = gl.createShader(type); gl.shaderSource(shader, source); gl.compileShader(shader); return shader; }
-        function initGl() {
-            glCanvas.width = window.innerWidth; glCanvas.height = window.innerHeight;
-            gl.viewport(0, 0, glCanvas.width, glCanvas.height);
-            let vShader = createShader(gl, gl.VERTEX_SHADER, vs); let fShader = createShader(gl, gl.FRAGMENT_SHADER, fs);
-            program = gl.createProgram(); gl.attachShader(program, vShader); gl.attachShader(program, fShader); gl.linkProgram(program); gl.useProgram(program);
-            positionBuffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
-            let positionLocation = gl.getAttribLocation(program, "a_position");
-            gl.enableVertexAttribArray(positionLocation); gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-            timeLocation = gl.getUniformLocation(program, "u_time"); progressLocation = gl.getUniformLocation(program, "u_progress");
-            resolutionLocation = gl.getUniformLocation(program, "u_resolution"); mouseLocation = gl.getUniformLocation(program, "u_mouse");
-        }
-        function drawGl(timestamp) {
-            if (!transStartTime) return;
-            let elapsed = (timestamp - transStartTime) / 800; // 0.8秒转场
-            if (elapsed > 1) { glCanvas.classList.remove('active'); transStartTime = 0; return; }
-            glCanvas.width = window.innerWidth; glCanvas.height = window.innerHeight; // 响应式
-            gl.viewport(0, 0, glCanvas.width, glCanvas.height);
-            gl.uniform1f(timeLocation, timestamp * 0.001); gl.uniform1f(progressLocation, elapsed);
-            gl.uniform2f(resolutionLocation, glCanvas.width, glCanvas.height); gl.uniform2f(mouseLocation, mouse.x, mouse.y);
-            gl.drawArrays(gl.TRIANGLES, 0, 6);
-            requestAnimationFrame(drawGl);
-        }
-        function triggerLiquidTransition() {
-            glCanvas.classList.add('active'); transStartTime = performance.now();
-            requestAnimationFrame(drawGl);
-        }
-        initGl();
-        window.addEventListener('resize', initGl);
     </script>
 </body>
 </html>
