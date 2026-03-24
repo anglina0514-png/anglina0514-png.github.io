@@ -40,7 +40,7 @@
             --clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
         }
 
-        html { scroll-behavior: smooth; font-family: 'Helvetica Neue', 'PingFang SC', sans-serif; cursor: none; } /* 隐藏默认鼠标 */
+        html { scroll-behavior: smooth; font-family: 'Helvetica Neue', 'PingFang SC', sans-serif; cursor: none; }
         body { margin: 0; padding: 0; background-color: var(--bg); color: var(--text-main); line-height: 1.6; overflow-x: hidden; transition: background-color 0.6s ease; }
         
         body.cyberpunk::after {
@@ -51,7 +51,7 @@
         #particle-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
 
         /* =========================================
-           ⚠️ 2. 系统开机引导动画 (Boot Sequence) ⚠️
+           2. 系统开机引导动画
            ========================================= */
         #boot-screen {
             position: fixed; inset: 0; background: #030407; z-index: 9999999; 
@@ -59,24 +59,22 @@
             color: #00f3ff; font-family: 'Courier New', Courier, monospace; font-size: 1.3em; font-weight: bold;
             transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
         }
-        #boot-screen.boot-finish { transform: translateY(-100%); opacity: 0; }
+        #boot-screen.boot-finish { transform: translateY(-100%); opacity: 0; pointer-events: none; }
         .boot-line { margin: 5px 0; text-shadow: 0 0 10px #00f3ff; opacity: 0; }
         @keyframes bootTyping { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
 
         /* =========================================
-           ⚠️ 3. 磁性自定义光标 (Magnetic Cursor) ⚠️
+           3. 磁性自定义光标
            ========================================= */
-        .cursor-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; position: fixed; z-index: 100000; pointer-events: none; transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--primary); transition: background 0.3s; }
-        .cursor-ring { width: 35px; height: 35px; border: 2px solid var(--primary); border-radius: 50%; position: fixed; z-index: 99999; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border-radius 0.3s, border-color 0.3s; }
-        /* 磁吸悬停状态 */
+        .cursor-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; position: fixed; z-index: 100000; pointer-events: none !important; transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--primary); transition: background 0.3s; }
+        .cursor-ring { width: 35px; height: 35px; border: 2px solid var(--primary); border-radius: 50%; position: fixed; z-index: 99999; pointer-events: none !important; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border-radius 0.3s, border-color 0.3s; }
         .cursor-ring.hovered { width: 60px; height: 60px; background: rgba(37,99,235,0.1); border-color: transparent; }
         body.cyberpunk .cursor-ring.hovered { background: rgba(0,243,255,0.15); border: 1px dashed var(--accent); }
-        /* 夜间狙击准星状态 */
         body.cyberpunk .cursor-ring { border-radius: 0; border: 1px solid var(--primary); box-shadow: 0 0 10px var(--primary); width: 25px; height: 25px; }
         body.cyberpunk .cursor-dot { background: var(--accent); }
 
         /* =========================================
-           ⚠️ 4. Bento Box 仪表盘网格布局 ⚠️
+           4. Bento Box 仪表盘网格布局 
            ========================================= */
         .bento-grid {
             display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, auto); gap: 20px;
@@ -89,15 +87,14 @@
         }
         body.cyberpunk .bento-profile { border-top: 4px solid var(--accent); border-bottom: 4px solid var(--primary); }
         
-        .data-dashboard { display: contents; } /* 让数据卡片直接参与 Bento 网格排版 */
+        .data-dashboard { display: contents; } 
         .data-card {
             grid-column: span 1; grid-row: span 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
             background: var(--bg); padding: 20px; border-radius: var(--card-radius); border: 1px solid var(--border-color);
-            clip-path: var(--clip-path); transition: all 0.4s ease; transform-style: preserve-3d;
+            clip-path: var(--clip-path); transition: all 0.4s ease; transform-style: preserve-3d; cursor: none;
         }
         body.cyberpunk .data-card { background: rgba(0, 0, 0, 0.6); border-left: 3px solid var(--accent); }
 
-        /* 头像与打字机 */
         .avatar { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 4px solid var(--surface); box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: all 0.5s ease; }
         body.cyberpunk .avatar { border-radius: 10px; border-color: var(--accent); box-shadow: 5px 5px 0px rgba(255,0,255,0.6), -5px -5px 0px rgba(0,243,255,0.6); }
         h1 { font-size: 2.4em; margin: 15px 0 5px; font-weight: 800; letter-spacing: 2px; }
@@ -111,7 +108,6 @@
         body.cyberpunk .data-card strong { color: #fff; text-shadow: 0 0 10px var(--primary); }
         .data-card span { font-size: 0.8em; color: var(--text-muted); font-weight: 600; transform: translateZ(10px); text-align: center;}
 
-        /* 3D 悬浮透视辅助类 */
         .tilt-card { transform-style: preserve-3d; transform: perspective(1000px); transition: box-shadow 0.3s ease; }
         
         /* 导航栏 */
@@ -124,7 +120,9 @@
         .nav-links a.active-nav { color: #fff; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); background: transparent;}
         body.cyberpunk .nav-links a.active-nav { color: #000; box-shadow: 0 0 20px var(--primary); border: 1px solid var(--accent); }
         .nav-links a.active-nav::before { transform: scaleX(1); transform-origin: left; }
+        
         .theme-toggle { margin-left: 15px; cursor: none; color: var(--text-main); font-size: 1.4em; transition: color 0.3s; }
+        .theme-toggle:hover { color: var(--primary); }
 
         .main-content { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
 
@@ -159,11 +157,11 @@
         .night-anim-5 { animation: nightMosaic 0.6s ease-in-out forwards; }
         @keyframes nightMosaic { 0% { opacity: 0; transform: translateX(-30px) skewX(10deg); filter: contrast(3) grayscale(1) blur(8px); } 50% { opacity: 0.8; transform: translateX(10px) skewX(-5deg); filter: contrast(1.5) sepia(1) blur(3px); } 100% { opacity: 1; transform: translateX(0) skewX(0); filter: contrast(1) grayscale(0) blur(0); } }
 
-        /* 排版与作品展示 */
+        /* 排版与彩色图 */
         h2 { color: var(--text-main); font-size: 2em; margin-top: 0; border-bottom: 1px dashed var(--border-color); padding-bottom: 15px; display: flex; align-items: center; gap: 12px; }
         body.cyberpunk h2 i { color: var(--accent); text-shadow: 0 0 15px var(--accent); }
 
-        .content-item { padding: 25px; border-radius: 16px; background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); margin-bottom: 24px; position: relative; overflow: hidden; transition: all 0.3s ease; }
+        .content-item { padding: 25px; border-radius: 16px; background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); margin-bottom: 24px; position: relative; overflow: hidden; transition: all 0.3s ease; cursor: none;}
         body.cyberpunk .content-item { background: rgba(255,255,255,0.02); border-radius: 0; border-right: 2px solid var(--secondary); }
         .content-item::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(to bottom, var(--primary), var(--secondary)); transform: scaleY(0); transition: transform 0.3s ease; transform-origin: bottom; }
         body.cyberpunk .content-item::before { background: var(--accent); }
@@ -184,7 +182,6 @@
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; background: #000; margin-top: 15px; border: 1px solid #333; transform: translateZ(15px); cursor: none;}
         body.cyberpunk .video-container { border-radius: 0; border: 2px solid var(--secondary); box-shadow: 0 0 15px rgba(255,0,255,0.3); }
         .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; object-fit: cover;}
-        /* 播放提示遮罩 */
         .video-hover-play { position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; color: white; font-size: 3em; opacity: 1; transition: opacity 0.3s; z-index: 10; pointer-events: none; }
         .video-container:hover .video-hover-play { opacity: 0; }
 
@@ -202,7 +199,6 @@
         .fab-btn.resume-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; }
         body.cyberpunk .fab-btn.resume-btn { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent); }
 
-        /* 图标解构特效 */
         i.scatter-anim { animation: scatterReassemble 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards !important; position: relative; z-index: 10000; display: inline-block; }
         @keyframes scatterReassemble {
             0% { transform: translate(0, 0) rotate(0) scale(1); filter: brightness(1) blur(0); opacity: 1; color: inherit; }
@@ -213,7 +209,6 @@
         
         footer { text-align: center; padding: 40px 0 80px 0; color: var(--text-muted); font-size: 0.9em; font-family: monospace;}
         
-        /* 移动端适配：恢复原生鼠标，变成列排版 */
         @media (max-width: 768px) { 
             html { cursor: auto; } .cursor-dot, .cursor-ring { display: none !important; }
             .bento-grid { display: flex; flex-direction: column; margin-top: 120px;}
@@ -223,7 +218,9 @@
         }
     </style>
 </head>
-<body class="cyberpunk"> <div id="boot-screen"></div>
+<body class="cyberpunk"> 
+
+    <div id="boot-screen"></div>
 
     <div class="cursor-dot"></div>
     <div class="cursor-ring"></div>
@@ -237,7 +234,7 @@
             <a onclick="switchPage(event, 'aigc_works')"><i class="fas fa-magic"></i> 视觉生成</a>
             <a onclick="switchPage(event, 'video_3d_works')"><i class="fas fa-cube"></i> 虚拟现实</a>
             <a onclick="switchPage(event, 'ip_strategy')"><i class="fas fa-network-wired"></i> 矩阵行研</a>
-            <i class="fas fa-crosshairs theme-toggle" id="theme-icon" onclick="toggleTheme()" title="切换 UI 模式"></i>
+            <i class="fas fa-moon theme-toggle" id="theme-icon" onclick="toggleTheme()" title="切换 UI 模式"></i>
         </div>
     </nav>
 
@@ -255,7 +252,7 @@
         
         <div class="data-dashboard" id="dynamic-dashboard">
             <div class="data-card tilt-card"><strong>1000W+</strong><span>全网流量级操盘</span></div>
-            <div class="data-card tilt-card"><strong>GPA3.9</strong><span>绩点前10%运营</span></div>
+            <div class="data-card tilt-card"><strong>3.89</strong><span>专业排名前 10%</span></div>
             <div class="data-card tilt-card"><strong>30+</strong><span>行研标的库搭建</span></div>
             <div class="data-card tilt-card"><strong>UE5/AI</strong><span>次世代视觉引擎</span></div>
         </div>
@@ -263,13 +260,13 @@
 
     <div class="main-content">
         <section id="about" class="page-section show-section night-anim-1">
-            <h2><i class="fas fa-fingerprint"></i> System.AboutMe()</h2>
+            <h2><i class="fas fa-fingerprint"></i> System.AboutMe</h2>
             <p>我是<span style="font-weight: bold; color: var(--primary);">深圳大学网络与新媒体专业</span>在读学生，辅修人际传播专业（人工智能方向）。深耕于 <strong>AIGC 技术落地、虚幻五建模与动画实战、千万级自媒体运营与二级市场研报</strong> 的复合型人才。</p>
             <p>具备极强的自驱力与跨界整合能力。熟练运用 Sora2、Midjourney 完成商业视觉创作并获奖；操盘 IP 直播间及产出 10 万+ 科普；在国海证券进行传媒赛道深度研究，具备 SPSS 量化数据清洗与行研逻辑。坚持以数据驱动内容，以技术创新商业叙事。</p>
         </section>
 
         <section id="internships" class="page-section">
-            <h2><i class="fas fa-building"></i> Experience.Log()</h2>
+            <h2><i class="fas fa-building"></i> Experience.Log</h2>
             <div class="content-list">
                 <div class="content-item tilt-card">
                     <div class="item-header"><h3><i class="fas fa-chart-pie"></i> 国海证券 传媒研究所</h3><span class="meta">研究助理 | 2026.01 - 2026.04</span></div>
@@ -283,7 +280,7 @@
         </section>
 
         <section id="aigc_works" class="page-section">
-            <h2><i class="fas fa-magic"></i> Render.AIGC()</h2>
+            <h2><i class="fas fa-magic"></i> Render.AIGC</h2>
             <p style="color: var(--text-muted); margin-bottom: 25px;">Midjourney、Stable Diffusion 获奖视觉创作，及 Sora2 引擎生成的全运会宣传片。</p>
             <div class="portfolio-grid">
                 <div class="portfolio-item tilt-card"><img src="midjourny创作1获奖作品.jpg"><div class="portfolio-item-content"><h3>神兽复兴：最佳人气</h3><p>Midjourney</p></div></div>
@@ -300,7 +297,7 @@
         </section>
 
         <section id="video_3d_works" class="page-section">
-            <h2><i class="fas fa-cube"></i> Engine.UE5()</h2>
+            <h2><i class="fas fa-cube"></i> Engine.UE5</h2>
             <div class="video-wrapper tilt-card">
                 <h3><i class="fas fa-rocket"></i> UE5商业级动画作品实录</h3>
                 <div class="video-container">
@@ -311,7 +308,7 @@
         </section>
 
         <section id="ip_strategy" class="page-section">
-            <h2><i class="fas fa-hashtag"></i> Network.Strategy()</h2>
+            <h2><i class="fas fa-hashtag"></i> Network.Strategy</h2>
             <div class="content-list">
                 <div class="content-item tilt-card">
                     <div class="item-header"><h3><i class="fas fa-fire-alt"></i> 千萬級自媒體操盤流量运营</h3></div>
@@ -333,10 +330,10 @@
         </section>
     </div>
 
-    <footer><p>> System.exit(0); // © 2026 许智宁</p></footer>
+    <footer><p>> System.exit; // © 2026 许智宁</p></footer>
 
     <script>
-        // --- 1. 开机加载仪式动画 (Boot Sequence) ---
+        // --- 1. 开机加载 (修复阻挡 Bug) ---
         const bootScreen = document.getElementById('boot-screen');
         const bootTextLines = [
             "> SYSTEM BOOT INITIATED...",
@@ -353,14 +350,17 @@
                 p.style.animation = `bootTyping 0.1s forwards`;
                 bootScreen.appendChild(p);
                 bootI++;
-                setTimeout(runBootSequence, 300);
+                setTimeout(runBootSequence, 200);
             } else {
-                setTimeout(() => { bootScreen.classList.add('boot-finish'); document.body.classList.remove('cyberpunk'); initParticles(false); }, 800);
+                setTimeout(() => { 
+                    bootScreen.classList.add('boot-finish'); 
+                    setTimeout(() => bootScreen.style.display = 'none', 800);
+                }, 600);
             }
         }
-        window.addEventListener('load', () => setTimeout(runBootSequence, 500));
+        window.addEventListener('load', () => setTimeout(runBootSequence, 200));
 
-        // --- 2. 沉浸式自定义磁吸光标 ---
+        // --- 2. 磁性光标 ---
         const cDot = document.querySelector('.cursor-dot'); const cRing = document.querySelector('.cursor-ring');
         let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
         if(window.innerWidth > 768) {
@@ -374,8 +374,6 @@
                 requestAnimationFrame(animateCursor);
             }
             animateCursor();
-            
-            // 磁吸判断
             const interactables = document.querySelectorAll('a, button, .portfolio-item, .data-card, .video-container');
             interactables.forEach(el => {
                 el.addEventListener('mouseenter', () => cRing.classList.add('hovered'));
@@ -383,23 +381,22 @@
             });
         }
 
-        // --- 3. 原生 3D 悬浮视差 (3D Hover Parallax) ---
+        // --- 3. 3D 悬浮视差 ---
         function init3DTilt() {
             if(window.innerWidth < 768) return;
             document.querySelectorAll('.tilt-card').forEach(card => {
                 card.addEventListener('mousemove', e => {
                     let rect = card.getBoundingClientRect();
                     let x = e.clientX - rect.left; let y = e.clientY - rect.top;
-                    let rotateX = ((y / rect.height) - 0.5) * -15; // 倾斜角度
-                    let rotateY = ((x / rect.width) - 0.5) * 15;
+                    let rotateX = ((y / rect.height) - 0.5) * -15; let rotateY = ((x / rect.width) - 0.5) * 15;
                     card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
                 });
                 card.addEventListener('mouseleave', () => { card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1,1,1)`; });
             });
         }
-        init3DTilt(); // 初始化调用
+        init3DTilt();
 
-        // --- 4. 视频无缝悬停自动播放 (Hover Playback) ---
+        // --- 4. 视频无缝自动播放 ---
         document.querySelectorAll('.video-container').forEach(container => {
             let vid = container.querySelector('video');
             if(vid) {
@@ -408,10 +405,10 @@
             }
         });
 
-        // --- 动态数据流与 10 大转场 ---
+        // --- 5. 纯净无括号数据流 ---
         const dashboardData = {
-            'about': [{ val: '千万级+', label: '全网流量级操盘' }, { val: '3.89', label: '绩点前10%运营' }, { val: '30+', label: '行研标的库搭建' }, { val: 'UE5/AI', label: '次世代视觉引擎' }],
-            'internships': [{ val: '10万+', label: '单条视频爆发' }, { val: '千万级+', label: '自媒体矩阵累积' }, { val: '深度研报', label: '传媒研报初稿撰写' }, { val: 'SPSS清洗', label: '量化数据分析' }],
+            'about': [{ val: '千万级+', label: '全网流量级操盘' }, { val: '3.89', label: '专业排名前 10%' }, { val: '30+', label: '行研标的库搭建' }, { val: 'UE5/AI', label: '次世代视觉引擎' }],
+            'internships': [{ val: '10万+', label: '单条视频爆发' }, { val: '千万级+', label: '自媒体矩阵累积' }, { val: '深度研报', label: '传媒研报分析' }, { val: 'SPSS清洗', label: '量化数据分析' }],
             'aigc_works': [{ val: '千万级+', label: 'Sora全流程操盘' }, { val: '最高人气', label: '堆友Ai创作大赛' }, { val: '全流程SD', label: '视觉创作解决方案' }, { val: '核心主控', label: 'AIGC视觉操盘' }],
             'video_3d_works': [{ val: '独立搭建', label: '场景与骨骼驱动' }, { val: '次世代', label: '商业动画视觉' }, { val: '商业渲染', label: '实时光影技术' }, { val: '全流程', label: '虚幻五实战操盘' }],
             'ip_strategy': [{ val: '1000W+', label: '矩阵操盘总播量' }, { val: '117.5W', label: '社媒累积点赞' }, { val: '千万级+', label: '行研复盘经验' }, { val: '高成长', label: '研报赛道捕捉' }]
@@ -420,7 +417,7 @@
         const typeString = "> Angie Angel \n> 全栈内容操盘手 \n> 千万级自媒体矩阵 \n> 档案载入中...\n> \n> System Ready."; 
         const typeEl = document.getElementById('type-text'); let typeI = 0;
         function typing() { if (typeI < typeString.length) { typeEl.innerHTML += typeString.charAt(typeI) === '\n' ? '<br>' : typeString.charAt(typeI); typeI++; setTimeout(typing, 50); } }
-        setTimeout(typing, 3500); // 等待开机画面结束
+        setTimeout(typing, 2500); 
 
         const sectionsList = ['about', 'internships', 'aigc_works', 'video_3d_works', 'ip_strategy'];
         function switchPage(event, targetId) {
@@ -442,26 +439,28 @@
             setTimeout(() => {
                 dash.innerHTML = dashboardData[targetId].map(d => `<div class="data-card tilt-card"><strong>${d.val}</strong><span>${d.label}</span></div>`).join('');
                 dash.style.opacity = 1; dash.style.transform = 'translateY(0)';
-                init3DTilt(); // 重新为新的数据卡片绑定 3D 透视事件
+                init3DTilt(); 
             }, 300);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- 炸裂重组与模式切换 ---
+        // --- 6. 月亮/太阳切换 ---
         function toggleTheme() {
             const body = document.body; const icon = document.getElementById('theme-icon');
             if (!body.classList.contains('cyberpunk')) scatterIcons();
+            
             body.classList.toggle('cyberpunk');
-            icon.style.transform = 'rotate(180deg)'; setTimeout(() => icon.style.transform = 'rotate(0deg)', 300);
+            icon.style.transform = 'rotate(180deg)'; 
+            setTimeout(() => icon.style.transform = 'rotate(0deg)', 300);
 
             if(body.classList.contains('cyberpunk')) {
-                icon.classList.remove('fa-sun'); icon.classList.add('fa-crosshairs'); // 切成十字狙击星
+                icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); 
                 initParticles(true); 
                 const activeId = document.querySelector('.nav-links a.active-nav').getAttribute('onclick').match(/'([^']+)'/)[1];
                 const activeIndex = sectionsList.indexOf(activeId) + 1; const activeSec = document.getElementById(activeId);
                 activeSec.className = 'page-section show-section'; void activeSec.offsetWidth; activeSec.classList.add(`night-anim-${activeIndex}`);
             } else {
-                icon.classList.remove('fa-crosshairs'); icon.classList.add('fa-moon'); // 切回月亮
+                icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); 
                 initParticles(false); 
                 const activeId = document.querySelector('.nav-links a.active-nav').getAttribute('onclick').match(/'([^']+)'/)[1];
                 const activeIndex = sectionsList.indexOf(activeId) + 1; const activeSec = document.getElementById(activeId);
@@ -494,7 +493,7 @@
         }
         function initParticles(isCyber) { pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight; particles = []; let numberOfParticles = (pCanvas.width * pCanvas.height) / 9000; for (let i = 0; i < numberOfParticles; i++) { particles.push(new Particle(Math.random() * pCanvas.width, Math.random() * pCanvas.height, isCyber)); } }
         function animateParticles() { pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height); for (let i = 0; i < particles.length; i++) { particles[i].update(); particles[i].draw(); } requestAnimationFrame(animateParticles); }
-        animateParticles(); // 启动画布
+        initParticles(false); animateParticles();
     </script>
 </body>
 </html>
