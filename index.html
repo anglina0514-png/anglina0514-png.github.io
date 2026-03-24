@@ -41,7 +41,7 @@
             --clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
         }
 
-        html { scroll-behavior: smooth; font-family: 'Helvetica Neue', 'PingFang SC', sans-serif; cursor: none; }
+        html { scroll-behavior: smooth; font-family: 'Helvetica Neue', 'PingFang SC', sans-serif; }
         body { margin: 0; padding: 0; background-color: var(--bg); color: var(--text-main); line-height: 1.6; overflow-x: hidden; transition: background-color 0.6s ease; }
         
         body.cyberpunk::after {
@@ -52,7 +52,7 @@
         #particle-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
 
         /* =========================================
-           2. 系统开机引导动画
+           2. 系统开机引导动画 (Boot Sequence)
            ========================================= */
         #boot-screen {
             position: fixed; inset: 0; background: #030407; z-index: 9999999; 
@@ -65,17 +65,7 @@
         @keyframes bootTyping { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
 
         /* =========================================
-           3. 磁性光标 (绝对穿透防止阻挡点击)
-           ========================================= */
-        .cursor-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; position: fixed; z-index: 100000; pointer-events: none !important; transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--primary); transition: background 0.3s; }
-        .cursor-ring { width: 35px; height: 35px; border: 2px solid var(--primary); border-radius: 50%; position: fixed; z-index: 99999; pointer-events: none !important; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border-radius 0.3s, border-color 0.3s; }
-        .cursor-ring.hovered { width: 60px; height: 60px; background: rgba(37,99,235,0.1); border-color: transparent; }
-        body.cyberpunk .cursor-ring.hovered { background: rgba(0,243,255,0.15); border: 1px dashed var(--accent); }
-        body.cyberpunk .cursor-ring { border-radius: 0; border: 1px solid var(--primary); box-shadow: 0 0 10px var(--primary); width: 25px; height: 25px; }
-        body.cyberpunk .cursor-dot { background: var(--accent); }
-
-        /* =========================================
-           4. Bento Box 仪表盘网格布局 
+           3. Bento Box 仪表盘网格布局 
            ========================================= */
         .bento-grid {
             display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, auto); gap: 20px;
@@ -92,7 +82,7 @@
         .data-card {
             grid-column: span 1; grid-row: span 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
             background: var(--bg); padding: 20px; border-radius: var(--card-radius); border: 1px solid var(--border-color);
-            clip-path: var(--clip-path); transition: all 0.4s ease; transform-style: preserve-3d; cursor: none;
+            clip-path: var(--clip-path); transition: all 0.4s ease; transform-style: preserve-3d;
         }
         body.cyberpunk .data-card { background: rgba(0, 0, 0, 0.6); border-left: 3px solid var(--accent); }
 
@@ -115,20 +105,20 @@
         .glass-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: var(--surface); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); display: flex; justify-content: center; padding: 15px 0; box-shadow: var(--shadow); transition: all 0.5s ease; }
         body.cyberpunk .glass-nav { border-bottom: 2px solid var(--primary); }
         .nav-links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; padding: 0 20px; align-items: center;}
-        .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 1.05em; padding: 8px 18px; border-radius: 30px; cursor: none; position: relative; overflow: hidden; transition: all 0.4s ease; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 1.05em; padding: 8px 18px; border-radius: 30px; cursor: pointer; position: relative; overflow: hidden; transition: all 0.4s ease; }
         body.cyberpunk .nav-links a { border-radius: 0; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
         .nav-links a::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary)); z-index: -1; transform: scaleX(0); transform-origin: right; transition: transform 0.4s ease; }
         .nav-links a.active-nav { color: #fff; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); background: transparent;}
         body.cyberpunk .nav-links a.active-nav { color: #000; box-shadow: 0 0 20px var(--primary); border: 1px solid var(--accent); }
         .nav-links a.active-nav::before { transform: scaleX(1); transform-origin: left; }
         
-        .theme-toggle { margin-left: 15px; cursor: none; color: var(--text-main); font-size: 1.4em; transition: color 0.3s; }
+        .theme-toggle { margin-left: 15px; cursor: pointer; color: var(--text-main); font-size: 1.4em; transition: color 0.3s; }
         .theme-toggle:hover { color: var(--primary); }
 
         .main-content { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
 
         /* =========================================
-           5. 10大极客转场动画核心
+           4. 10大极客转场动画核心 (纯CSS)
            ========================================= */
         .page-section { display: none; background: var(--surface); border: 1px solid var(--border-color); padding: 45px; border-radius: var(--card-radius); box-shadow: var(--shadow); margin-bottom: 30px; backdrop-filter: blur(10px); clip-path: var(--clip-path); }
         body.cyberpunk .page-section { border-left: 5px solid var(--primary); }
@@ -158,11 +148,11 @@
         .night-anim-5 { animation: nightMosaic 0.6s ease-in-out forwards; }
         @keyframes nightMosaic { 0% { opacity: 0; transform: translateX(-30px) skewX(10deg); filter: contrast(3) grayscale(1) blur(8px); } 50% { opacity: 0.8; transform: translateX(10px) skewX(-5deg); filter: contrast(1.5) sepia(1) blur(3px); } 100% { opacity: 1; transform: translateX(0) skewX(0); filter: contrast(1) grayscale(0) blur(0); } }
 
-        /* 排版与彩色图 */
+        /* 排版与彩色图保留 */
         h2 { color: var(--text-main); font-size: 2em; margin-top: 0; border-bottom: 1px dashed var(--border-color); padding-bottom: 15px; display: flex; align-items: center; gap: 12px; }
         body.cyberpunk h2 i { color: var(--accent); text-shadow: 0 0 15px var(--accent); }
 
-        .content-item { padding: 25px; border-radius: 16px; background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); margin-bottom: 24px; position: relative; overflow: hidden; transition: all 0.3s ease; cursor: none;}
+        .content-item { padding: 25px; border-radius: 16px; background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); margin-bottom: 24px; position: relative; overflow: hidden; transition: all 0.3s ease; }
         body.cyberpunk .content-item { background: rgba(255,255,255,0.02); border-radius: 0; border-right: 2px solid var(--secondary); }
         .content-item::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(to bottom, var(--primary), var(--secondary)); transform: scaleY(0); transition: transform 0.3s ease; transform-origin: bottom; }
         body.cyberpunk .content-item::before { background: var(--accent); }
@@ -173,21 +163,21 @@
         body.cyberpunk .item-header .meta { background: rgba(0,243,255,0.1); border: 1px solid var(--primary); border-radius: 0; }
 
         .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px; }
-        .portfolio-item { background: var(--surface); border-radius: var(--card-radius); overflow: hidden; border: 1px solid var(--border-color); clip-path: var(--clip-path); transform-style: preserve-3d; cursor: none; }
+        .portfolio-item { background: var(--surface); border-radius: var(--card-radius); overflow: hidden; border: 1px solid var(--border-color); clip-path: var(--clip-path); transform-style: preserve-3d; cursor: pointer; }
         .portfolio-item img { width: 100%; height: 180px; object-fit: cover; filter: brightness(0.95); transform: translateZ(10px); pointer-events: none;}
         body.cyberpunk .portfolio-item img { filter: brightness(0.85) contrast(1.15) saturate(1.2); } 
         .portfolio-item-content { padding: 15px; background: var(--surface); transform: translateZ(20px); pointer-events: none;}
 
         .video-wrapper { margin-top: 30px; background: rgba(0,0,0,0.02); padding: 20px; border-radius: var(--card-radius); border: 1px solid var(--border-color); clip-path: var(--clip-path); transform-style: preserve-3d;}
         body.cyberpunk .video-wrapper { background: rgba(0,243,255,0.05); border-color: var(--primary); }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; background: #000; margin-top: 15px; border: 1px solid #333; transform: translateZ(15px); cursor: none;}
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; background: #000; margin-top: 15px; border: 1px solid #333; transform: translateZ(15px); cursor: pointer;}
         body.cyberpunk .video-container { border-radius: 0; border: 2px solid var(--secondary); box-shadow: 0 0 15px rgba(255,0,255,0.3); }
         .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; object-fit: cover;}
         .video-hover-play { position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; color: white; font-size: 3em; opacity: 1; transition: opacity 0.3s; z-index: 10; pointer-events: none; }
         .video-container:hover .video-hover-play { opacity: 0; }
 
         .ppt-downloads { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 20px; }
-        .file-link { display: flex; align-items: center; justify-content: space-between; background: var(--surface); padding: 16px 20px; border-radius: 12px; font-weight: bold; text-decoration: none; border: 1px solid var(--border-color); color: var(--text-main); clip-path: var(--clip-path); cursor: none; transform-style: preserve-3d; }
+        .file-link { display: flex; align-items: center; justify-content: space-between; background: var(--surface); padding: 16px 20px; border-radius: 12px; font-weight: bold; text-decoration: none; border: 1px solid var(--border-color); color: var(--text-main); clip-path: var(--clip-path); cursor: pointer; transform-style: preserve-3d; }
         body.cyberpunk .file-link { border-radius: 0; border-left: 3px solid var(--accent); }
         body.cyberpunk .file-link.ppt i.icon-type { color: #ff00ff; text-shadow: 0 0 10px #ff00ff; }
         body.cyberpunk .file-link.pdf i.icon-type { color: #fcee0a; text-shadow: 0 0 10px #fcee0a; }
@@ -195,7 +185,7 @@
         .file-link i.fa-download { transform: translateZ(20px); }
         
         .fab-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 9999; }
-        .fab-btn { width: 55px; height: 55px; border-radius: 50%; background: var(--surface); display: flex; align-items: center; justify-content: center; color: var(--text-main); font-size: 1.4em; text-decoration: none; box-shadow: var(--shadow); border: 1px solid var(--border-color); cursor: none; }
+        .fab-btn { width: 55px; height: 55px; border-radius: 50%; background: var(--surface); display: flex; align-items: center; justify-content: center; color: var(--text-main); font-size: 1.4em; text-decoration: none; box-shadow: var(--shadow); border: 1px solid var(--border-color); cursor: pointer; }
         body.cyberpunk .fab-btn { border-radius: 0; clip-path: polygon(25% 0%, 100% 0%, 100% 75%, 75% 100%, 0% 100%, 0% 25%); border: 1px solid var(--primary); color: var(--primary);}
         .fab-btn.resume-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; }
         body.cyberpunk .fab-btn.resume-btn { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent); }
@@ -211,7 +201,6 @@
         footer { text-align: center; padding: 40px 0 80px 0; color: var(--text-muted); font-size: 0.9em; font-family: monospace;}
         
         @media (max-width: 768px) { 
-            html { cursor: auto; } .cursor-dot, .cursor-ring { display: none !important; }
             .bento-grid { display: flex; flex-direction: column; margin-top: 120px;}
             .bento-profile { padding: 25px; }
             .data-card { min-width: auto; padding: 15px; }
@@ -222,9 +211,6 @@
 <body> 
 
     <div id="boot-screen"></div>
-
-    <div class="cursor-dot"></div>
-    <div class="cursor-ring"></div>
 
     <canvas id="particle-canvas"></canvas>
 
@@ -361,28 +347,7 @@
         }
         window.addEventListener('load', () => setTimeout(runBootSequence, 200));
 
-        // --- 2. 磁性光标 ---
-        const cDot = document.querySelector('.cursor-dot'); const cRing = document.querySelector('.cursor-ring');
-        let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
-        if(window.innerWidth > 768) {
-            document.addEventListener('mousemove', e => {
-                mouseX = e.clientX; mouseY = e.clientY;
-                cDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
-            });
-            function animateCursor() {
-                ringX += (mouseX - ringX) * 0.15; ringY += (mouseY - ringY) * 0.15;
-                cRing.style.transform = `translate(${ringX}px, ${ringY}px)`;
-                requestAnimationFrame(animateCursor);
-            }
-            animateCursor();
-            const interactables = document.querySelectorAll('a, button, .portfolio-item, .data-card, .video-container');
-            interactables.forEach(el => {
-                el.addEventListener('mouseenter', () => cRing.classList.add('hovered'));
-                el.addEventListener('mouseleave', () => cRing.classList.remove('hovered'));
-            });
-        }
-
-        // --- 3. 3D 悬浮视差 ---
+        // --- 2. 3D 悬浮视差 ---
         function init3DTilt() {
             if(window.innerWidth < 768) return;
             document.querySelectorAll('.tilt-card').forEach(card => {
@@ -397,7 +362,7 @@
         }
         init3DTilt();
 
-        // --- 4. 视频无缝自动播放 ---
+        // --- 3. 视频无缝自动播放 ---
         document.querySelectorAll('.video-container').forEach(container => {
             let vid = container.querySelector('video');
             if(vid) {
@@ -406,7 +371,7 @@
             }
         });
 
-        // --- 5. 纯净数据流 ---
+        // --- 4. 纯净无括号数据流 ---
         const dashboardData = {
             'about': [{ val: '千万级+', label: '全网流量级操盘' }, { val: '3.89', label: '专业排名前 10%' }, { val: '30+', label: '行研标的库搭建' }, { val: 'UE5/AI', label: '次世代视觉引擎' }],
             'internships': [{ val: '10万+', label: '单条视频爆发' }, { val: '千万级+', label: '自媒体矩阵累积' }, { val: '深度研报', label: '传媒研报分析' }, { val: 'SPSS清洗', label: '量化数据分析' }],
@@ -445,7 +410,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- 6. 切换逻辑 ---
+        // --- 5. 月亮/太阳切换 ---
         function toggleTheme() {
             const body = document.body; const icon = document.getElementById('theme-icon');
             if (!body.classList.contains('cyberpunk')) scatterIcons();
@@ -456,13 +421,11 @@
 
             if(body.classList.contains('cyberpunk')) {
                 icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); 
-                initParticles(true); 
                 const activeId = document.querySelector('.nav-links a.active-nav').getAttribute('onclick').match(/'([^']+)'/)[1];
                 const activeIndex = sectionsList.indexOf(activeId) + 1; const activeSec = document.getElementById(activeId);
                 activeSec.className = 'page-section show-section'; void activeSec.offsetWidth; activeSec.classList.add(`night-anim-${activeIndex}`);
             } else {
                 icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); 
-                initParticles(false); 
                 const activeId = document.querySelector('.nav-links a.active-nav').getAttribute('onclick').match(/'([^']+)'/)[1];
                 const activeIndex = sectionsList.indexOf(activeId) + 1; const activeSec = document.getElementById(activeId);
                 activeSec.className = 'page-section show-section'; void activeSec.offsetWidth; activeSec.classList.add(`day-anim-${activeIndex}`);
@@ -479,7 +442,7 @@
             });
         }
 
-        // --- 7. 全局点击脉冲反馈 ---
+        // --- 6. 全局点击脉冲反馈 ---
         document.addEventListener('mousedown', function(e) {
             let targetIcon = e.target.closest('i');
             let clickTarget = e.target.closest('a') || e.target.closest('.fab-btn') || e.target.closest('.file-link');
@@ -498,22 +461,31 @@
             }
         });
 
-        // --- 8. 粒子系统 (修改为仅白天模式下初始化为 false) ---
+        // --- 7. 独立保留的背景粒子系统追踪引擎 ---
         const pCanvas = document.getElementById('particle-canvas'); const pCtx = pCanvas.getContext('2d');
         let particles = [];
+        
+        let globalMouseX = window.innerWidth / 2;
+        let globalMouseY = window.innerHeight / 2;
+        window.addEventListener('mousemove', (e) => { 
+            globalMouseX = e.clientX; 
+            globalMouseY = e.clientY; 
+        });
+        
         window.addEventListener('resize', () => { pCanvas.width = innerWidth; pCanvas.height = innerHeight; initParticles(document.body.classList.contains('cyberpunk')); });
+        
         class Particle {
             constructor(x, y, isCyber) { this.x = x; this.y = y; this.size = Math.random() * 2 + 1; this.baseX = this.x; this.baseY = this.y; this.density = (Math.random() * 30) + 1; this.isCyber = isCyber; }
             draw() { pCtx.fillStyle = this.isCyber ? 'rgba(0, 243, 255, 0.8)' : 'rgba(37, 99, 235, 0.3)'; pCtx.beginPath(); pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2); pCtx.closePath(); pCtx.fill(); }
             update() {
-                let dx = mouseX - this.x; let dy = mouseY - this.y; let distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < 150) { pCtx.strokeStyle = document.body.classList.contains('cyberpunk') ? 'rgba(255,0,255,0.2)' : 'rgba(37,99,235,0.05)'; pCtx.lineWidth = 1; pCtx.beginPath(); pCtx.moveTo(this.x, this.y); pCtx.lineTo(mouseX, mouseY); pCtx.stroke(); }
+                let dx = globalMouseX - this.x; let dy = globalMouseY - this.y; let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 150) { pCtx.strokeStyle = document.body.classList.contains('cyberpunk') ? 'rgba(255,0,255,0.2)' : 'rgba(37,99,235,0.05)'; pCtx.lineWidth = 1; pCtx.beginPath(); pCtx.moveTo(this.x, this.y); pCtx.lineTo(globalMouseX, globalMouseY); pCtx.stroke(); }
                 if (this.x !== this.baseX) { this.x -= (this.x - this.baseX)/10; } if (this.y !== this.baseY) { this.y -= (this.y - this.baseY)/10; }
             }
         }
         function initParticles(isCyber) { pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight; particles = []; let numberOfParticles = (pCanvas.width * pCanvas.height) / 9000; for (let i = 0; i < numberOfParticles; i++) { particles.push(new Particle(Math.random() * pCanvas.width, Math.random() * pCanvas.height, isCyber)); } }
         function animateParticles() { pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height); for (let i = 0; i < particles.length; i++) { particles[i].update(); particles[i].draw(); } requestAnimationFrame(animateParticles); }
-        initParticles(false); animateParticles(); // ⚠️ 从一开始就传入 false 以匹配默认白天模式 ⚠️
+        initParticles(false); animateParticles(); 
     </script>
 </body>
 </html>
