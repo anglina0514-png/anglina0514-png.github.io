@@ -65,7 +65,7 @@
         @keyframes bootTyping { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
 
         /* =========================================
-           3. Bento Box 仪表盘 & ⚡特效 4: 动态流光边框 ⚡
+           3. Bento Box 仪表盘网格布局 
            ========================================= */
         .bento-grid {
             display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, auto); gap: 20px;
@@ -76,51 +76,30 @@
             background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--card-radius); box-shadow: var(--shadow);
             padding: 40px; backdrop-filter: blur(10px); clip-path: var(--clip-path); transition: all 0.5s ease;
         }
+        body.cyberpunk .bento-profile { border-top: 4px solid var(--accent); border-bottom: 4px solid var(--primary); }
+        
         .data-dashboard { display: contents; } 
         .data-card {
             grid-column: span 1; grid-row: span 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
             background: var(--bg); padding: 20px; border-radius: var(--card-radius); border: 1px solid var(--border-color);
             clip-path: var(--clip-path); transition: all 0.4s ease; transform-style: preserve-3d;
         }
-        
-        /* ⚡ 特效 4：动态霓虹流光边框 (仅限赛博模式) ⚡ */
-        body.cyberpunk .data-card, body.cyberpunk .bento-profile {
-            background: linear-gradient(rgba(10,14,20,0.9), rgba(10,14,20,0.9)) padding-box,
-                        linear-gradient(45deg, var(--primary), transparent, var(--secondary), transparent) border-box;
-            background-size: 200% 200%;
-            border: 2px solid transparent;
-            animation: neonFlow 4s linear infinite;
-        }
-        @keyframes neonFlow { 0% { background-position: 0% 0%; } 100% { background-position: 200% 200%; } }
+        body.cyberpunk .data-card { background: rgba(0, 0, 0, 0.6); border-left: 3px solid var(--accent); }
 
-        /* ⚡ 特效 3：头像全息故障干扰 ⚡ */
-        .avatar { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 4px solid var(--surface); box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: all 0.3s ease; }
+        .avatar { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 4px solid var(--surface); box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: all 0.5s ease; }
         body.cyberpunk .avatar { border-radius: 10px; border-color: var(--accent); box-shadow: 5px 5px 0px rgba(255,0,255,0.6), -5px -5px 0px rgba(0,243,255,0.6); }
-        
-        @keyframes avatarGlitch {
-            0% { transform: scale(1.08) translate(0); filter: drop-shadow(0 0 0 transparent); }
-            20% { transform: scale(1.08) translate(-3px, 2px); filter: drop-shadow(-4px 0 rgba(255,0,0,0.8)) drop-shadow(4px 0 rgba(0,243,255,0.8)); }
-            40% { transform: scale(1.08) translate(3px, -2px); filter: drop-shadow(4px 0 rgba(255,0,0,0.8)) drop-shadow(-4px 0 rgba(0,243,255,0.8)); }
-            60% { transform: scale(1.08) translate(-3px, -2px) skewX(5deg); filter: drop-shadow(-4px 0 rgba(255,0,0,0.8)) drop-shadow(4px 0 rgba(0,243,255,0.8)); }
-            80% { transform: scale(1.08) translate(3px, 2px) skewX(-5deg); filter: drop-shadow(4px 0 rgba(255,0,0,0.8)) drop-shadow(-4px 0 rgba(0,243,255,0.8)); }
-            100% { transform: scale(1.08) translate(0); filter: drop-shadow(0 0 0 transparent); }
-        }
-        body:not(.cyberpunk) .avatar:hover { transform: scale(1.08) rotate(5deg); }
-        body.cyberpunk .avatar:hover { animation: avatarGlitch 0.2s infinite; } /* 鼠标悬停触发故障 */
-
         h1 { font-size: 2.4em; margin: 15px 0 5px; font-weight: 800; letter-spacing: 2px; }
         body.cyberpunk h1 { text-shadow: 3px 0px 0px var(--secondary), -3px 0px 0px var(--primary); color: #fff; }
-        .typewriter-box { font-family: 'Courier New', Courier, monospace; font-size: 1em; font-weight: bold; color: var(--primary); min-height: 48px; text-align: center; }
+        
+        /* ⚠️ 纯净打字机样式 ⚠️ */
+        .typewriter-box { font-family: 'Courier New', Courier, monospace; font-size: 1.05em; font-weight: bold; color: var(--primary); min-height: 48px; text-align: center; line-height: 1.8; }
         body.cyberpunk .typewriter-box { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
-        .cursor { display: inline-block; width: 8px; height: 1.2em; background-color: var(--primary); vertical-align: bottom; animation: blink 1s step-end infinite; }
+        .cursor { display: inline-block; width: 8px; height: 1.2em; background-color: var(--primary); vertical-align: bottom; animation: blink 1s step-end infinite; margin-left: 5px; }
         body.cyberpunk .cursor { background-color: var(--accent); }
 
         .data-card strong { font-size: 1.6em; color: var(--primary); font-weight: 800; display: block; transform: translateZ(20px); }
         body.cyberpunk .data-card strong { color: #fff; text-shadow: 0 0 10px var(--primary); }
         .data-card span { font-size: 0.8em; color: var(--text-muted); font-weight: 600; transform: translateZ(10px); text-align: center;}
-        
-        /* ⚡ 特效 1 辅助 CSS：乱码颜色 ⚡ */
-        .scramble-text { color: var(--accent); text-shadow: 0 0 10px var(--accent); font-family: 'Courier New', Courier, monospace; }
 
         .tilt-card { transform-style: preserve-3d; transform: perspective(1000px); transition: box-shadow 0.3s ease; }
         
@@ -135,19 +114,16 @@
         body.cyberpunk .nav-links a.active-nav { color: #000; box-shadow: 0 0 20px var(--primary); border: 1px solid var(--accent); }
         .nav-links a.active-nav::before { transform: scaleX(1); transform-origin: left; }
         
-        /* ⚡ 特效 2 辅助 CSS：磁吸按钮回弹 ⚡ */
-        .magnetic-btn { transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, border-color 0.3s; cursor: pointer;}
-        
-        .theme-toggle { margin-left: 15px; color: var(--text-main); font-size: 1.4em; display: inline-block; padding: 10px;}
+        .theme-toggle { margin-left: 15px; cursor: pointer; color: var(--text-main); font-size: 1.4em; transition: color 0.3s; }
         .theme-toggle:hover { color: var(--primary); }
 
         .main-content { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
 
         /* =========================================
-           4. 10大极客转场动画核心 
+           4. 10大极客转场动画核心 (纯CSS)
            ========================================= */
         .page-section { display: none; background: var(--surface); border: 1px solid var(--border-color); padding: 45px; border-radius: var(--card-radius); box-shadow: var(--shadow); margin-bottom: 30px; backdrop-filter: blur(10px); clip-path: var(--clip-path); }
-        body.cyberpunk .page-section { border-left: 5px solid var(--primary); background: rgba(10,14,20,0.85); }
+        body.cyberpunk .page-section { border-left: 5px solid var(--primary); }
         .show-section { display: block !important; }
 
         /* 白天 5 种动画 */
@@ -211,7 +187,7 @@
         .file-link i.fa-download { transform: translateZ(20px); }
         
         .fab-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 9999; }
-        .fab-btn { width: 55px; height: 55px; border-radius: 50%; background: var(--surface); display: flex; align-items: center; justify-content: center; color: var(--text-main); font-size: 1.4em; text-decoration: none; box-shadow: var(--shadow); border: 1px solid var(--border-color); }
+        .fab-btn { width: 55px; height: 55px; border-radius: 50%; background: var(--surface); display: flex; align-items: center; justify-content: center; color: var(--text-main); font-size: 1.4em; text-decoration: none; box-shadow: var(--shadow); border: 1px solid var(--border-color); cursor: pointer; }
         body.cyberpunk .fab-btn { border-radius: 0; clip-path: polygon(25% 0%, 100% 0%, 100% 75%, 75% 100%, 0% 100%, 0% 25%); border: 1px solid var(--primary); color: var(--primary);}
         .fab-btn.resume-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; }
         body.cyberpunk .fab-btn.resume-btn { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent); }
@@ -224,6 +200,7 @@
             100% { transform: translate(0, 0) rotate(0) scale(1); filter: brightness(1) blur(0); opacity: 1; color: inherit; }
         }
         
+        /* ⚠️ 纯净版底部版权 ⚠️ */
         footer { text-align: center; padding: 40px 0 80px 0; color: var(--text-muted); font-size: 0.9em; font-family: monospace;}
         
         @media (max-width: 768px) { 
@@ -231,7 +208,6 @@
             .bento-profile { padding: 25px; }
             .data-card { min-width: auto; padding: 15px; }
             .fab-container { bottom: 20px; right: 20px; }
-            .magnetic-btn { transform: none !important; } /* 移动端关闭磁吸 */
         }
     </style>
 </head>
@@ -248,13 +224,13 @@
             <a onclick="switchPage(event, 'aigc_works')"><i class="fas fa-magic"></i> 视觉生成</a>
             <a onclick="switchPage(event, 'video_3d_works')"><i class="fas fa-cube"></i> 虚拟现实</a>
             <a onclick="switchPage(event, 'ip_strategy')"><i class="fas fa-network-wired"></i> 矩阵行研</a>
-            <i class="fas fa-moon theme-toggle magnetic-btn" id="theme-icon" onclick="toggleTheme()" title="切换 UI 模式"></i>
+            <i class="fas fa-moon theme-toggle" id="theme-icon" onclick="toggleTheme()" title="切换 UI 模式"></i>
         </div>
     </nav>
 
     <div class="fab-container tilt-card">
-        <a href="新媒体运营经历-许智宁.pdf" download title="提取数据" class="fab-btn resume-btn magnetic-btn"><i class="fas fa-file-download"></i></a>
-        <a href="mailto:anglina0514@gmail.com" title="加密通信" class="fab-btn magnetic-btn"><i class="fas fa-envelope"></i></a>
+        <a href="新媒体运营经历-许智宁.pdf" download title="提取数据" class="fab-btn resume-btn"><i class="fas fa-file-download"></i></a>
+        <a href="mailto:anglina0514@gmail.com" title="加密通信" class="fab-btn"><i class="fas fa-envelope"></i></a>
     </div>
 
     <header class="bento-grid">
@@ -265,22 +241,22 @@
         </div>
         
         <div class="data-dashboard" id="dynamic-dashboard">
-            <div class="data-card tilt-card"><strong class="scramble-target">1000W+</strong><span class="scramble-target">全网流量级操盘</span></div>
-            <div class="data-card tilt-card"><strong class="scramble-target">3.89</strong><span class="scramble-target">专业排名前 10%</span></div>
-            <div class="data-card tilt-card"><strong class="scramble-target">30+</strong><span class="scramble-target">行研标的库搭建</span></div>
-            <div class="data-card tilt-card"><strong class="scramble-target">UE5/AI</strong><span class="scramble-target">次世代视觉引擎</span></div>
+            <div class="data-card tilt-card"><strong>1000W+</strong><span>全网流量级操盘</span></div>
+            <div class="data-card tilt-card"><strong>3.89</strong><span>专业排名前 10%</span></div>
+            <div class="data-card tilt-card"><strong>30+</strong><span>行研标的库搭建</span></div>
+            <div class="data-card tilt-card"><strong>UE5/AI</strong><span>次世代视觉引擎</span></div>
         </div>
     </header>
 
     <div class="main-content">
         <section id="about" class="page-section show-section day-anim-1">
-            <h2><i class="fas fa-fingerprint"></i> <span class="scramble-target">System.AboutMe</span></h2>
+            <h2><i class="fas fa-fingerprint"></i> System.AboutMe</h2>
             <p>我是<span style="font-weight: bold; color: var(--primary);">深圳大学网络与新媒体专业</span>在读学生，辅修人际传播专业（人工智能方向）。深耕于 <strong>AIGC 技术落地、虚幻五建模与动画实战、千万级自媒体运营与二级市场研报</strong> 的复合型人才。</p>
             <p>具备极强的自驱力与跨界整合能力。熟练运用 Sora2、Midjourney 完成商业视觉创作并获奖；操盘 IP 直播间及产出 10 万+ 科普；在国海证券进行传媒赛道深度研究，具备 SPSS 量化数据清洗与行研逻辑。坚持以数据驱动内容，以技术创新商业叙事。</p>
         </section>
 
         <section id="internships" class="page-section">
-            <h2><i class="fas fa-building"></i> <span class="scramble-target">Experience.Log</span></h2>
+            <h2><i class="fas fa-building"></i> Experience.Log</h2>
             <div class="content-list">
                 <div class="content-item tilt-card">
                     <div class="item-header"><h3><i class="fas fa-chart-pie"></i> 国海证券 传媒研究所</h3><span class="meta">研究助理 | 2026.01 - 2026.04</span></div>
@@ -294,7 +270,7 @@
         </section>
 
         <section id="aigc_works" class="page-section">
-            <h2><i class="fas fa-magic"></i> <span class="scramble-target">Render.AIGC</span></h2>
+            <h2><i class="fas fa-magic"></i> Render.AIGC</h2>
             <p style="color: var(--text-muted); margin-bottom: 25px;">Midjourney、Stable Diffusion 获奖视觉创作，及 Sora2 引擎生成的全运会宣传片。</p>
             <div class="portfolio-grid">
                 <div class="portfolio-item tilt-card"><img src="midjourny创作1获奖作品.jpg"><div class="portfolio-item-content"><h3>神兽复兴：最佳人气</h3><p>Midjourney</p></div></div>
@@ -311,7 +287,7 @@
         </section>
 
         <section id="video_3d_works" class="page-section">
-            <h2><i class="fas fa-cube"></i> <span class="scramble-target">Engine.UE5</span></h2>
+            <h2><i class="fas fa-cube"></i> Engine.UE5</h2>
             <div class="video-wrapper tilt-card">
                 <h3><i class="fas fa-rocket"></i> UE5商业级动画作品实录</h3>
                 <div class="video-container">
@@ -322,7 +298,7 @@
         </section>
 
         <section id="ip_strategy" class="page-section">
-            <h2><i class="fas fa-hashtag"></i> <span class="scramble-target">Network.Strategy</span></h2>
+            <h2><i class="fas fa-share-nodes"></i> Network.Strategy</h2>
             <div class="content-list">
                 <div class="content-item tilt-card">
                     <div class="item-header"><h3><i class="fas fa-fire-alt"></i> 千万级自媒体矩阵流量运营</h3></div>
@@ -342,7 +318,7 @@
         </section>
     </div>
 
-    <footer><p>> System.exit; // © 2026 许智宁</p></footer>
+    <footer><p>© 2026 许智宁</p></footer>
 
     <script>
         // --- 1. 开机加载 ---
@@ -372,52 +348,7 @@
         }
         window.addEventListener('load', () => setTimeout(runBootSequence, 200));
 
-        // --- 2. ⚡ 特效 1：文字骇客解密进场 (Text Scramble) ⚡ ---
-        class TextScramble {
-            constructor(el) { this.el = el; this.chars = '!<>-_\\/[]{}—=+*^?#010101'; this.update = this.update.bind(this); }
-            setText(newText) {
-                const oldText = this.el.innerText; const length = Math.max(oldText.length, newText.length);
-                const promise = new Promise((resolve) => this.resolve = resolve); this.queue = [];
-                for (let i = 0; i < length; i++) {
-                    const from = oldText[i] || ''; const to = newText[i] || '';
-                    const start = Math.floor(Math.random() * 40); const end = start + Math.floor(Math.random() * 40);
-                    this.queue.push({ from, to, start, end });
-                }
-                cancelAnimationFrame(this.frameRequest); this.frame = 0; this.update(); return promise;
-            }
-            update() {
-                let output = ''; let complete = 0;
-                for (let i = 0, n = this.queue.length; i < n; i++) {
-                    let { from, to, start, end, char } = this.queue[i];
-                    if (this.frame >= end) { complete++; output += to; }
-                    else if (this.frame >= start) {
-                        if (!char || Math.random() < 0.28) { char = this.randomChar(); this.queue[i].char = char; }
-                        output += `<span class="scramble-text">${char}</span>`;
-                    } else { output += from; }
-                }
-                this.el.innerHTML = output;
-                if (complete === this.queue.length) { this.resolve(); }
-                else { this.frameRequest = requestAnimationFrame(this.update); this.frame++; }
-            }
-            randomChar() { return this.chars[Math.floor(Math.random() * this.chars.length)]; }
-        }
-
-        // --- 3. ⚡ 特效 2：磁吸物理按钮 (Magnetic Buttons) ⚡ ---
-        const magneticEls = document.querySelectorAll('.magnetic-btn');
-        magneticEls.forEach(el => {
-            el.addEventListener('mousemove', function(e) {
-                if(window.innerWidth < 768) return;
-                const rect = this.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                this.style.transform = `translate(${x * 0.4}px, ${y * 0.4}px) scale(1.1)`;
-            });
-            el.addEventListener('mouseleave', function() {
-                this.style.transform = `translate(0px, 0px) scale(1)`;
-            });
-        });
-
-        // --- 4. 3D 悬浮视差 ---
+        // --- 2. 3D 悬浮视差 ---
         function init3DTilt() {
             if(window.innerWidth < 768) return;
             document.querySelectorAll('.tilt-card').forEach(card => {
@@ -432,7 +363,7 @@
         }
         init3DTilt();
 
-        // --- 5. 视频无缝自动播放 ---
+        // --- 3. 视频无缝自动播放 ---
         document.querySelectorAll('.video-container').forEach(container => {
             let vid = container.querySelector('video');
             if(vid) {
@@ -441,7 +372,7 @@
             }
         });
 
-        // --- 6. 数据流与骇客换页 ---
+        // --- 4. 纯净数据流 ---
         const dashboardData = {
             'about': [{ val: '千万级+', label: '全网流量级操盘' }, { val: '3.89', label: '专业排名前 10%' }, { val: '30+', label: '行研标的库搭建' }, { val: 'UE5/AI', label: '次世代视觉引擎' }],
             'internships': [{ val: '10万+', label: '单条视频爆发' }, { val: '千万级+', label: '自媒体矩阵累积' }, { val: '深度研报', label: '传媒研报分析' }, { val: 'SPSS清洗', label: '量化数据分析' }],
@@ -450,7 +381,8 @@
             'ip_strategy': [{ val: '1000W+', label: '矩阵操盘总播量' }, { val: '117.5W', label: '社媒累积点赞' }, { val: '千万级+', label: '行研复盘经验' }, { val: '高成长', label: '研报赛道捕捉' }]
         };
 
-        const typeString = "> Angie Angel \n> 全栈内容操盘手 \n> 千万级自媒体矩阵 \n> 档案载入中...\n> \n> System Ready."; 
+        // ⚠️ 彻底移除多余的 > 符号 ⚠️
+        const typeString = "Angie Angel \n全栈内容操盘手 \n千万级自媒体矩阵 \n档案载入中...\nSystem Ready."; 
         const typeEl = document.getElementById('type-text'); let typeI = 0;
         function typing() { if (typeI < typeString.length) { typeEl.innerHTML += typeString.charAt(typeI) === '\n' ? '<br>' : typeString.charAt(typeI); typeI++; setTimeout(typing, 50); } }
         setTimeout(typing, 2500); 
@@ -470,36 +402,17 @@
             document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active-nav'));
             event.currentTarget.classList.add('active-nav');
             
-            // ⚠️ 数据渲染与乱码解码特效 ⚠️
             const dash = document.getElementById('dynamic-dashboard');
-            
-            if (isCyber) {
-                // 夜间模式：触发黑客乱码解码
-                dash.innerHTML = dashboardData[targetId].map(d => `<div class="data-card tilt-card"><strong class="scramble-target"></strong><span class="scramble-target"></span></div>`).join('');
-                const vals = dash.querySelectorAll('strong.scramble-target');
-                const lbls = dash.querySelectorAll('span.scramble-target');
-                dashboardData[targetId].forEach((d, i) => {
-                    new TextScramble(vals[i]).setText(d.val);
-                    new TextScramble(lbls[i]).setText(d.label);
-                });
-                
-                // 给对应板块的标题也加上乱码
-                const titleSpan = activeSec.querySelector('h2 .scramble-target');
-                if(titleSpan) { const titleScrambler = new TextScramble(titleSpan); titleScrambler.setText(titleSpan.innerText); }
+            dash.style.opacity = 0; dash.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                dash.innerHTML = dashboardData[targetId].map(d => `<div class="data-card tilt-card"><strong>${d.val}</strong><span>${d.label}</span></div>`).join('');
+                dash.style.opacity = 1; dash.style.transform = 'translateY(0)';
                 init3DTilt(); 
-            } else {
-                // 白天模式：保留优雅的淡入淡出
-                dash.style.opacity = 0; dash.style.transform = 'translateY(10px)';
-                setTimeout(() => {
-                    dash.innerHTML = dashboardData[targetId].map(d => `<div class="data-card tilt-card"><strong>${d.val}</strong><span>${d.label}</span></div>`).join('');
-                    dash.style.opacity = 1; dash.style.transform = 'translateY(0)';
-                    init3DTilt(); 
-                }, 300);
-            }
+            }, 300);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- 7. 切换逻辑 ---
+        // --- 5. 月亮/太阳切换 ---
         function toggleTheme() {
             const body = document.body; const icon = document.getElementById('theme-icon');
             if (!body.classList.contains('cyberpunk')) scatterIcons();
@@ -520,11 +433,6 @@
                 const activeId = document.querySelector('.nav-links a.active-nav').getAttribute('onclick').match(/'([^']+)'/)[1];
                 const activeIndex = sectionsList.indexOf(activeId) + 1; const activeSec = document.getElementById(activeId);
                 activeSec.className = 'page-section show-section'; void activeSec.offsetWidth; activeSec.classList.add(`day-anim-${activeIndex}`);
-                
-                // 切回白天时重置数据文字（消除乱码残留）
-                const dash = document.getElementById('dynamic-dashboard');
-                dash.innerHTML = dashboardData[activeId].map(d => `<div class="data-card tilt-card"><strong>${d.val}</strong><span>${d.label}</span></div>`).join('');
-                init3DTilt();
             }
         }
 
@@ -538,7 +446,7 @@
             });
         }
 
-        // --- 8. 脉冲反馈 ---
+        // --- 6. 全局点击脉冲反馈 ---
         document.addEventListener('mousedown', function(e) {
             let targetIcon = e.target.closest('i');
             let clickTarget = e.target.closest('a') || e.target.closest('.fab-btn') || e.target.closest('.file-link');
@@ -557,11 +465,17 @@
             }
         });
 
-        // --- 9. 粒子追踪引擎 ---
+        // --- 7. 独立保留的背景粒子系统 ---
         const pCanvas = document.getElementById('particle-canvas'); const pCtx = pCanvas.getContext('2d');
         let particles = [];
-        let globalMouseX = window.innerWidth / 2; let globalMouseY = window.innerHeight / 2;
-        window.addEventListener('mousemove', (e) => { globalMouseX = e.clientX; globalMouseY = e.clientY; });
+        
+        let globalMouseX = window.innerWidth / 2;
+        let globalMouseY = window.innerHeight / 2;
+        window.addEventListener('mousemove', (e) => { 
+            globalMouseX = e.clientX; 
+            globalMouseY = e.clientY; 
+        });
+        
         window.addEventListener('resize', () => { pCanvas.width = innerWidth; pCanvas.height = innerHeight; initParticles(document.body.classList.contains('cyberpunk')); });
         
         class Particle {
