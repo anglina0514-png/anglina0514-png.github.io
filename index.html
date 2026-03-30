@@ -148,7 +148,7 @@
         .night-anim-5 { animation: nightMosaic 0.6s ease-in-out forwards; }
         @keyframes nightMosaic { 0% { opacity: 0; transform: translateX(-30px) skewX(10deg); filter: contrast(3) grayscale(1) blur(8px); } 50% { opacity: 0.8; transform: translateX(10px) skewX(-5deg); filter: contrast(1.5) sepia(1) blur(3px); } 100% { opacity: 1; transform: translateX(0) skewX(0); filter: contrast(1) grayscale(0) blur(0); } }
 
-        /* 排版与彩色图保留 */
+        /* 排版与彩色图 */
         h2 { color: var(--text-main); font-size: 2em; margin-top: 0; border-bottom: 1px dashed var(--border-color); padding-bottom: 15px; display: flex; align-items: center; gap: 12px; }
         body.cyberpunk h2 i { color: var(--accent); text-shadow: 0 0 15px var(--accent); }
 
@@ -298,10 +298,8 @@
             <h2><i class="fas fa-hashtag"></i> Network.Strategy</h2>
             <div class="content-list">
                 <div class="content-item tilt-card">
-                    <div class="item-header"><h3><i class="fas fa-fire-alt"></i> 千萬級自媒體操盤流量运营</h3></div>
-                    <div style="float: right; width: 45%; margin-left: 20px; margin-bottom: 10px;"><img src="堆友Ai创作 (2).jpg" style="width: 100%; border-radius: 8px;"></div>
-                    <p style="margin-top: 10px;">独立及合伙运营小红书财经账号，<strong>全网累积播放量超千万</strong>，累积点赞 117.5w+. 结合数据清洗与平台算法，精准捕捉爆款趋势。</p>
-                    <div style="clear: both;"></div>
+                    <div class="item-header"><h3><i class="fas fa-fire-alt"></i> 千万级自媒体矩阵流量运营</h3></div>
+                    <p style="margin-top: 10px;">独立及合伙运营小红书财经账号，<strong>全网累积播放量超千万</strong>，累积点赞 117.5w+。结合数据清洗与平台算法，精准捕捉爆款趋势，实现高粘性粉丝转化。</p>
                 </div>
                 
                 <div class="content-item tilt-card">
@@ -371,7 +369,7 @@
             }
         });
 
-        // --- 4. 纯净无括号数据流 ---
+        // --- 4. 纯净数据流 ---
         const dashboardData = {
             'about': [{ val: '千万级+', label: '全网流量级操盘' }, { val: '3.89', label: '专业排名前 10%' }, { val: '30+', label: '行研标的库搭建' }, { val: 'UE5/AI', label: '次世代视觉引擎' }],
             'internships': [{ val: '10万+', label: '单条视频爆发' }, { val: '千万级+', label: '自媒体矩阵累积' }, { val: '深度研报', label: '传媒研报分析' }, { val: 'SPSS清洗', label: '量化数据分析' }],
@@ -421,11 +419,13 @@
 
             if(body.classList.contains('cyberpunk')) {
                 icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); 
+                initParticles(true); 
                 const activeId = document.querySelector('.nav-links a.active-nav').getAttribute('onclick').match(/'([^']+)'/)[1];
                 const activeIndex = sectionsList.indexOf(activeId) + 1; const activeSec = document.getElementById(activeId);
                 activeSec.className = 'page-section show-section'; void activeSec.offsetWidth; activeSec.classList.add(`night-anim-${activeIndex}`);
             } else {
                 icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); 
+                initParticles(false); 
                 const activeId = document.querySelector('.nav-links a.active-nav').getAttribute('onclick').match(/'([^']+)'/)[1];
                 const activeIndex = sectionsList.indexOf(activeId) + 1; const activeSec = document.getElementById(activeId);
                 activeSec.className = 'page-section show-section'; void activeSec.offsetWidth; activeSec.classList.add(`day-anim-${activeIndex}`);
