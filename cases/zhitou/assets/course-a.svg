@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 160" role="img" aria-label="A股基础课程插画">
+  <rect width="220" height="160" rx="28" fill="#eaf0ff"/>
+  <rect x="34" y="38" width="152" height="88" rx="18" fill="#fff"/>
+  <path d="M54 106h112" stroke="#dce5f5" stroke-width="8" stroke-linecap="round"/>
+  <rect x="62" y="72" width="18" height="32" rx="5" fill="#24a36b"/>
+  <rect x="92" y="54" width="18" height="50" rx="5" fill="#ef4f62"/>
+  <rect x="122" y="66" width="18" height="38" rx="5" fill="#24a36b"/>
+  <path d="M60 52l30 14 32-26 34 20" fill="none" stroke="#2454d6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="r1-risky arcade result image">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0c1a"/>
+      <stop offset="1" stop-color="#17152c"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx=".22" cy=".18" r=".58">
+      <stop offset="0" stop-color="#ffd84d" stop-opacity=".36"/>
+      <stop offset="1" stop-color="#ffd84d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx=".78" cy=".72" r=".52">
+      <stop offset="0" stop-color="#ff426f" stop-opacity=".3"/>
+      <stop offset="1" stop-color="#ff426f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="danger" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff426f" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#ff426f" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#ff426f" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="960" height="540" fill="url(#bg)"/>
+  <rect width="960" height="540" fill="url(#glowA)"/>
+  <rect width="960" height="540" fill="url(#glowB)"/>
+  <g opacity=".16">
+    <path d="M0 0v540" stroke="#fff" stroke-width="1"/><path d="M38 0v540" stroke="#fff" stroke-width="1"/><path d="M76 0v540" stroke="#fff" stroke-width="1"/><path d="M114 0v540" stroke="#fff" stroke-width="1"/><path d="M152 0v540" stroke="#fff" stroke-width="1"/><path d="M190 0v540" stroke="#fff" stroke-width="1"/><path d="M228 0v540" stroke="#fff" stroke-width="1"/><path d="M266 0v540" stroke="#fff" stroke-width="1"/><path d="M304 0v540" stroke="#fff" stroke-width="1"/><path d="M342 0v540" stroke="#fff" stroke-width="1"/><path d="M380 0v540" stroke="#fff" stroke-width="1"/><path d="M418 0v540" stroke="#fff" stroke-width="1"/><path d="M456 0v540" stroke="#fff" stroke-width="1"/><path d="M494 0v540" stroke="#fff" stroke-width="1"/><path d="M532 0v540" stroke="#fff" stroke-width="1"/><path d="M570 0v540" stroke="#fff" stroke-width="1"/><path d="M608 0v540" stroke="#fff" stroke-width="1"/><path d="M646 0v540" stroke="#fff" stroke-width="1"/><path d="M684 0v540" stroke="#fff" stroke-width="1"/><path d="M722 0v540" stroke="#fff" stroke-width="1"/><path d="M760 0v540" stroke="#fff" stroke-width="1"/><path d="M798 0v540" stroke="#fff" stroke-width="1"/><path d="M836 0v540" stroke="#fff" stroke-width="1"/><path d="M874 0v540" stroke="#fff" stroke-width="1"/><path d="M912 0v540" stroke="#fff" stroke-width="1"/><path d="M950 0v540" stroke="#fff" stroke-width="1"/><path d="M988 0v540" stroke="#fff" stroke-width="1"/><path d="M1026 0v540" stroke="#fff" stroke-width="1"/>
+    <path d="M0 0h960" stroke="#fff" stroke-width="1"/><path d="M0 38h960" stroke="#fff" stroke-width="1"/><path d="M0 76h960" stroke="#fff" stroke-width="1"/><path d="M0 114h960" stroke="#fff" stroke-width="1"/><path d="M0 152h960" stroke="#fff" stroke-width="1"/><path d="M0 190h960" stroke="#fff" stroke-width="1"/><path d="M0 228h960" stroke="#fff" stroke-width="1"/><path d="M0 266h960" stroke="#fff" stroke-width="1"/><path d="M0 304h960" stroke="#fff" stroke-width="1"/><path d="M0 342h960" stroke="#fff" stroke-width="1"/><path d="M0 380h960" stroke="#fff" stroke-width="1"/><path d="M0 418h960" stroke="#fff" stroke-width="1"/><path d="M0 456h960" stroke="#fff" stroke-width="1"/><path d="M0 494h960" stroke="#fff" stroke-width="1"/><path d="M0 532h960" stroke="#fff" stroke-width="1"/><path d="M0 570h960" stroke="#fff" stroke-width="1"/>
+  </g>
+  <g filter="url(#softGlow)">
+    <rect x="160" y="178" width="160" height="158" rx="38" fill="rgba(255,255,255,.06)" stroke="#ffd84d" stroke-width="8" opacity=".78"/>
+    <rect x="176" y="194" width="128" height="128" rx="30" fill="#1f2a44" stroke="#fff" stroke-opacity=".44" stroke-width="5"/>
+    <rect x="198" y="160" width="32" height="30" rx="4" fill="#ffd84d" opacity=".96"/>
+    <rect x="250" y="160" width="32" height="30" rx="4" fill="#ff426f" opacity=".96"/>
+    <path d="M214 194v-20M266 194v-20" stroke="#fff" stroke-opacity=".48" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="216" cy="256" r="10" fill="#ffd84d"/>
+    <circle cx="264" cy="256" r="10" fill="#ff426f"/>
+    <path d="M208 288c18 24 62 24 80 0" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+  </g>
+  <g filter="url(#softGlow)">
+    
+      <rect x="382" y="138" width="282" height="160" rx="26" fill="rgba(255,255,255,.08)" stroke="#ffd84d" stroke-width="8"/>
+      <circle cx="430" cy="190" r="18" fill="#ffd84d"/>
+      <path d="M414 244h190M414 272h126" stroke="#ff426f" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M680 116l36-44 36 44-36 44z" fill="#ffd84d" opacity=".8"/>
+    
+  </g>
+  
+  <g opacity=".74">
+    <rect x="74" y="56" width="168" height="12" rx="6" fill="#ffd84d"/>
+    <rect x="74" y="82" width="104" height="12" rx="6" fill="#ff426f"/>
+    <rect x="728" y="450" width="160" height="14" rx="7" fill="#ff426f"/>
+    <rect x="782" y="480" width="92" height="14" rx="7" fill="#ffd84d"/>
+  </g>
+</svg>

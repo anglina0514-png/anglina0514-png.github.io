@@ -1,0 +1,2766 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:," />
+  <title>网贷娱乐化视觉小说 H5 游戏</title>
+  <style>
+    :root {
+      --ink: #f7f4ee;
+      --muted: #c9c7c2;
+      --dim: #8c96aa;
+      --panel: rgba(11, 15, 25, .78);
+      --panel-strong: rgba(8, 12, 21, .94);
+      --line: rgba(255,255,255,.18);
+      --green: #63e6a7;
+      --blue: #66c7ff;
+      --yellow: #ffd95c;
+      --red: #ff5d73;
+      --orange: #ff9f45;
+      --shadow: 0 20px 70px rgba(0,0,0,.42);
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink);
+      font-family: var(--font);
+      background: #070b14;
+    }
+
+    button {
+      border: 0;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+    button:disabled { cursor: not-allowed; opacity: .48; }
+    a { color: var(--green); }
+
+    .app {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(102,199,255,.12), transparent 28%),
+        radial-gradient(circle at 82% 24%, rgba(255,93,115,.12), transparent 24%),
+        #070b14;
+      overflow: hidden;
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: none;
+    }
+    .screen.active { display: block; }
+
+    .title-screen {
+      padding: min(7vw, 72px);
+      background:
+        linear-gradient(90deg, rgba(7,11,20,.96) 0%, rgba(7,11,20,.68) 50%, rgba(7,11,20,.92) 100%),
+        url("h5-assets/galgame/backgrounds/dorm-night.png") center / cover no-repeat,
+        #101521;
+    }
+    .title-wrap {
+      width: min(1120px, 100%);
+      height: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(360px, .8fr);
+      align-content: center;
+      align-items: center;
+      gap: 26px;
+    }
+    .kicker {
+      width: fit-content;
+      padding: 8px 12px;
+      border: 1px solid rgba(99,230,167,.5);
+      border-radius: 999px;
+      color: var(--green);
+      background: rgba(99,230,167,.11);
+      font-size: 14px;
+      font-weight: 800;
+    }
+    .title-screen h1 {
+      max-width: 820px;
+      margin: 0;
+      font-size: clamp(42px, 8vw, 92px);
+      line-height: .98;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+    .title-screen p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(16px, 2vw, 22px);
+      line-height: 1.75;
+    }
+    .title-actions, .row-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .main-btn, .ghost-btn, .mini-btn {
+      border-radius: 999px;
+      font-weight: 900;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+    .main-btn {
+      padding: 14px 24px;
+      background: linear-gradient(135deg, var(--green), var(--yellow));
+      color: #071016;
+      box-shadow: 0 18px 42px rgba(99,230,167,.23);
+    }
+    .ghost-btn {
+      padding: 13px 22px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.07);
+      backdrop-filter: blur(12px);
+    }
+    .mini-btn {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.08);
+      color: var(--ink);
+      font-size: 13px;
+    }
+    .main-btn:hover, .ghost-btn:hover, .mini-btn:hover { transform: translateY(-1px); }
+    .main-btn:active, .ghost-btn:active, .mini-btn:active { transform: translateY(0); }
+
+    .title-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: var(--dim);
+      font-size: 13px;
+    }
+    .title-meta span {
+      padding: 7px 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+    }
+    .intro-stage {
+      min-height: 520px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 28px;
+      overflow: hidden;
+      background: #070b14;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .intro-stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(5,8,15,.04) 0%, rgba(5,8,15,.24) 46%, rgba(5,8,15,.76) 100%),
+        linear-gradient(90deg, rgba(5,8,15,.56), transparent 44%, rgba(5,8,15,.26));
+      z-index: 1;
+    }
+    .intro-video {
+      width: 100%;
+      height: 100%;
+      min-height: 520px;
+      object-fit: cover;
+      display: none;
+      background: #070b14;
+    }
+    .intro-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 1;
+      transform: scale(1.012);
+      transition: opacity .38s ease, transform 2.4s ease;
+      background: #070b14;
+    }
+    .intro-image.is-switching {
+      opacity: .35;
+      transform: scale(1.035);
+    }
+    .intro-card {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      z-index: 3;
+      display: grid;
+      gap: 12px;
+    }
+    .intro-shot {
+      width: fit-content;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(8,12,21,.75);
+      border: 1px solid rgba(255,255,255,.18);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .intro-card strong {
+      max-width: 480px;
+      font-size: clamp(24px, 3.4vw, 44px);
+      line-height: 1.08;
+      text-shadow: 0 12px 30px rgba(0,0,0,.56);
+    }
+    .intro-timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .intro-timeline span {
+      min-height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      overflow: hidden;
+      position: relative;
+    }
+    .intro-timeline span::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, var(--green), var(--yellow), var(--red));
+      animation: introBar 8s linear infinite;
+      animation-delay: calc(var(--i) * 1s);
+    }
+    @keyframes introBar {
+      0% { transform: translateX(-100%); }
+      45%, 100% { transform: translateX(100%); }
+    }
+    .debug-status {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 14px;
+      color: var(--muted);
+      background: rgba(255,255,255,.06);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .vn-screen {
+      isolation: isolate;
+    }
+    .scene-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: saturate(.98) contrast(1.02);
+      transform: scale(1.02);
+      transition: background-image .35s ease, filter .35s ease;
+      z-index: -3;
+    }
+    .scene-bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(5,8,15,.28) 0%, rgba(5,8,15,.18) 42%, rgba(5,8,15,.78) 100%),
+        linear-gradient(90deg, rgba(5,8,15,.66), transparent 40%, rgba(5,8,15,.58));
+    }
+    .scene-bg.bad {
+      filter: saturate(.64) contrast(1.12) brightness(.78);
+      animation: pressurePulse 1.6s ease-in-out infinite;
+    }
+    .scene-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      pointer-events: none;
+      background: #070b14;
+      transition: opacity .28s ease;
+      z-index: -2;
+    }
+    .scene-video.active {
+      opacity: .94;
+    }
+    .vn-screen.cinematic .scene-video {
+      z-index: 24;
+      opacity: 1;
+    }
+    .vn-screen.cinematic .hud,
+    .vn-screen.cinematic .character-layer,
+    .vn-screen.cinematic .activity,
+    .vn-screen.cinematic .dialogue,
+    .vn-screen.cinematic .feedback {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .skip-video {
+      position: absolute;
+      right: 18px;
+      bottom: 24px;
+      z-index: 40;
+      display: none;
+      border-radius: 999px;
+      background: rgba(8,12,21,.72);
+      backdrop-filter: blur(16px);
+    }
+    .skip-video.active {
+      display: inline-flex;
+    }
+    @keyframes pressurePulse {
+      0%, 100% { transform: scale(1.02); }
+      50% { transform: scale(1.035); }
+    }
+
+    .hud {
+      position: absolute;
+      top: 12px;
+      left: 16px;
+      right: 16px;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: minmax(190px, 320px) minmax(320px, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      pointer-events: none;
+    }
+    .chapter-chip, .stat-wrap, .top-tools {
+      pointer-events: auto;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(8,12,21,.62);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 12px 42px rgba(0,0,0,.24);
+    }
+    .chapter-chip {
+      min-height: 58px;
+      padding: 9px 13px;
+      border-radius: 16px;
+    }
+    .chapter-chip strong {
+      display: block;
+      font-size: 14px;
+      letter-spacing: .02em;
+    }
+    .chapter-chip span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .stat-wrap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 8px;
+      border-radius: 16px;
+      min-height: 58px;
+    }
+    .stat {
+      min-width: 0;
+      padding: 7px 9px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.07);
+    }
+    .stat-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+    .stat b {
+      color: var(--ink);
+      font-size: 15px;
+    }
+    .bar {
+      height: 5px;
+      margin-top: 6px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,.13);
+    }
+    .bar i {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      transition: width .25s ease;
+    }
+    .bar.pressure i { background: linear-gradient(90deg, var(--orange), var(--red)); }
+    .bar.traffic i { background: linear-gradient(90deg, var(--blue), #9f8cff); }
+    .bar.bill i { background: linear-gradient(90deg, var(--yellow), var(--orange)); }
+    .top-tools {
+      display: flex;
+      gap: 8px;
+      padding: 7px;
+      border-radius: 999px;
+      min-height: 58px;
+      align-items: center;
+    }
+
+    .character-layer {
+      position: absolute;
+      inset: 86px 0 152px;
+      z-index: 4;
+      pointer-events: none;
+    }
+    .char {
+      position: absolute;
+      bottom: 0;
+      max-height: min(68vh, 690px);
+      width: min(29vw, 390px);
+      object-fit: contain;
+      object-position: bottom center;
+      filter: drop-shadow(0 24px 32px rgba(0,0,0,.55));
+      transition: opacity .25s ease, transform .3s ease, filter .25s ease;
+      opacity: .96;
+    }
+    .char.left { left: 9%; transform: translateX(-6%) scale(.98); }
+    .char.center { left: 50%; transform: translateX(-50%) scale(1); }
+    .char.right { right: 9%; transform: translateX(6%) scale(.98); }
+    .char.dim { opacity: .58; filter: grayscale(.2) drop-shadow(0 18px 28px rgba(0,0,0,.45)); }
+
+    .dialogue {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 14px;
+      z-index: 30;
+      display: grid;
+      gap: 8px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 18px;
+      padding: 13px 16px;
+      background: linear-gradient(180deg, rgba(14,18,31,.84), rgba(8,12,21,.94));
+      backdrop-filter: blur(22px);
+      box-shadow: var(--shadow);
+      min-height: 118px;
+      max-height: 22vh;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    .dialogue.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(18px);
+    }
+    .speaker-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+    .speaker {
+      width: fit-content;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(99,230,167,.14);
+      color: var(--green);
+      font-weight: 900;
+    }
+    .line-text {
+      margin: 0;
+      min-height: 48px;
+      max-height: 96px;
+      overflow: auto;
+      color: var(--ink);
+      font-size: clamp(16px, 1.65vw, 22px);
+      line-height: 1.6;
+      text-wrap: pretty;
+    }
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .choice {
+      min-height: 82px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 18px;
+      background: rgba(255,255,255,.07);
+      text-align: left;
+    }
+    .choice:hover { border-color: rgba(99,230,167,.58); background: rgba(99,230,167,.1); }
+    .choice strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 7px;
+    }
+    .choice span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .choice.risky:hover { border-color: rgba(255,93,115,.65); background: rgba(255,93,115,.11); }
+    .choice.social:hover { border-color: rgba(102,199,255,.62); background: rgba(102,199,255,.1); }
+
+    .activity {
+      position: absolute;
+      z-index: 26;
+      left: 50%;
+      right: auto;
+      top: auto;
+      bottom: 148px;
+      transform: translateX(-50%);
+      width: min(760px, calc(100vw - 44px));
+      max-height: min(42vh, 430px);
+      overflow: auto;
+      display: none;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(16,21,36,.88), rgba(8,12,21,.95));
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .activity.active { display: block; }
+    .vn-screen.activity-open .dialogue {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(18px);
+    }
+    .activity.loan-mode {
+      width: min(980px, calc(100vw - 36px));
+      max-height: min(68vh, 650px);
+      bottom: 28px;
+      overflow: visible;
+      padding: 18px;
+    }
+    .vn-screen.activity-open .char {
+      opacity: .74;
+      filter: saturate(.86) brightness(.82) drop-shadow(0 18px 28px rgba(0,0,0,.42));
+    }
+    .vn-screen.activity-open .char.left { left: -2%; transform: translateX(-10%) scale(.9); }
+    .vn-screen.activity-open .char.right { right: -2%; transform: translateX(10%) scale(.9); }
+    .vn-screen.activity-open .char.center { opacity: .34; transform: translateX(-50%) scale(.88); }
+    .activity h2 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 4vw, 38px);
+      letter-spacing: 0;
+    }
+    .activity p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    .activity-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, .82fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .phone-card, .system-card, .case-card, .comment-card, .queue-card {
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 22px;
+      background: rgba(255,255,255,.07);
+    }
+    .phone-card {
+      min-height: 320px;
+      padding: 18px;
+      background:
+        linear-gradient(180deg, rgba(15,22,37,.5), rgba(7,10,18,.82)),
+        url("h5-assets/galgame/backgrounds/short-video-feed.png") center / cover no-repeat;
+      display: grid;
+      align-content: end;
+      gap: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    .phone-card::before {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 26px;
+      border: 2px solid rgba(255,255,255,.16);
+      pointer-events: none;
+    }
+    .short-video-title {
+      position: relative;
+      z-index: 2;
+      font-size: clamp(24px, 4vw, 46px);
+      line-height: 1.05;
+      font-weight: 1000;
+      text-shadow: 0 4px 22px rgba(0,0,0,.68);
+    }
+    .short-video-copy {
+      position: relative;
+      z-index: 2;
+      max-width: 520px;
+      color: rgba(255,255,255,.86);
+      line-height: 1.6;
+    }
+    .side-stack { display: grid; gap: 10px; align-content: start; }
+    .side-note {
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 18px;
+      color: var(--muted);
+      background: rgba(0,0,0,.18);
+      line-height: 1.55;
+    }
+
+    .comment-list { display: grid; gap: 12px; margin-top: 16px; }
+    .swipe-phone {
+      touch-action: pan-y;
+      user-select: none;
+      cursor: grab;
+    }
+    .swipe-phone:active { cursor: grabbing; }
+    .gesture-hint {
+      position: relative;
+      z-index: 2;
+      width: fit-content;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(8,12,21,.7);
+      border: 1px solid rgba(255,255,255,.16);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .swipe-meter {
+      position: relative;
+      z-index: 2;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.14);
+      overflow: hidden;
+    }
+    .swipe-meter i {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--blue), var(--yellow), var(--red));
+      transition: width .25s ease;
+    }
+    .drop-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, .8fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .drop-zones {
+      display: grid;
+      gap: 12px;
+    }
+    .drop-zone {
+      min-height: 140px;
+      padding: 16px;
+      border: 2px dashed rgba(255,255,255,.2);
+      border-radius: 22px;
+      background: rgba(255,255,255,.06);
+      transition: border-color .16s ease, background .16s ease, transform .16s ease;
+    }
+    .drop-zone strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+    .drop-zone p {
+      font-size: 14px;
+    }
+    .drop-zone.hot {
+      transform: translateY(-2px);
+      border-color: rgba(99,230,167,.72);
+      background: rgba(99,230,167,.1);
+    }
+    .drag-card {
+      touch-action: none;
+      cursor: grab;
+      user-select: none;
+      transition: opacity .18s ease, transform .18s ease, border-color .18s ease;
+    }
+    .drag-card:active { cursor: grabbing; }
+    .drag-card.dragging {
+      opacity: .72;
+      transform: scale(.98);
+      border-color: rgba(99,230,167,.7);
+    }
+    .drag-card.done {
+      opacity: .42;
+      pointer-events: none;
+    }
+    .comment-card {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+    .comment-card.done { opacity: .72; }
+    .comment-card.correct { border-color: rgba(99,230,167,.62); }
+    .comment-card.wrong { border-color: rgba(255,93,115,.62); }
+    .comment-card strong { display: block; margin-bottom: 4px; }
+    .comment-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .comment-card.drag-card {
+      grid-template-columns: 1fr;
+    }
+    .comment-card .drag-label {
+      margin-top: 8px;
+      color: var(--dim);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .camera-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, .82fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .camera-box {
+      min-height: 260px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,.15);
+      background:
+        linear-gradient(180deg, rgba(13,20,35,.4), rgba(6,9,16,.86)),
+        url("h5-assets/galgame/backgrounds/loan-popup-space.png") center / cover no-repeat;
+      overflow: hidden;
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+    video#cameraPreview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+      transform: scaleX(-1);
+    }
+    .camera-overlay {
+      position: absolute;
+      inset: 18px;
+      border: 1px dashed rgba(99,230,167,.48);
+      border-radius: 24px;
+      pointer-events: none;
+    }
+    .gesture-list {
+      display: grid;
+      gap: 10px;
+    }
+    .gesture-step {
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.07);
+      color: var(--muted);
+    }
+    .gesture-step.done {
+      color: var(--green);
+      border-color: rgba(99,230,167,.62);
+      background: rgba(99,230,167,.1);
+    }
+
+    .loan-loop {
+      display: grid;
+      grid-template-columns: minmax(260px, .78fr) minmax(0, 1.22fr);
+      gap: 16px;
+      margin-top: 16px;
+      align-items: center;
+    }
+    .bill-stack {
+      min-height: 260px;
+      position: relative;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,.14);
+      background:
+        linear-gradient(180deg, rgba(24,28,42,.62), rgba(8,12,21,.86)),
+        url("h5-assets/galgame/backgrounds/bill-night.png") center / cover no-repeat;
+      overflow: hidden;
+    }
+    .paper {
+      position: absolute;
+      width: 70%;
+      height: 110px;
+      left: 15%;
+      top: 48px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(247,244,238,.94), rgba(180,195,218,.82));
+      box-shadow: 0 16px 30px rgba(0,0,0,.25);
+      transform: rotate(var(--rot)) translateY(var(--shift));
+      transition: transform .35s ease, opacity .25s ease;
+    }
+    .paper::before, .paper::after {
+      content: "";
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(8,12,21,.22);
+    }
+    .paper::before { top: 24px; }
+    .paper::after { top: 52px; width: 54%; right: auto; }
+    .paper.cover {
+      animation: coverBill .48s ease;
+    }
+    @keyframes coverBill {
+      from { transform: translateY(-120px) rotate(-10deg); opacity: 0; }
+      to { transform: rotate(var(--rot)) translateY(var(--shift)); opacity: 1; }
+    }
+    .loop-actions { display: grid; gap: 10px; }
+    .bill-drag-card {
+      margin-top: 12px;
+      padding: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 18px;
+      background: rgba(255,255,255,.08);
+    }
+    .bill-action-zones {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .bill-action-zones .drop-zone {
+      min-height: 132px;
+      padding: 12px;
+    }
+    .bill-action-zones .drop-zone {
+      cursor: pointer;
+      text-align: left;
+    }
+    .bill-action-zones .drop-zone:disabled {
+      cursor: not-allowed;
+      opacity: .56;
+    }
+    .loop-result {
+      min-height: 46px;
+      padding: 11px 13px;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 16px;
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      line-height: 1.55;
+      margin-top: 10px;
+    }
+
+    .queue-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .queue-card {
+      padding: 15px;
+      min-height: 160px;
+      display: grid;
+      align-content: space-between;
+    }
+    .queue-card strong {
+      font-size: 19px;
+      color: var(--ink);
+    }
+    .queue-card p { font-size: 14px; }
+    .queue-card.alert { border-color: rgba(255,93,115,.42); }
+    .queue-card.safe { border-color: rgba(99,230,167,.38); }
+    .evidence-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .evidence-token {
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      color: var(--muted);
+    }
+    .evidence-token.on {
+      color: #081019;
+      background: var(--green);
+      border-color: transparent;
+      font-weight: 900;
+    }
+    .evidence-bag {
+      min-height: 150px;
+      padding: 16px;
+      border-radius: 22px;
+      border: 2px dashed rgba(99,230,167,.34);
+      background: rgba(99,230,167,.08);
+    }
+    .priority-stack {
+      min-height: 150px;
+      padding: 16px;
+      border-radius: 22px;
+      border: 2px dashed rgba(102,199,255,.3);
+      background: rgba(102,199,255,.07);
+    }
+    .dropped-pill {
+      display: inline-block;
+      margin: 6px 6px 0 0;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .feedback {
+      position: absolute;
+      z-index: 60;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(.98);
+      width: min(720px, calc(100vw - 32px));
+      display: none;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(18,23,38,.94), rgba(7,11,20,.97));
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+    .feedback.active {
+      display: block;
+      animation: popIn .18s ease forwards;
+    }
+    @keyframes popIn {
+      to { transform: translate(-50%, -50%) scale(1); }
+    }
+    .feedback h3 {
+      margin: 0 0 10px;
+      font-size: 28px;
+    }
+    .delta-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .delta {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.08);
+      color: var(--muted);
+    }
+    .delta b {
+      display: block;
+      color: var(--ink);
+      font-size: 22px;
+    }
+
+    .modal {
+      position: absolute;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      background: rgba(3,6,12,.68);
+      backdrop-filter: blur(12px);
+    }
+    .modal.active { display: flex; }
+    .modal-card {
+      width: min(940px, 100%);
+      max-height: min(780px, calc(100vh - 36px));
+      overflow: auto;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(20,25,40,.98), rgba(8,12,21,.98));
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+    .modal-card h2 {
+      margin: 0 0 10px;
+      font-size: clamp(26px, 5vw, 46px);
+    }
+    .modal-card p {
+      color: var(--muted);
+      line-height: 1.75;
+    }
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .case-card {
+      padding: 14px;
+    }
+    .case-card h3 {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-size: 18px;
+    }
+    .case-card p {
+      margin: 0 0 10px;
+      font-size: 14px;
+    }
+    .ending-visual {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 22px;
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,.18);
+      background:
+        linear-gradient(135deg, rgba(102,199,255,.18), rgba(255,93,115,.18)),
+        #111827;
+    }
+    .ending-video {
+      display: block;
+    }
+    .ending-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .ending-stat {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .ending-stat b {
+      display: block;
+      font-size: 30px;
+      color: var(--yellow);
+    }
+
+    .demo-panel {
+      display: grid;
+      gap: 14px;
+    }
+    .demo-section {
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 18px;
+      background: rgba(255,255,255,.06);
+    }
+    .demo-section h3 {
+      margin: 0 0 10px;
+    }
+    .range-grid {
+      display: grid;
+      gap: 10px;
+    }
+    .range-grid label {
+      display: grid;
+      grid-template-columns: 70px 1fr 48px;
+      gap: 10px;
+      align-items: center;
+      color: var(--muted);
+    }
+    input[type="range"] { width: 100%; accent-color: var(--green); }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 860px) {
+      body { overflow: auto; }
+      .app { min-height: 100vh; height: auto; overflow: visible; }
+      .screen { min-height: 100vh; position: relative; }
+      .title-screen { padding: 28px 18px; }
+      .title-wrap { grid-template-columns: 1fr; }
+      .intro-stage, .intro-video { min-height: 360px; }
+      .hud {
+        position: relative;
+        top: auto; left: auto; right: auto;
+        grid-template-columns: 1fr;
+        padding: 10px;
+        gap: 8px;
+      }
+      .stat-wrap { grid-template-columns: 1fr; }
+      .character-layer {
+        position: relative;
+        inset: auto;
+        min-height: 360px;
+        margin-top: 6px;
+      }
+      .char { width: 44vw; max-height: 350px; }
+      .char.left { left: 2%; transform: translateX(0) scale(.96); }
+      .char.right { right: 2%; transform: translateX(0) scale(.96); }
+      .char.center { width: 62vw; }
+      .dialogue {
+        position: relative;
+        left: auto; right: auto; bottom: auto;
+        margin: 12px;
+        max-height: none;
+      }
+      .choice-grid,
+      .activity-grid,
+      .camera-grid,
+      .loan-loop,
+      .drop-layout,
+      .bill-action-zones,
+      .queue-grid,
+      .case-grid,
+      .ending-stats,
+      .delta-row {
+        grid-template-columns: 1fr;
+      }
+      .activity {
+        position: relative;
+        left: auto; top: auto;
+        transform: none;
+        max-height: none;
+        width: auto;
+        margin: 12px;
+        right: auto;
+        bottom: auto;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <section class="screen title-screen active" id="titleScreen">
+      <div class="title-wrap">
+        <div>
+          <div class="kicker">互动视觉小说</div>
+          <h1>摇摇头，张张嘴，然后呢？</h1>
+          <p>你将扮演一名大三学生，在短视频段子、评论区、轻松认证、以贷养贷和现实求助之间做选择。每个选择都会改变三项明面数值：压力值、流量值、账单值。</p>
+          <div class="title-actions">
+            <button class="main-btn" id="startBtn">开始游戏</button>
+            <button class="ghost-btn" id="continueBtn">继续游戏</button>
+            <button class="ghost-btn" id="demoBtn">进入演示模式</button>
+            <button class="ghost-btn" id="settingsBtn">声音设置</button>
+            <button class="ghost-btn" id="aboutBtn">作品说明</button>
+          </div>
+        </div>
+        <div class="intro-stage" aria-label="剧情片头">
+          <video class="intro-video" id="introVideo" muted playsinline></video>
+          <img class="intro-image" id="introImage" src="h5-assets/galgame/intro/intro-01-short-video.png" alt="短视频段子入口">
+          <div class="intro-card">
+            <span class="intro-shot" id="introShot">短视频段子入口</span>
+            <strong id="introHeadline">玩笑把风险推近</strong>
+            <div class="intro-timeline">
+              <span style="--i:0"></span>
+              <span style="--i:1"></span>
+              <span style="--i:2"></span>
+              <span style="--i:3"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen vn-screen" id="gameScreen">
+      <div class="scene-bg" id="sceneBg"></div>
+      <video class="scene-video" id="sceneVideo" muted playsinline preload="metadata"></video>
+      <button class="mini-btn skip-video" id="skipSceneVideoBtn">跳过演出</button>
+      <header class="hud">
+        <div class="chapter-chip">
+          <strong id="chapterTitle">第1章：短视频入口</strong>
+          <span id="chapterSub">段子起点</span>
+        </div>
+        <div class="stat-wrap" aria-label="三项核心数值">
+          <div class="stat">
+            <div class="stat-line"><span>压力值</span><b id="pressureValue">20</b></div>
+            <div class="bar pressure"><i id="pressureBar"></i></div>
+          </div>
+          <div class="stat">
+            <div class="stat-line"><span>流量值</span><b id="trafficValue">10</b></div>
+            <div class="bar traffic"><i id="trafficBar"></i></div>
+          </div>
+          <div class="stat">
+            <div class="stat-line"><span>账单值</span><b id="billValue">0</b></div>
+            <div class="bar bill"><i id="billBar"></i></div>
+          </div>
+        </div>
+        <div class="top-tools">
+          <button class="mini-btn" id="saveBtn">保存</button>
+          <button class="mini-btn" id="soundToggle">声音</button>
+          <button class="mini-btn" id="demoMiniBtn">演示</button>
+        </div>
+      </header>
+
+      <main class="character-layer" id="characterLayer" aria-hidden="true"></main>
+
+      <section class="activity" id="activityPanel" aria-live="polite"></section>
+
+      <section class="dialogue" id="dialogueBox">
+        <div class="speaker-row">
+          <div class="speaker" id="speakerName">旁白</div>
+          <button class="mini-btn" id="nextLineBtn">继续</button>
+        </div>
+        <p class="line-text" id="lineText"></p>
+        <div class="choice-grid hidden" id="choiceGrid"></div>
+      </section>
+
+      <section class="feedback" id="feedbackBox">
+        <h3 id="feedbackTitle">结果</h3>
+        <p id="feedbackText"></p>
+        <div class="delta-row" id="deltaRow"></div>
+        <button class="main-btn" id="feedbackNext">继续</button>
+      </section>
+    </section>
+
+    <div class="modal" id="genericModal" role="dialog" aria-modal="true"></div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const clamp = (n, min = 0, max = 100) => Math.max(min, Math.min(max, n));
+
+    const assets = {
+      bg: {
+        dorm: "h5-assets/galgame/backgrounds/dorm-night.png",
+        feed: "h5-assets/galgame/backgrounds/short-video-feed.png",
+        loan: "h5-assets/galgame/backgrounds/loan-popup-space.png",
+        bill: "h5-assets/galgame/backgrounds/bill-night.png",
+        help: "h5-assets/galgame/backgrounds/help-call-office.png",
+        crisis: "h5-assets/galgame/backgrounds/crisis-pressure.png"
+      },
+      chars: {
+        player: {
+          name: "你",
+          color: "#66c7ff",
+          normal: "h5-assets/galgame/characters/player-normal.png",
+          worried: "h5-assets/galgame/characters/player-worried.png",
+          serious: "h5-assets/galgame/characters/player-serious.png"
+        },
+        friend: {
+          name: "同学",
+          color: "#ffd95c",
+          normal: "h5-assets/galgame/characters/friend-normal.png",
+          worried: "h5-assets/galgame/characters/friend-worried.png",
+          serious: "h5-assets/galgame/characters/friend-serious.png"
+        },
+        bot: {
+          name: "平台客服 Bot",
+          color: "#ff9f45",
+          normal: "h5-assets/galgame/characters/bot-normal.png",
+          worried: "h5-assets/galgame/characters/bot-worried.png",
+          serious: "h5-assets/galgame/characters/bot-serious.png"
+        },
+        mentor: {
+          name: "辅导员",
+          color: "#63e6a7",
+          normal: "h5-assets/galgame/characters/mentor-normal.png",
+          worried: "h5-assets/galgame/characters/mentor-worried.png",
+          serious: "h5-assets/galgame/characters/mentor-serious.png"
+        }
+      },
+      endings: {
+        pressure: "h5-assets/result-ai-images/ending-pressure-v2.png",
+        traffic: "h5-assets/result-ai-images/ending-traffic-v2.png",
+        illusion: "h5-assets/result-ai-images/ending-credit-v2.png",
+        edge: "h5-assets/result-ai-images/ending-edge-v2.png",
+        clear: "h5-assets/result-ai-images/ending-clear-v2.png"
+      }
+    };
+
+    const sourceLinks = {
+      cctv: "https://news.cctv.com/2024/07/02/ARTISkzV12h0XpVH7ZaP60Yx240702.shtml",
+      regulator: "https://www.nfra.gov.cn/chinese/OFFICE/PDF/1216973.pdf",
+      help: "https://www.nfra.gov.cn/branch/henan/view/pages/common/ItemDetail.html?docId=1180739&itemId=1378"
+    };
+
+    const generatedAssetPlan = {
+      provider: "Dreamina/Seedance",
+      envKey: "Dreamina login session",
+      introVideo: "ai_video_assets/videos/intro_00.mp4",
+      status: "missing-key"
+    };
+
+    const aiVideoManifestFallback = [
+      ["intro_00", "ai_video_assets/videos/intro_00.mp4"],
+      ["scene_01", "ai_video_assets/videos/scene_01.mp4"],
+      ["scene_02", "ai_video_assets/videos/scene_02.mp4"],
+      ["scene_03", "ai_video_assets/videos/scene_03.mp4"],
+      ["scene_04", "ai_video_assets/videos/scene_04.mp4"],
+      ["scene_05", "ai_video_assets/videos/scene_05.mp4"],
+      ["scene_06", "ai_video_assets/videos/scene_06.mp4"],
+      ["scene_07", "ai_video_assets/videos/scene_07.mp4"],
+      ["scene_08", "ai_video_assets/videos/scene_08.mp4"],
+      ["end_01", "ai_video_assets/videos/end_01.mp4"],
+      ["end_02", "ai_video_assets/videos/end_02.mp4"],
+      ["end_03", "ai_video_assets/videos/end_03.mp4"],
+      ["end_04", "ai_video_assets/videos/end_04.mp4"],
+      ["end_05", "ai_video_assets/videos/end_05.mp4"]
+    ].map(([scene_id, output_video_path]) => ({ scene_id, output_video_path }));
+
+    const aiVideoRuntime = {
+      loadedManifest: false,
+      currentSceneId: null,
+      currentMode: null,
+      startedAt: 0,
+      currentEnd: null,
+      assets: new Map(aiVideoManifestFallback.map(item => [item.scene_id, item]))
+    };
+
+    const endingSceneMap = {
+      pressure: "end_01",
+      traffic: "end_02",
+      illusion: "end_03",
+      edge: "end_04",
+      clear: "end_05"
+    };
+
+    const introImages = [
+      {
+        src: "h5-assets/galgame/intro/intro-01-short-video.png",
+        shot: "短视频段子入口",
+        headline: "玩笑把风险推近",
+        alt: "宿舍夜晚里漂浮着短视频段子界面"
+      },
+      {
+        src: "h5-assets/galgame/intro/intro-02-camera-gate.png",
+        shot: "轻松认证入口",
+        headline: "动作越简单，判断越容易被压缩",
+        alt: "手机摄像头认证和借贷弹窗同时出现"
+      },
+      {
+        src: "h5-assets/galgame/intro/intro-03-bill-cover.png",
+        shot: "账单覆盖",
+        headline: "新入口盖住旧账单",
+        alt: "桌面上的账单被新的电子卡片覆盖"
+      },
+      {
+        src: "h5-assets/galgame/intro/intro-04-reality-pressure.png",
+        shot: "现实压力显现",
+        headline: "屏幕退下后，关系和账单留下",
+        alt: "宿舍桌面上有账单、证据袋和来电阴影"
+      }
+    ];
+
+    const introVideoPlaylist = [
+      {
+        sceneId: "intro_00",
+        shot: "短视频段子入口",
+        headline: "玩笑把风险推近",
+        fallbackImage: "h5-assets/galgame/intro/intro-01-short-video.png"
+      },
+      {
+        sceneId: "scene_01",
+        shot: "短视频入口",
+        headline: "屏幕把入口包装成挑战",
+        fallbackImage: "ai_video_assets/reference_images/scene_01.png"
+      },
+      {
+        sceneId: "scene_02",
+        shot: "评论区污染",
+        headline: "笑声会让判断变钝",
+        fallbackImage: "ai_video_assets/reference_images/scene_02.png"
+      },
+      {
+        sceneId: "scene_04",
+        shot: "以贷养贷",
+        headline: "新入口盖住旧账单",
+        fallbackImage: "ai_video_assets/reference_images/scene_04.png"
+      },
+      {
+        sceneId: "end_05",
+        shot: "清醒止损",
+        headline: "把问题带回现实处理",
+        fallbackImage: "ai_video_assets/reference_images/end_05.png"
+      }
+    ];
+
+    const assetManager = {
+      loaded: 0,
+      failed: [],
+      allImages() {
+        const images = [
+          ...introImages.map(item => item.src),
+          ...Object.values(assets.bg),
+          ...Object.values(assets.endings)
+        ];
+        Object.values(assets.chars).forEach(char => {
+          ["normal", "worried", "serious"].forEach(mood => images.push(char[mood]));
+        });
+        return [...new Set(images)];
+      },
+      async preload() {
+        this.loaded = 0;
+        this.failed = [];
+        updateAssetStatus("素材检测：正在检查图片和片头");
+        await Promise.all(this.allImages().map(src => new Promise(resolve => {
+          const img = new Image();
+          img.onload = () => { this.loaded += 1; resolve(); };
+          img.onerror = () => { this.failed.push(src); resolve(); };
+          img.src = src;
+        })));
+        await this.checkIntroVideo();
+        const total = this.allImages().length;
+        updateAssetStatus(this.failed.length
+          ? `素材检测：${this.loaded}/${total} 成功，${this.failed.length} 个失败，已启用占位`
+          : `素材检测：${this.loaded}/${total} 成功，图片可正常显示`);
+      },
+      async checkIntroVideo() {
+        try {
+          const resp = await fetch(generatedAssetPlan.introVideo, { method: "HEAD" });
+          if (resp.ok) {
+            const video = $("introVideo");
+            video.src = generatedAssetPlan.introVideo;
+            video.style.display = "block";
+            video.loop = false;
+            video.muted = true;
+            $("introImage").style.opacity = ".18";
+            generatedAssetPlan.status = "video-ready";
+            sceneController.startIntro();
+          } else {
+            generatedAssetPlan.status = "image-carousel";
+          }
+        } catch (error) {
+          generatedAssetPlan.status = "image-carousel";
+        }
+      },
+      imgError(img, label) {
+        img.replaceWith(createMissingVisual(label || "素材未加载"));
+      }
+    };
+
+    function updateAssetStatus(text) {
+      const generationText = generatedAssetPlan.status === "video-ready"
+        ? "片头视频已接入"
+        : "使用生成图片片头";
+      const videoManifestText = aiVideoRuntime.loadedManifest ? "节点视频清单已接入" : "节点视频使用默认路径";
+      const value = `${text}；Dreamina：${generationText}；${videoManifestText}`;
+      state.debugAssetStatus = value;
+      const box = $("debugAssetStatus");
+      if (box) box.textContent = value;
+    }
+
+    async function loadAiVideoManifest() {
+      try {
+        const resp = await fetch("ai_video_assets/manifest.json", { cache: "no-store" });
+        if (!resp.ok) return;
+        const items = await resp.json();
+        if (!Array.isArray(items)) return;
+        items.forEach(item => {
+          if (item.scene_id && item.output_video_path) aiVideoRuntime.assets.set(item.scene_id, item);
+        });
+        aiVideoRuntime.loadedManifest = true;
+        updateAssetStatus("素材检测：视频 manifest 已加载");
+      } catch (error) {}
+    }
+
+    function resolveVideoAsset(sceneId) {
+      return aiVideoRuntime.assets.get(sceneId) || null;
+    }
+
+    function stopSceneVideo({ clear = true } = {}) {
+      const video = $("sceneVideo");
+      video.pause();
+      video.classList.remove("active");
+      $("gameScreen").classList.remove("cinematic");
+      $("skipSceneVideoBtn").classList.remove("active");
+      if (clear) {
+        video.removeAttribute("src");
+        video.load();
+      }
+      aiVideoRuntime.currentSceneId = null;
+      aiVideoRuntime.currentMode = null;
+      aiVideoRuntime.startedAt = 0;
+      aiVideoRuntime.currentEnd = null;
+    }
+
+    function playScene(sceneId, options = {}) {
+      const { mode = "branch", onEnd = null } = options;
+      const asset = resolveVideoAsset(sceneId);
+      if (!asset || !asset.output_video_path) {
+        if (onEnd) onEnd(sceneId);
+        else if (mode === "chapter") showVNDialogue(sceneId);
+        return false;
+      }
+      const video = $("sceneVideo");
+      aiVideoRuntime.currentSceneId = sceneId;
+      aiVideoRuntime.currentMode = mode;
+      aiVideoRuntime.startedAt = Date.now();
+      aiVideoRuntime.currentEnd = onEnd;
+      video.onended = () => onVideoEnd(sceneId);
+      video.onerror = () => handleSceneVideoError(sceneId);
+      video.src = asset.output_video_path;
+      video.currentTime = 0;
+      video.loop = false;
+      video.muted = !state.sound;
+      video.playsInline = true;
+      video.classList.add("active");
+      $("gameScreen").classList.add("cinematic");
+      $("skipSceneVideoBtn").classList.add("active");
+      if (mode === "chapter") {
+        state.phase = "video";
+        $("dialogueBox").classList.add("is-hidden");
+      }
+      stopVoice();
+      video.play().catch(() => {
+        handleSceneVideoError(sceneId);
+      });
+      return true;
+    }
+
+    function syncVideoMuteState() {
+      $("sceneVideo").muted = !state.sound;
+      document.querySelectorAll(".ending-video").forEach(video => {
+        video.muted = !state.sound;
+      });
+    }
+
+    function handleSceneVideoError(sceneId) {
+      if (aiVideoRuntime.currentSceneId !== sceneId) return;
+      const mode = aiVideoRuntime.currentMode;
+      const onEnd = aiVideoRuntime.currentEnd;
+      stopSceneVideo({ clear: true });
+      if (onEnd) {
+        onEnd(sceneId);
+        return;
+      }
+      if (mode === "chapter" || state.phase === "video") showVNDialogue(sceneId);
+    }
+
+    function onVideoEnd(sceneId, options = {}) {
+      if (!options.force && aiVideoRuntime.currentSceneId === sceneId) {
+        const elapsed = Date.now() - aiVideoRuntime.startedAt;
+        if (elapsed < 5800) {
+          window.setTimeout(() => {
+            if (aiVideoRuntime.currentSceneId === sceneId) onVideoEnd(sceneId);
+          }, 5800 - elapsed);
+          return;
+        }
+      }
+      const onEnd = aiVideoRuntime.currentEnd;
+      stopSceneVideo({ clear: false });
+      if (onEnd) {
+        onEnd(sceneId);
+        return;
+      }
+      if (state.phase === "video") showVNDialogue(sceneId);
+    }
+
+    function showVNDialogue(sceneId) {
+      $("dialogueBox").classList.remove("is-hidden");
+      if (state.phase === "video") state.phase = "story";
+      renderLine();
+    }
+
+    function createMissingVisual(label) {
+      const div = document.createElement("div");
+      div.className = "ending-visual";
+      div.style.display = "grid";
+      div.style.placeItems = "center";
+      div.style.color = "var(--muted)";
+      div.style.padding = "20px";
+      div.textContent = label;
+      return div;
+    }
+
+    const sceneController = {
+      introTimer: null,
+      introVideoIndex: 0,
+      startIntro() {
+        let i = 0;
+        clearInterval(this.introTimer);
+        const video = $("introVideo");
+        const drawVideo = () => {
+          if (generatedAssetPlan.status !== "video-ready") return false;
+          const item = introVideoPlaylist[this.introVideoIndex % introVideoPlaylist.length];
+          const asset = resolveVideoAsset(item.sceneId);
+          $("introShot").textContent = item.shot;
+          $("introHeadline").textContent = item.headline;
+          $("introImage").src = item.fallbackImage;
+          $("introImage").alt = item.shot;
+          if (!asset?.output_video_path) return false;
+          video.src = asset.output_video_path;
+          video.style.display = "block";
+          video.loop = false;
+          video.muted = true;
+          $("introImage").style.opacity = ".16";
+          video.play().catch(() => {});
+          this.introVideoIndex += 1;
+          return true;
+        };
+        video.onended = () => drawVideo();
+        const draw = () => {
+          if (drawVideo()) return;
+          const shot = introImages[i % introImages.length];
+          const img = $("introImage");
+          img.classList.add("is-switching");
+          window.setTimeout(() => {
+            img.src = shot.src;
+            img.alt = shot.alt;
+            $("introShot").textContent = shot.shot;
+            $("introHeadline").textContent = shot.headline;
+            img.classList.remove("is-switching");
+          }, 160);
+          i += 1;
+        };
+        draw();
+        this.introTimer = setInterval(() => {
+          if (generatedAssetPlan.status !== "video-ready") draw();
+        }, 2600);
+      },
+      setCharacters(list) {
+        const layer = $("characterLayer");
+        layer.innerHTML = "";
+        list.forEach((c, idx) => {
+          const data = assets.chars[c.key];
+          const img = document.createElement("img");
+          img.className = `char ${c.pos || "center"} pose-${c.mood || "normal"} ${idx > 0 && state.phase === "activity" ? "dim" : ""}`;
+          img.src = data[c.mood || "normal"] || data.normal;
+          img.alt = data.name;
+          img.onerror = () => assetManager.imgError(img, data.name);
+          layer.appendChild(img);
+        });
+      }
+    };
+
+    const interactionController = {
+      bindSwipe(el, handlers) {
+        let startX = 0, startY = 0, startTime = 0;
+        const begin = (event) => {
+          const p = event.touches ? event.touches[0] : event;
+          startX = p.clientX; startY = p.clientY; startTime = Date.now();
+        };
+        const end = (event) => {
+          const p = event.changedTouches ? event.changedTouches[0] : event;
+          const dx = p.clientX - startX;
+          const dy = p.clientY - startY;
+          const fast = Date.now() - startTime < 900;
+          if (!fast) return;
+          if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 45) {
+            if (dx < 0 && handlers.left) handlers.left();
+            if (dx > 0 && handlers.right) handlers.right();
+          } else if (Math.abs(dy) > 45) {
+            if (dy < 0 && handlers.up) handlers.up();
+            if (dy > 0 && handlers.down) handlers.down();
+          }
+        };
+        el.addEventListener("touchstart", begin, { passive: true });
+        el.addEventListener("touchend", end, { passive: true });
+        el.addEventListener("pointerdown", begin);
+        el.addEventListener("pointerup", end);
+      },
+      bindDrop(cards, zones, onDrop) {
+        cards.forEach(card => {
+          card.setAttribute("draggable", "true");
+          card.addEventListener("dragstart", event => {
+            card.classList.add("dragging");
+            event.dataTransfer.setData("text/plain", card.dataset.drag || card.dataset.index || "");
+          });
+          card.addEventListener("dragend", () => card.classList.remove("dragging"));
+          card.addEventListener("pointerup", event => {
+            const target = document.elementFromPoint(event.clientX, event.clientY)?.closest(".drop-zone");
+            if (target && !card.classList.contains("done")) onDrop(card, target);
+          });
+        });
+        zones.forEach(zone => {
+          zone.addEventListener("dragover", event => { event.preventDefault(); zone.classList.add("hot"); });
+          zone.addEventListener("dragleave", () => zone.classList.remove("hot"));
+          zone.addEventListener("drop", event => {
+            event.preventDefault();
+            zone.classList.remove("hot");
+            const key = event.dataTransfer.getData("text/plain");
+            const card = cards.find(item => (item.dataset.drag || item.dataset.index || "") === key);
+            if (card && !card.classList.contains("done")) onDrop(card, zone);
+          });
+        });
+      }
+    };
+
+    const chapters = [
+      {
+        id: "video",
+        title: "第1章：短视频入口",
+        sub: "段子起点",
+        videoSceneId: "scene_01",
+        bg: "feed",
+        chars: [{ key: "player", mood: "normal", pos: "left" }, { key: "friend", mood: "normal", pos: "right" }],
+        lines: [
+          ["narrator", "晚上，宿舍里只剩手机屏幕亮着。作品集、实习、房租押金挤在同一个备忘录里。"],
+          ["friend", "你看这个，摇摇头，张张嘴，额度到账。评论区全在接梗。"],
+          ["player", "等等，这不就是借钱吗？我连费用在哪都没看清。"]
+        ],
+        activity: "shortVideo"
+      },
+      {
+        id: "comments",
+        title: "第2章：评论区认知污染",
+        sub: "群体玩梗",
+        videoSceneId: "scene_02",
+        bg: "feed",
+        chars: [{ key: "player", mood: "worried", pos: "left" }, { key: "friend", mood: "normal", pos: "right" }],
+        lines: [
+          ["friend", "大家都说没事，先借出来再说。"],
+          ["player", "他们都这么说，我有点动摇了，好像只有我在担心。"]
+        ],
+        activity: "commentJudge"
+      },
+      {
+        id: "loan",
+        title: "第3章：轻松借贷入口",
+        sub: "认证包装",
+        videoSceneId: "scene_03",
+        bg: "loan",
+        chars: [{ key: "bot", mood: "normal", pos: "center" }],
+        lines: [
+          ["bot", "完成轻松认证，即可查看可用方案。动作很简单，摇头、张嘴、眨眼。"],
+          ["narrator", "认证流程把严肃决策压缩成几秒动作，像一次游戏签到。"]
+        ],
+        activity: "cameraGate"
+      },
+      {
+        id: "rollover",
+        title: "第4章：以贷养贷",
+        sub: "风险延迟",
+        videoSceneId: "scene_04",
+        bg: "bill",
+        chars: [{ key: "player", mood: "worried", pos: "left" }, { key: "bot", mood: "serious", pos: "right" }],
+        lines: [
+          ["narrator", "还款日到了。账单没有消失，只被新入口盖住。"],
+          ["bot", "可以再周转一次，把当前提醒先处理掉。"]
+        ],
+        activity: "loanLoop"
+      },
+      {
+        id: "pressure",
+        title: "第5章：现实压力爆发",
+        sub: "电话、消息、账单",
+        videoSceneId: "scene_05",
+        bg: "crisis",
+        chars: [{ key: "player", mood: "worried", pos: "left" }, { key: "mentor", mood: "serious", pos: "right" }],
+        lines: [
+          ["narrator", "通知变多了。陌生来电、账单提醒、同学转发的梗同时出现。"],
+          ["mentor", "先把证据、账单和求助对象分开处理。越乱，越需要留下清楚记录。"]
+        ],
+        activity: "pressureQueue"
+      },
+      {
+        id: "help",
+        title: "第6章：求助与多结局",
+        sub: "叙事判定",
+        videoSceneId: "scene_06",
+        bg: "help",
+        chars: [{ key: "player", mood: "serious", pos: "left" }, { key: "mentor", mood: "normal", pos: "right" }],
+        lines: [
+          ["mentor", "你可以先不用一次说完，我们一步一步把账单和证据说清楚。"],
+          ["player", "我不想再一个人扛了，但我也怕说出来。"]
+        ],
+        activity: "finalChoice"
+      }
+    ];
+
+    const endingData = {
+      pressure: {
+        title: "压力爆表结局：以贷养贷崩溃",
+        tone: "bad",
+        image: assets.endings.pressure,
+        body: "账单、来电和隐瞒同时压上来。风险从屏幕进入现实关系，主角需要停止独自硬扛，保存证据并寻求现实支持。",
+        cases: [
+          ["低额滚高债", "据媒体报道整理，有年轻人起初只为日常消费借小额款项，后来在还款日继续从其他入口周转，债务逐步扩大。", sourceLinks.cctv],
+          ["多平台同时逾期", "以贷养贷会让账单日期交错叠加，短期缓解换来更难追踪的偿还压力。", sourceLinks.cctv],
+          ["催收影响亲友", "报道中提到，逾期后的催收电话可能影响家人或通讯录联系人，压力会扩散到现实关系。", sourceLinks.cctv]
+        ]
+      },
+      traffic: {
+        title: "流量麻痹结局：玩梗淹没风险",
+        tone: "social",
+        image: assets.endings.traffic,
+        body: "段子获得了互动，风险感被继续稀释。主角没有马上崩溃，但评论区的笑声盖过了真实成本。",
+        cases: [
+          ["抱团玩梗", "据媒体报道整理，部分负债内容在社交平台形成抱团表达，情绪被安慰，风险也可能被延后处理。", sourceLinks.cctv],
+          ["广告话术轻量化", "风险提示提醒用户警惕低门槛、快速放款、低息等包装，避免被轻松表达影响判断。", sourceLinks.regulator],
+          ["风险识别滞后", "当注意力集中在梗和互动时，费用、还款日和隐私授权更容易被忽略。", sourceLinks.regulator]
+        ]
+      },
+      illusion: {
+        title: "额度错觉结局：把数字误认为安全",
+        tone: "risky",
+        image: assets.endings.illusion,
+        body: "账单值已经很高，主角仍把可用额度理解成余地。漂亮数字带来短暂安全感，偿还压力继续累积。",
+        cases: [
+          ["高额度诱导", "风险提示中反复出现对高额度、低息宣传的提醒，核心是看清真实成本。", sourceLinks.regulator],
+          ["费用拆分", "媒体报道提到，有些平台通过多种费用名目让实际成本变得难以判断。", sourceLinks.cctv],
+          ["还款能力错估", "额度代表可借上限，不能代表收入、偿还能力或风险承受能力。", sourceLinks.help]
+        ]
+      },
+      edge: {
+        title: "边缘悬停结局：还没爆发，但已经危险",
+        tone: "edge",
+        image: assets.endings.edge,
+        body: "压力、流量和账单都没有达到极端值，但每一项都在临界区。故事停在还可以求助的位置。",
+        cases: [
+          ["还款日焦虑", "据报道，一些年轻人会把还款日标成日历里的压力点，陌生来电会持续放大焦虑。", sourceLinks.cctv],
+          ["隐私和通讯录风险", "网络借贷中的个人信息授权和催收风险需要被提前识别。", sourceLinks.cctv],
+          ["及时整理仍有效", "监管风险提示强调保留证据、通过正规渠道咨询和投诉，越早整理越容易止损。", sourceLinks.help]
+        ]
+      },
+      clear: {
+        title: "清醒止损结局：把问题带回现实处理",
+        tone: "clear",
+        image: assets.endings.clear,
+        body: "主角降低了流量参与，整理账单并联系辅导员。风险没有被抹掉，但行动从逃避转向可处理。",
+        cases: [
+          ["保存证据", "风险提示建议遇到异常催收、诈骗或不规范行为时保留截图、录音、来电记录等材料。", sourceLinks.help],
+          ["正规求助", "通过家人、老师、学校资助渠道、官方客服或监管投诉渠道寻求帮助，能降低独自承受的压力。", sourceLinks.help],
+          ["停止周转", "媒体报道中的恶性循环常从以贷养贷开始，停止新增入口是止损关键。", sourceLinks.cctv]
+        ]
+      }
+    };
+
+    const state = {
+      chapter: 0,
+      line: 0,
+      pressure: 20,
+      traffic: 10,
+      bill: 0,
+      phase: "title",
+      sound: true,
+      cameraStream: null,
+      cameraTimer: null,
+      flags: { evidence: 0, finalHelp: false },
+      loopRound: 0,
+      pendingNextChapter: null,
+      debugAssetStatus: "等待检测"
+    };
+
+    let currentLines = [];
+    let afterFeedback = null;
+    let audioCtx = null;
+    let voiceAudio = null;
+
+    function enterScreen(id) {
+      ["titleScreen", "gameScreen"].forEach(screen => $(screen).classList.remove("active"));
+      $(id).classList.add("active");
+    }
+
+    function resetGame() {
+      Object.assign(state, {
+        chapter: 0,
+        line: 0,
+        pressure: 20,
+        traffic: 10,
+        bill: 0,
+        phase: "story",
+        flags: { evidence: 0, finalHelp: false },
+        loopRound: 0,
+        pendingNextChapter: null
+      });
+      stopCamera();
+      enterScreen("gameScreen");
+      startChapter(0);
+      saveGame();
+    }
+
+    function startChapter(index) {
+      stopCamera();
+      state.chapter = clamp(index, 0, chapters.length - 1);
+      state.line = 0;
+      state.phase = "story";
+      state.pendingNextChapter = null;
+      currentLines = chapters[state.chapter].lines.slice();
+      $("activityPanel").classList.remove("active");
+      $("activityPanel").classList.remove("loan-mode");
+      $("gameScreen").classList.remove("activity-open");
+      $("gameScreen").classList.remove("cinematic");
+      $("choiceGrid").classList.add("hidden");
+      $("feedbackBox").classList.remove("active");
+      renderScene();
+      const sceneId = chapters[state.chapter].videoSceneId;
+      if (sceneId) {
+        playScene(sceneId, { mode: "chapter", onEnd: () => showVNDialogue(sceneId) });
+      } else {
+        $("dialogueBox").classList.remove("is-hidden");
+        renderLine();
+      }
+      saveGame();
+    }
+
+    function renderScene() {
+      const chapter = chapters[state.chapter];
+      $("chapterTitle").textContent = chapter.title;
+      $("chapterSub").textContent = chapter.sub;
+      const bg = assets.bg[chapter.bg] || assets.bg.dorm;
+      $("sceneBg").style.backgroundImage = `url("${bg}"), linear-gradient(135deg, #101827, #090d16)`;
+      $("sceneBg").classList.toggle("bad", state.pressure >= 88);
+      sceneController.setCharacters(chapter.chars);
+      renderStats();
+    }
+
+    function renderStats() {
+      [["pressure", "pressureValue", "pressureBar"], ["traffic", "trafficValue", "trafficBar"], ["bill", "billValue", "billBar"]].forEach(([key, valueId, barId]) => {
+        $(valueId).textContent = Math.round(state[key]);
+        $(barId).style.width = `${clamp(state[key])}%`;
+      });
+    }
+
+    function renderLine() {
+      const line = currentLines[state.line];
+      if (!line) {
+        if (state.pendingNextChapter !== null) {
+          const target = state.pendingNextChapter;
+          state.pendingNextChapter = null;
+          startChapter(target);
+          return;
+        }
+        renderActivity(chapters[state.chapter].activity);
+        return;
+      }
+      const [speaker, text] = line;
+      const data = assets.chars[speaker];
+      $("speakerName").textContent = data ? data.name : "旁白";
+      $("speakerName").style.color = data ? data.color : "var(--green)";
+      $("lineText").textContent = text;
+      $("nextLineBtn").textContent = state.line >= currentLines.length - 1 ? "进入互动" : "继续";
+      $("choiceGrid").classList.add("hidden");
+      playTone("line");
+      if (state.sound) speak(text, speaker);
+    }
+
+    function nextLine() {
+      if (state.phase !== "story") return;
+      state.line += 1;
+      if (state.line >= currentLines.length) {
+        if (state.pendingNextChapter !== null) {
+          const target = state.pendingNextChapter;
+          state.pendingNextChapter = null;
+          startChapter(target);
+          return;
+        }
+        renderActivity(chapters[state.chapter].activity);
+      } else renderLine();
+    }
+
+    function renderActivity(type) {
+      state.phase = "activity";
+      $("activityPanel").classList.add("active");
+      $("activityPanel").classList.remove("loan-mode");
+      $("gameScreen").classList.add("activity-open");
+      $("activityPanel").scrollTop = 0;
+      const renderers = {
+        shortVideo: renderShortVideo,
+        commentJudge: renderCommentJudge,
+        cameraGate: renderCameraGate,
+        loanLoop: renderLoanLoop,
+        pressureQueue: renderPressureQueue,
+        finalChoice: renderFinalChoice
+      };
+      renderers[type]();
+      saveGame();
+    }
+
+    function applyDelta(delta = {}) {
+      ["pressure", "traffic", "bill"].forEach(key => {
+        state[key] = clamp(state[key] + (delta[key] || 0));
+      });
+      renderStats();
+      saveGame();
+    }
+
+    function formatDelta(delta = {}) {
+      return ["pressure", "traffic", "bill"].map(key => {
+        const label = key === "pressure" ? "压力值" : key === "traffic" ? "流量值" : "账单值";
+        const value = delta[key] || 0;
+        const sign = value > 0 ? "+" : "";
+        return `<div class="delta"><b>${sign}${value}</b>${label}</div>`;
+      }).join("");
+    }
+
+    function completeStep({ title, text, delta, afterLines, nextChapter, ending }) {
+      applyDelta(delta);
+      playTone(delta.pressure > 12 || state.pressure >= 90 ? "warning" : "choice");
+      $("activityPanel").classList.remove("active");
+      $("activityPanel").classList.remove("loan-mode");
+      $("gameScreen").classList.remove("activity-open");
+      $("feedbackTitle").textContent = title;
+      $("feedbackText").textContent = text;
+      $("deltaRow").innerHTML = formatDelta(delta);
+      $("feedbackBox").classList.add("active");
+      afterFeedback = () => {
+        $("feedbackBox").classList.remove("active");
+        if (state.pressure >= 100) {
+          showCaseInterlude("pressure");
+          return;
+        }
+        if (ending) {
+          const endingKey = ending === "auto" ? calculateEnding() : ending;
+          showCaseInterlude(endingKey);
+          return;
+        }
+        if (afterLines && afterLines.length) {
+          state.phase = "story";
+          state.pendingNextChapter = typeof nextChapter === "number" ? nextChapter : Math.min(state.chapter + 1, chapters.length - 1);
+          currentLines = afterLines;
+          state.line = 0;
+          renderScene();
+          renderLine();
+          return;
+        }
+        if (typeof nextChapter === "number") startChapter(nextChapter);
+        else startChapter(Math.min(state.chapter + 1, chapters.length - 1));
+      };
+    }
+
+    function renderShortVideo() {
+      let swipes = 0;
+      let stayed = 0;
+      const feedCards = [
+        ["挑战视频", "摇摇头，张张嘴，马上看到方案", "像挑战赛一样包装入口。"],
+        ["上岸打卡", "今天又撑过去了，评论区来接力", "情绪被安慰，风险被推后。"],
+        ["低息弹窗", "日息看起来很小，费用折在角落", "数字被切碎后更难判断。"]
+      ];
+      let cardIndex = 0;
+      $("activityPanel").innerHTML = `
+        <h2>刷到“轻松借一下”的短视频</h2>
+        <p>在手机画面上上下滑动切换短视频，向左滑查看风险提示。停留越久，流量值越高。</p>
+        <div class="activity-grid">
+          <div class="phone-card swipe-phone" id="swipePhone">
+            <div class="gesture-hint">上/下滑：切换视频　左滑：查看风险提示</div>
+            <div class="short-video-title" id="feedTitle">摇摇头，张张嘴<br>马上看到方案</div>
+            <div class="short-video-copy" id="feedCopy">画面像挑战赛，按钮像奖励。费用说明被折进小字区。</div>
+            <div class="swipe-meter"><i id="stayMeter"></i></div>
+          </div>
+          <div class="side-stack">
+            <div class="side-note" id="feedStatus">第 1 条视频。等待你的滑动。</div>
+            <button class="choice social" id="fallbackLike"><strong>点赞并转发</strong><span>用按钮模拟接梗选择。</span></button>
+            <button class="choice" id="fallbackRisk"><strong>查看风险提示</strong><span>用按钮模拟左滑风险说明。</span></button>
+          </div>
+        </div>`;
+      const draw = () => {
+        const c = feedCards[cardIndex % feedCards.length];
+        $("feedTitle").innerHTML = c[1].replace("，", "，<br>");
+        $("feedCopy").textContent = c[2];
+        $("feedStatus").textContent = `第 ${cardIndex + 1} 条视频。已滑动 ${swipes} 次，停留强度 ${stayed}/3。`;
+        $("stayMeter").style.width = `${Math.min(100, stayed * 34)}%`;
+      };
+      const finish = (safe) => {
+        completeStep({
+          title: safe ? "你主动打开了风险提示" : "短视频把入口推到你面前",
+          text: safe ? "你用一次左滑打断了推荐流，注意力回到费用和规则。" : "滑动和停留都变成推荐信号，借贷入口看起来更自然。",
+          delta: safe ? { pressure: -2, traffic: -8, bill: 0 } : { pressure: 8 + stayed * 2, traffic: 16 + swipes * 4, bill: 3 },
+          afterLines: [
+            ["friend", "评论区更热闹了，有人说这只是一个梗。"],
+            ["player", "他们笑得越轻松，我越容易把这件事当成小事。"]
+          ]
+        });
+      };
+      const nextCard = () => {
+        swipes += 1;
+        stayed += 1;
+        cardIndex = (cardIndex + 1) % feedCards.length;
+        applyDelta({ pressure: 1, traffic: 4, bill: 0 });
+        playTone("choice");
+        draw();
+        if (swipes >= 3) finish(false);
+      };
+      interactionController.bindSwipe($("swipePhone"), {
+        up: nextCard,
+        down: nextCard,
+        left: () => finish(true)
+      });
+      $("fallbackLike").onclick = () => finish(false);
+      $("fallbackRisk").onclick = () => finish(true);
+      draw();
+    }
+
+    function renderCommentJudge() {
+      const comments = [
+        ["“先借出来再说，年轻人哪有不负债的。”", true],
+        ["“看清年化和费用，别只看日息小数。”", false],
+        ["“逾期也就接几个电话，别太认真。”", true],
+        ["“如果被骚扰通讯录，保留证据走正规渠道。”", false],
+        ["“负债上岸打卡，越惨越有流量。”", true]
+      ];
+      let answered = 0;
+      let correct = 0;
+      $("activityPanel").innerHTML = `
+        <h2>评论区真假判断</h2>
+        <p>把每条评论拖到对应区域：它是在淡化风险，还是在提醒风险。答对会降低流量影响。</p>
+        <div class="drop-layout">
+          <div class="comment-list" id="commentList"></div>
+          <div class="drop-zones">
+            <div class="drop-zone" data-zone="true"><strong>淡化风险</strong><p>把借贷、逾期、催收说成小事或玩梗。</p></div>
+            <div class="drop-zone" data-zone="false"><strong>风险提醒</strong><p>提醒费用、证据、隐私、正规求助。</p></div>
+          </div>
+        </div>`;
+      $("commentList").innerHTML = comments.map((c, i) => `
+        <div class="comment-card drag-card" data-index="${i}" data-drag="${i}">
+          <div><strong>评论 ${i + 1}</strong><p>${c[0]}</p><div class="drag-label">拖动到右侧分类区</div></div>
+        </div>`).join("");
+      const finishOne = (card, zone) => {
+          if (card.classList.contains("done")) return;
+          const item = comments[Number(card.dataset.index)];
+          const isRight = String(item[1]) === zone.dataset.zone;
+          card.classList.add("done", isRight ? "correct" : "wrong");
+          zone.insertAdjacentHTML("beforeend", `<span class="dropped-pill">${isRight ? "判断正确" : "判断偏差"}</span>`);
+          answered += 1;
+          if (isRight) correct += 1;
+          applyDelta(isRight ? { pressure: -1, traffic: -3, bill: 0 } : { pressure: 4, traffic: 5, bill: 1 });
+          playTone(isRight ? "choice" : "warning");
+          if (answered >= comments.length) {
+            completeStep({
+              title: correct >= 4 ? "你识别出多数淡化风险评论" : "评论区影响了你的判断",
+              text: correct >= 4 ? "你把玩梗和风险提醒分开了，流量的推力下降。" : "一些话听起来轻松，实际在削弱风险感。",
+              delta: correct >= 4 ? { pressure: -2, traffic: -8, bill: 0 } : { pressure: 8, traffic: 12, bill: 2 },
+              afterLines: [
+                ["bot", "检测到你对内容感兴趣，轻松认证入口已经准备好。"],
+                ["player", "入口真的跳出来了，我差点就点进去了。"]
+              ]
+            });
+          }
+      };
+      interactionController.bindDrop(
+        [...$("commentList").querySelectorAll(".drag-card")],
+        [...$("activityPanel").querySelectorAll(".drop-zone")],
+        finishOne
+      );
+    }
+
+    function renderCameraGate() {
+      $("activityPanel").innerHTML = `
+        <h2>轻松认证入口</h2>
+        <p>仅本地识别。完成、手动或跳过都能继续剧情。</p>
+        <div class="camera-grid">
+          <div class="camera-box">
+            <video id="cameraPreview" autoplay playsinline muted></video>
+            <div class="camera-overlay"></div>
+            <canvas id="cameraCanvas" width="160" height="120" class="hidden"></canvas>
+            <p id="cameraHint">点击“开启摄像头体验识别”后，这里显示预览。</p>
+          </div>
+          <div class="side-stack">
+            <div class="gesture-list">
+              <div class="gesture-step" id="gesture0">1. 摇摇头</div>
+              <div class="gesture-step" id="gesture1">2. 张张嘴</div>
+              <div class="gesture-step" id="gesture2">3. 眨眨眼</div>
+            </div>
+            <button class="main-btn" id="startCameraBtn">开启摄像头体验识别</button>
+            <button class="ghost-btn" id="manualVerifyBtn">手动完成认证</button>
+            <button class="ghost-btn" id="skipVerifyBtn">跳过认证</button>
+            <div class="side-note">动作越轻，决策越容易被包装成一次签到。</div>
+          </div>
+        </div>`;
+      $("startCameraBtn").onclick = startCameraFlow;
+      $("manualVerifyBtn").onclick = () => finishCamera("manual");
+      $("skipVerifyBtn").onclick = () => finishCamera("skip");
+    }
+
+    async function startCameraFlow() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        state.cameraStream = stream;
+        const video = $("cameraPreview");
+        video.srcObject = stream;
+        video.style.display = "block";
+        $("cameraHint").style.display = "none";
+        playTone("choice");
+        runLocalMotionDetector(video);
+      } catch (error) {
+        $("cameraHint").textContent = "摄像头无法开启。请使用手动完成或跳过继续剧情。";
+        playTone("warning");
+      }
+    }
+
+    function runLocalMotionDetector(video) {
+      const canvas = $("cameraCanvas");
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      let prev = null;
+      let step = 0;
+      let hits = 0;
+      clearInterval(state.cameraTimer);
+      state.cameraTimer = setInterval(() => {
+        if (!video.videoWidth) return;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const frame = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        if (prev) {
+          let diff = 0;
+          for (let i = 0; i < frame.length; i += 16) diff += Math.abs(frame[i] - prev[i]);
+          if (diff > 34000) hits += 1;
+          if (hits >= 2) {
+            $(`gesture${step}`).classList.add("done");
+            step += 1;
+            hits = 0;
+            playTone("choice");
+          }
+          if (step >= 3) finishCamera("camera");
+        }
+        prev = new Uint8ClampedArray(frame);
+      }, 420);
+    }
+
+    function finishCamera(type) {
+      stopCamera();
+      const map = {
+        camera: ["认证完成", "动作完成后，入口像奖励一样亮起。风险说明仍然需要主动寻找。", { pressure: 8, traffic: 8, bill: 18 }],
+        manual: ["手动完成认证", "你绕过了识别流程，但仍进入了同一个借贷入口。", { pressure: 6, traffic: 5, bill: 14 }],
+        skip: ["跳过认证", "你没有进入当前入口，推荐流稍微冷下来，但后续周转压力还在。", { pressure: -2, traffic: -6, bill: 0 }]
+      };
+      const c = map[type];
+      completeStep({
+        title: c[0],
+        text: c[1],
+        delta: c[2],
+        afterLines: [
+          ["narrator", "到还款日时，轻松入口带来的后果开始变成具体账单。"],
+          ["player", "真正难的是后面的选择。"]
+        ]
+      });
+    }
+
+    function stopCamera() {
+      clearInterval(state.cameraTimer);
+      state.cameraTimer = null;
+      if (state.cameraStream) {
+        state.cameraStream.getTracks().forEach(track => track.stop());
+        state.cameraStream = null;
+      }
+    }
+
+    function renderLoanLoop() {
+      state.loopRound = 0;
+      $("activityPanel").classList.add("loan-mode");
+      $("activityPanel").innerHTML = `
+        <h2>以贷养贷循环</h2>
+        <p>连续做三次处理选择。按钮可以直接推进；拖动卡片只是备用操作，不再依赖拖拽完成流程。</p>
+        <div class="loan-loop">
+          <div>
+            <div class="bill-stack" id="billStack"></div>
+            <div class="bill-drag-card drag-card" id="loanDragCard" data-drag="loan-card">
+              <strong>新的周转入口</strong>
+              <p>可拖到右侧区域，也可以直接点右侧按钮。</p>
+            </div>
+          </div>
+          <div class="side-stack">
+            <div class="side-note" id="loopStatus">第 1 / 3 次选择</div>
+            <div class="bill-action-zones">
+              <button class="drop-zone" data-loop="borrow"><strong>再借一笔</strong><p>短期缓解提醒，账单快速上涨。</p></button>
+              <button class="drop-zone" data-loop="delay"><strong>拖延处理</strong><p>先不面对，压力和账单缓慢上升。</p></button>
+              <button class="drop-zone" data-loop="organize"><strong>停止整理</strong><p>把账单列出来，压力下降。</p></button>
+            </div>
+            <div class="loop-result" id="loopResult">请选择本轮处理方式。</div>
+          </div>
+        </div>`;
+      playScene("scene_07", { mode: "branch" });
+      drawBillStack();
+      $("activityPanel").querySelectorAll("[data-loop]").forEach(btn => {
+        btn.onclick = () => handleLoanLoop(btn.dataset.loop);
+      });
+      interactionController.bindDrop(
+        [$("loanDragCard")],
+        [...$("activityPanel").querySelectorAll(".drop-zone")],
+        (card, zone) => {
+          handleLoanLoop(zone.dataset.loop);
+          if (state.loopRound < 3) {
+            card.classList.remove("dragging");
+            card.style.animation = "none";
+            void card.offsetWidth;
+            card.style.animation = "";
+          }
+        }
+      );
+    }
+
+    function drawBillStack() {
+      const stack = $("billStack");
+      const count = Math.max(2, Math.ceil(state.bill / 16));
+      stack.innerHTML = Array.from({ length: Math.min(7, count) }, (_, i) => {
+        const rot = (i % 2 ? 4 : -4) + i;
+        const shift = `${i * 22}px`;
+        return `<div class="paper ${i === count - 1 ? "cover" : ""}" style="--rot:${rot}deg;--shift:${shift}"></div>`;
+      }).join("");
+    }
+
+    function handleLoanLoop(choice) {
+      const options = {
+        borrow: ["新账单盖住旧账单", "提醒暂时少了，账单值和压力值同步上升。", { pressure: 14, traffic: 7, bill: 24 }],
+        delay: ["拖延让问题变暗", "没有新增入口那么快，但现实压力继续堆积。", { pressure: 10, traffic: 4, bill: 10 }],
+        organize: ["账单被摊开", "停止新增，整理现有项目，压力得到一点缓冲。", { pressure: -8, traffic: -6, bill: -8 }]
+      };
+      const data = options[choice];
+      if (!data || state.loopRound >= 3) return;
+      state.loopRound += 1;
+      applyDelta(data[2]);
+      drawBillStack();
+      playTone(choice === "borrow" ? "warning" : "choice");
+      if ($("loopResult")) $("loopResult").textContent = data[1];
+      $("loopStatus").textContent = state.loopRound >= 3
+        ? "第 3 / 3 次选择已完成"
+        : `第 ${Math.min(state.loopRound + 1, 3)} / 3 次选择`;
+      if (state.pressure >= 100) {
+        completeStep({ title: "压力已经爆表", text: "循环没有等到结尾，现实压力提前压过来了。", delta: { pressure: 0, traffic: 0, bill: 0 }, ending: "pressure" });
+        return;
+      }
+      if (state.loopRound >= 3) {
+        $("activityPanel").querySelectorAll("[data-loop]").forEach(btn => { btn.disabled = true; });
+        completeStep({
+          title: data[0],
+          text: `${data[1]} 三次循环结束后，现实压力开始集中出现。`,
+          delta: { pressure: 0, traffic: 0, bill: 0 },
+          afterLines: [
+            ["narrator", "手机开始连续震动。消息、电话和账单把宿舍夜晚切成碎片。"],
+            ["player", "我需要先处理哪一件？"]
+          ]
+        });
+      }
+    }
+
+    function renderPressureQueue() {
+      state.flags.evidence = 0;
+      $("activityPanel").innerHTML = `
+        <h2>现实压力优先级</h2>
+        <p>把电话、消息和账单拖进证据袋；把求助对象拖进优先级。继续刷评论会推高流量值。</p>
+        <div class="drop-layout">
+          <div class="queue-grid" id="pressureCards">
+            <div class="queue-card alert drag-card" data-queue="phone" data-drag="phone"><strong>陌生来电</strong><p>不显示真实号码。可记录时间和频率。</p><span>拖进证据袋</span></div>
+            <div class="queue-card alert drag-card" data-queue="message" data-drag="message"><strong>消息提醒</strong><p>不展示威胁话术。可保存截图。</p><span>拖进证据袋</span></div>
+            <div class="queue-card safe drag-card" data-queue="bill" data-drag="bill"><strong>账单清单</strong><p>把金额、日期和费用拆开。</p><span>拖进证据袋</span></div>
+            <div class="queue-card drag-card" data-queue="comment" data-drag="comment"><strong>继续刷评论</strong><p>短暂逃避，流量继续推高。</p><span>拖到这里会延迟处理</span></div>
+            <div class="queue-card safe drag-card" data-queue="mentor" data-drag="mentor"><strong>联系辅导员</strong><p>把问题从隐瞒转向现实支持。</p><span>拖进优先级</span></div>
+            <div class="queue-card safe drag-card" data-queue="family" data-drag="family"><strong>准备向家人说明</strong><p>先说清账单，不把压力交给谎言。</p><span>拖进优先级</span></div>
+          </div>
+          <div class="drop-zones">
+            <div class="drop-zone evidence-bag" data-target="evidence"><strong>证据袋</strong><p>来电记录、消息截图、账单清单。</p><div id="evidenceDrops"></div></div>
+            <div class="drop-zone priority-stack" data-target="priority"><strong>求助优先级</strong><p>老师、家人、正规渠道。</p><div id="priorityDrops"></div></div>
+            <div class="drop-zone" data-target="delay"><strong>继续拖延</strong><p>会提高流量值和压力值。</p></div>
+          </div>
+        </div>
+        <div class="evidence-row" id="evidenceRow">
+          <span class="evidence-token" id="evPhone">来电记录</span>
+          <span class="evidence-token" id="evMessage">消息截图</span>
+          <span class="evidence-token" id="evBill">账单清单</span>
+        </div>
+        <div class="row-actions" style="margin-top:16px">
+          <button class="main-btn" id="pressureDoneBtn" disabled>进入求助选择</button>
+        </div>`;
+      const picked = new Set();
+      const handlePressureDrop = (card, zone) => {
+          const key = card.dataset.queue;
+          if (picked.has(key)) return;
+          const target = zone.dataset.target;
+          picked.add(key);
+          card.classList.add("done");
+          const deltas = {
+            phone: { pressure: 2, traffic: -2, bill: 0 },
+            message: { pressure: 2, traffic: -3, bill: 0 },
+            bill: { pressure: -5, traffic: -4, bill: -6 },
+            comment: { pressure: 7, traffic: 12, bill: 2 },
+            mentor: { pressure: -8, traffic: -7, bill: 0 },
+            family: { pressure: -6, traffic: -5, bill: 0 }
+          };
+          const validEvidence = target === "evidence" && ["phone", "message", "bill"].includes(key);
+          const validPriority = target === "priority" && ["mentor", "family"].includes(key);
+          const delta = target === "delay" || key === "comment" ? { pressure: 7, traffic: 12, bill: 2 } : (validEvidence || validPriority ? deltas[key] : { pressure: 4, traffic: 2, bill: 0 });
+          applyDelta(delta);
+          const pill = `<span class="dropped-pill">${card.querySelector("strong").textContent}</span>`;
+          if (target === "evidence") $("evidenceDrops").insertAdjacentHTML("beforeend", pill);
+          if (target === "priority") $("priorityDrops").insertAdjacentHTML("beforeend", pill);
+          if (validEvidence) {
+            if (key === "phone") $("evPhone").classList.add("on");
+            if (key === "message") $("evMessage").classList.add("on");
+            if (key === "bill") $("evBill").classList.add("on");
+            state.flags.evidence += 1;
+          }
+          if (picked.size >= 3) $("pressureDoneBtn").disabled = false;
+          playTone(key === "comment" ? "warning" : "choice");
+          if (state.pressure >= 100) {
+            completeStep({ title: "现实压力提前爆发", text: "信息堆叠超过承受范围，故事直接进入坏结局。", delta: {}, ending: "pressure" });
+          }
+      };
+      interactionController.bindDrop(
+        [...$("pressureCards").querySelectorAll(".drag-card")],
+        [...$("activityPanel").querySelectorAll(".drop-zone")],
+        handlePressureDrop
+      );
+      $("pressureDoneBtn").onclick = () => {
+        completeStep({
+          title: state.flags.evidence >= 2 ? "证据链开始形成" : "仍有信息没有整理",
+          text: state.flags.evidence >= 2 ? "来电、消息和账单被分开保存，求助时能说得更清楚。" : "还缺少关键记录，求助会更难说明情况。",
+          delta: state.flags.evidence >= 2 ? { pressure: -5, traffic: -4, bill: -2 } : { pressure: 6, traffic: 2, bill: 0 },
+          afterLines: [
+            ["mentor", "我们先把能说明情况的材料整理出来，再决定联系谁。"],
+            ["player", "我想说清楚，可我不知道从哪里开始。"]
+          ]
+        });
+      };
+    }
+
+    function renderFinalChoice() {
+      $("activityPanel").innerHTML = `
+        <h2>求助与多结局</h2>
+        <p>最后选择会改变三项数值，随后由压力值、流量值、账单值共同判定结局。</p>
+        <div class="choice-grid" style="margin-top:16px">
+          <button class="choice risky" data-final="hide"><strong>继续隐藏</strong><span>维持表面平静，压力和账单继续上升。</span></button>
+          <button class="choice" data-final="help"><strong>正常求助</strong><span>联系辅导员和家人，整理账单与证据。</span></button>
+          <button class="choice social" data-final="meme"><strong>梗化逃避</strong><span>把困境发成段子，获得互动，现实问题继续延后。</span></button>
+        </div>`;
+      $("activityPanel").querySelectorAll("[data-final]").forEach(btn => {
+        btn.onclick = () => {
+          const options = {
+            hide: ["继续隐藏", "压力被推迟处理，现实关系开始承受代价。", { pressure: 24, traffic: 6, bill: 8 }],
+            help: ["正常求助", "问题没有立刻消失，但你把它带到可以处理的地方。", { pressure: -24, traffic: -16, bill: -12 }],
+            meme: ["梗化逃避", "互动变多，风险感继续下降，账单没有跟着消失。", { pressure: 16, traffic: 30, bill: 6 }]
+          };
+          const c = options[btn.dataset.final];
+          if (btn.dataset.final === "help") state.flags.finalHelp = true;
+          if (btn.dataset.final === "help") playScene("scene_08", { mode: "branch" });
+          completeStep({
+            title: c[0],
+            text: c[1],
+            delta: c[2],
+            ending: "auto"
+          });
+        };
+      });
+    }
+
+    function calculateEnding() {
+      if (state.pressure >= 100) return "pressure";
+      if (state.traffic >= 80 && state.pressure >= 58) return "traffic";
+      if (state.bill >= 80 && state.pressure >= 58) return "illusion";
+      if (state.flags.finalHelp && state.pressure <= 62 && state.traffic <= 58 && state.bill <= 74) return "clear";
+      if (state.pressure <= 50 && state.traffic <= 48 && state.bill <= 62) return "clear";
+      if (state.pressure >= 88 && state.bill >= 70) return "pressure";
+      return "edge";
+    }
+
+    function showCaseInterlude(key) {
+      const data = endingData[key];
+      playTone(key === "pressure" ? "alarm" : "ending");
+      const cases = data.cases.map(item => `
+        <article class="case-card">
+          <h3>${item[0]}</h3>
+          <p>${item[1]}</p>
+          <a href="${item[2]}" target="_blank" rel="noreferrer">来源/风险提示</a>
+        </article>`).join("");
+      openModal(`
+        <div class="modal-card">
+          <div class="kicker">真实案例卡 / 匿名化整理</div>
+          <h2>进入结局前，先看现实依据</h2>
+          <p>以下内容根据媒体报道和金融监管风险提示整理，去除真实姓名、电话、平台和学校信息，用于支撑课堂表达。</p>
+          <div class="case-grid">${cases}</div>
+          <div class="row-actions">
+            <button class="main-btn" id="enterEndingBtn">继续查看结局</button>
+            <button class="ghost-btn" id="backToDemoBtn">打开演示控制</button>
+          </div>
+        </div>`);
+      $("enterEndingBtn").onclick = () => showEnding(key);
+      $("backToDemoBtn").onclick = () => showDemoPanel();
+    }
+
+    function showEnding(key) {
+      stopCamera();
+      const data = endingData[key];
+      const badClass = data.tone === "bad" ? "bad-ending" : "";
+      if (data.tone === "bad") {
+        $("sceneBg").style.backgroundImage = `url("${assets.bg.crisis}"), linear-gradient(135deg, #121827, #080b10)`;
+        $("sceneBg").classList.add("bad");
+      }
+      speak(data.title + "。" + data.body, "narrator");
+      const stats = [
+        ["压力值", state.pressure],
+        ["流量值", state.traffic],
+        ["账单值", state.bill]
+      ].map(([label, value]) => `<div class="ending-stat"><b>${Math.round(value)}</b>${label}</div>`).join("");
+      const endingVideoAsset = resolveVideoAsset(endingSceneMap[key]);
+      const endingMutedAttr = state.sound ? "" : " muted";
+      const endingVisual = endingVideoAsset
+        ? `<video class="ending-visual ending-video" src="${endingVideoAsset.output_video_path}" autoplay${endingMutedAttr} playsinline controls onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"></video><img class="ending-visual" style="display:none" src="${data.image}" alt="${data.title}" onerror="assetManager.imgError(this, '${data.title}')">`
+        : `<img class="ending-visual" src="${data.image}" alt="${data.title}" onerror="assetManager.imgError(this, '${data.title}')">`;
+      openModal(`
+        <div class="modal-card ${badClass}">
+          <div class="kicker">结局演出</div>
+          <h2>${data.title}</h2>
+          ${endingVisual}
+          <p>${data.body}</p>
+          <div class="ending-stats">${stats}</div>
+          <p>止损提示：停止新增周转，整理真实账单，保留截图、录音、来电记录和转账记录；联系家人、老师、学校资助渠道、官方客服或正规投诉渠道。遇到骚扰通讯录、恐吓等违法催收，应通过正规渠道投诉或报警求助。</p>
+          <div class="row-actions">
+            <button class="main-btn" id="restartGameBtn">重新开始</button>
+            <button class="ghost-btn" id="demoAfterEndingBtn">演示控制</button>
+            <button class="ghost-btn" id="replayVoiceBtn">重播旁白</button>
+          </div>
+        </div>`);
+      $("restartGameBtn").onclick = resetGame;
+      $("demoAfterEndingBtn").onclick = showDemoPanel;
+      $("replayVoiceBtn").onclick = () => speak(data.title + "。" + data.body, "narrator");
+      saveGame();
+    }
+
+    function openModal(html) {
+      const modal = $("genericModal");
+      modal.innerHTML = html;
+      modal.classList.add("active");
+    }
+
+    function closeModal() {
+      $("genericModal").classList.remove("active");
+      $("genericModal").innerHTML = "";
+    }
+
+    function showSettings() {
+      openModal(`
+        <div class="modal-card">
+          <h2>声音设置</h2>
+          <p>剧情台词优先播放本地配音文件；没有对应文件时才使用浏览器朗读。点击音、警示音和来电音仍在本地生成，课堂展示前建议先点击一次页面解锁音频权限。</p>
+          <div class="row-actions">
+            <button class="main-btn" id="toggleSoundPanel">${state.sound ? "关闭声音" : "开启声音"}</button>
+            <button class="ghost-btn" id="testSoundBtn">测试警示音</button>
+            <button class="ghost-btn" id="closeSettingsBtn">关闭</button>
+          </div>
+        </div>`);
+      $("toggleSoundPanel").onclick = () => {
+        state.sound = !state.sound;
+        if (!state.sound) stopVoice();
+        $("soundToggle").textContent = state.sound ? "声音" : "静音";
+        saveGame();
+        showSettings();
+      };
+      $("testSoundBtn").onclick = () => playTone("alarm");
+      $("closeSettingsBtn").onclick = closeModal;
+    }
+
+    function showAbout() {
+      openModal(`
+        <div class="modal-card">
+          <h2>作品说明</h2>
+          <p>本作品关注网络段子如何降低网贷风险感知。故事中的选择只用于叙事表达，不提供借贷建议，也不连接任何真实金融流程。</p>
+          <p>系统逻辑：段子化认知升高，流量值升高；风险感降低后，行为更激进；账单值和压力值延迟爆发。现实认知上升后，流量参与降低，行为收敛，故事进入止损路径。</p>
+          <div class="row-actions"><button class="main-btn" id="closeAboutBtn">关闭</button></div>
+        </div>`);
+      $("closeAboutBtn").onclick = closeModal;
+    }
+
+    function showDemoPanel() {
+      openModal(`
+        <div class="modal-card">
+          <h2>演示控制台</h2>
+          <p>课堂备用。可以直接跳章节、跳结局、设置三项数值，或关闭摄像头。</p>
+          <div class="demo-panel">
+            <section class="demo-section">
+              <h3>跳章节</h3>
+              <div class="row-actions">
+                ${chapters.map((c, i) => `<button class="mini-btn" data-demo-chapter="${i}">${i + 1}. ${c.title.replace(/^第\d章：/, "")}</button>`).join("")}
+              </div>
+            </section>
+            <section class="demo-section">
+              <h3>跳结局</h3>
+              <div class="row-actions">
+                ${Object.keys(endingData).map(key => `<button class="mini-btn" data-demo-ending="${key}">${endingData[key].title.split("：")[0]}</button>`).join("")}
+              </div>
+            </section>
+            <section class="demo-section">
+              <h3>设置数值</h3>
+              <div class="range-grid">
+                <label>压力值 <input id="demoPressure" type="range" min="0" max="100" value="${state.pressure}"><span id="demoPressureOut">${state.pressure}</span></label>
+                <label>流量值 <input id="demoTraffic" type="range" min="0" max="100" value="${state.traffic}"><span id="demoTrafficOut">${state.traffic}</span></label>
+                <label>账单值 <input id="demoBill" type="range" min="0" max="100" value="${state.bill}"><span id="demoBillOut">${state.bill}</span></label>
+              </div>
+              <div class="row-actions" style="margin-top:12px">
+                <button class="main-btn" id="applyDemoStats">应用数值</button>
+                <button class="ghost-btn" id="demoBadPreset">坏结局预设</button>
+                <button class="ghost-btn" id="demoClearPreset">止损预设</button>
+              </div>
+            </section>
+            <section class="demo-section">
+              <h3>设备控制</h3>
+              <div class="debug-status" id="debugAssetStatus">${state.debugAssetStatus}</div>
+              <div class="row-actions">
+                <button class="ghost-btn" id="replayIntroBtn">重播片头</button>
+                <button class="ghost-btn" id="resetAssetBtn">重新检测素材</button>
+                <button class="ghost-btn" id="stopCameraBtn">关闭摄像头</button>
+                <button class="ghost-btn" id="closeDemoBtn">关闭控制台</button>
+              </div>
+            </section>
+          </div>
+        </div>`);
+      $("genericModal").querySelectorAll("[data-demo-chapter]").forEach(btn => {
+        btn.onclick = () => { closeModal(); enterScreen("gameScreen"); startChapter(Number(btn.dataset.demoChapter)); };
+      });
+      $("genericModal").querySelectorAll("[data-demo-ending]").forEach(btn => {
+        btn.onclick = () => { closeModal(); showCaseInterlude(btn.dataset.demoEnding); };
+      });
+      ["Pressure", "Traffic", "Bill"].forEach(name => {
+        $(`demo${name}`).oninput = () => $(`demo${name}Out`).textContent = $(`demo${name}`).value;
+      });
+      $("applyDemoStats").onclick = () => {
+        state.pressure = Number($("demoPressure").value);
+        state.traffic = Number($("demoTraffic").value);
+        state.bill = Number($("demoBill").value);
+        renderStats();
+        saveGame();
+      };
+      $("demoBadPreset").onclick = () => {
+        state.pressure = 100; state.traffic = 68; state.bill = 92; renderStats(); saveGame(); showDemoPanel();
+      };
+      $("demoClearPreset").onclick = () => {
+        state.pressure = 32; state.traffic = 22; state.bill = 42; state.flags.finalHelp = true; renderStats(); saveGame(); showDemoPanel();
+      };
+      $("replayIntroBtn").onclick = () => { closeModal(); enterScreen("titleScreen"); sceneController.startIntro(); };
+      $("resetAssetBtn").onclick = () => assetManager.preload();
+      $("stopCameraBtn").onclick = () => { stopCamera(); playTone("choice"); };
+      $("closeDemoBtn").onclick = closeModal;
+    }
+
+    function saveGame() {
+      const save = {
+        chapter: state.chapter,
+        pressure: state.pressure,
+        traffic: state.traffic,
+        bill: state.bill,
+        flags: state.flags,
+        sound: state.sound
+      };
+      localStorage.setItem("loan-vn-mvp-save", JSON.stringify(save));
+    }
+
+    function loadGame() {
+      const raw = localStorage.getItem("loan-vn-mvp-save");
+      if (!raw) return false;
+      try {
+        const save = JSON.parse(raw);
+        state.chapter = clamp(save.chapter || 0, 0, chapters.length - 1);
+        state.pressure = clamp(save.pressure ?? 20);
+        state.traffic = clamp(save.traffic ?? 10);
+        state.bill = clamp(save.bill ?? 0);
+        state.flags = save.flags || { evidence: 0, finalHelp: false };
+        state.sound = save.sound ?? true;
+        $("soundToggle").textContent = state.sound ? "声音" : "静音";
+        enterScreen("gameScreen");
+        startChapter(state.chapter);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+
+    function getAudioCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      return audioCtx;
+    }
+
+    function playTone(type) {
+      if (!state.sound) return;
+      try {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+        const seq = {
+          line: [[520, .035, .025]],
+          choice: [[620, .06, .06], [860, .05, .11]],
+          warning: [[220, .12, .08], [160, .16, .22]],
+          alarm: [[180, .18, .05], [120, .22, .32], [180, .18, .62]],
+          ending: [[420, .1, .04], [520, .1, .2], [640, .16, .38]]
+        }[type] || [[440, .06, .04]];
+        seq.forEach(([freq, dur, offset]) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = type === "alarm" || type === "warning" ? "sawtooth" : "sine";
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(.0001, now + offset);
+          gain.gain.exponentialRampToValueAtTime(type === "alarm" ? .13 : .055, now + offset + .012);
+          gain.gain.exponentialRampToValueAtTime(.0001, now + offset + dur);
+          osc.connect(gain).connect(ctx.destination);
+          osc.start(now + offset);
+          osc.stop(now + offset + dur + .03);
+        });
+      } catch (error) {}
+    }
+
+    const voiceManifestMap = new Map();
+    fetch("h5-assets/galgame/voice/voice-manifest.json")
+      .then((response) => response.ok ? response.json() : [])
+      .then((items) => {
+        if (!Array.isArray(items)) return;
+        items.forEach((item) => {
+          if (!item || !item.speaker || !item.text || !item.file) return;
+          const cleanedText = item.text.replace(/[“”]/g, "");
+          voiceManifestMap.set(`${item.speaker}|${cleanedText}`, `h5-assets/galgame/voice/${item.file}`);
+        });
+      })
+      .catch(() => {});
+
+    function voiceHash(input) {
+      let h = 2166136261;
+      for (let i = 0; i < input.length; i += 1) {
+        h ^= input.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return (h >>> 0).toString(16);
+    }
+
+    function voiceSrcFor(text, speaker) {
+      const manifestSrc = voiceManifestMap.get(`${speaker}|${text}`);
+      if (manifestSrc) return manifestSrc;
+      return `h5-assets/galgame/voice/${speaker}-${voiceHash(`${speaker}|${text}`)}.m4a`;
+    }
+
+    function stopVoice() {
+      if (voiceAudio) {
+        voiceAudio.pause();
+        voiceAudio.currentTime = 0;
+        voiceAudio = null;
+      }
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    }
+
+    function speak(text, speaker) {
+      if (!state.sound) return;
+      stopVoice();
+      const cleaned = text.replace(/[“”]/g, "");
+      const audio = new Audio(voiceSrcFor(cleaned, speaker));
+      let didFallback = false;
+      voiceAudio = audio;
+      audio.preload = "auto";
+      audio.volume = speaker === "bot" ? .82 : .95;
+      const fallbackOnce = () => {
+        if (didFallback) return;
+        didFallback = true;
+        fallbackSpeak(cleaned, speaker);
+      };
+      audio.onerror = fallbackOnce;
+      audio.play().catch(fallbackOnce);
+    }
+
+    function fallbackSpeak(text, speaker) {
+      if (!state.sound || !("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "zh-CN";
+      utter.rate = speaker === "bot" ? 1.08 : .98;
+      utter.pitch = speaker === "bot" ? 1.12 : .92;
+      window.speechSynthesis.speak(utter);
+    }
+
+    $("startBtn").onclick = resetGame;
+    $("continueBtn").onclick = () => { if (!loadGame()) resetGame(); };
+    $("demoBtn").onclick = showDemoPanel;
+    $("settingsBtn").onclick = showSettings;
+    $("aboutBtn").onclick = showAbout;
+    $("nextLineBtn").onclick = nextLine;
+    $("dialogueBox").onclick = (event) => {
+      if (event.target.closest("button")) return;
+      nextLine();
+    };
+    $("feedbackNext").onclick = () => { if (afterFeedback) afterFeedback(); };
+    $("skipSceneVideoBtn").onclick = () => onVideoEnd(aiVideoRuntime.currentSceneId || "", { force: true });
+    $("saveBtn").onclick = () => { saveGame(); playTone("choice"); };
+    $("soundToggle").onclick = () => {
+      state.sound = !state.sound;
+      if (!state.sound) stopVoice();
+      $("soundToggle").textContent = state.sound ? "声音" : "静音";
+      syncVideoMuteState();
+      saveGame();
+    };
+    $("demoMiniBtn").onclick = showDemoPanel;
+
+    window.addEventListener("beforeunload", stopCamera);
+    sceneController.startIntro();
+    loadAiVideoManifest().finally(() => assetManager.preload());
+    renderStats();
+  </script>
+</body>
+</html>

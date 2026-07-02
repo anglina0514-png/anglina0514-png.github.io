@@ -1,0 +1,358 @@
+[
+  {
+    "scene_id": "intro_00",
+    "chapter": "INTRO",
+    "type": "intro",
+    "title": "首页片头：短视频入口预告",
+    "reference_image_path": "ai_video_assets/reference_images/intro_00.png",
+    "image_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene: intro_00 - 首页片头：短视频入口预告\ngenerate cinematic keyframe image for AI video generation\nopening title beat, dorm at night, phone glow, short-video meme doorway, subtle camera push in, blue neon start, final frame leaves the protagonist watching the phone\nhigh detail, consistent character identity, emotional realism, no watermark, no brand logo",
+    "video_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene_id: intro_00\ngenerate 6 seconds cinematic image-to-video animation\nmust include camera movement, lighting transition, emotional progression, realistic motion, shallow depth of field\nkeep the same protagonist identity from the reference image\nuse smartphone UI overlay only when relevant, keep text abstract and non-branded\nopening title beat, dorm at night, phone glow, short-video meme doorway, subtle camera push in, blue neon start, final frame leaves the protagonist watching the phone\nfinal frame should hold for visual novel dialogue transition",
+    "output_image_path": "ai_video_assets/reference_images/intro_00.png",
+    "output_video_path": "ai_video_assets/videos/intro_00.mp4",
+    "dreamina": {
+      "command": "dreamina image2video",
+      "model_version": "seedance2.0_vip",
+      "duration": 6,
+      "video_resolution": "1080p",
+      "submit_id": "502775cd-3e9d-478c-b588-ce000d725b41",
+      "status": "downloaded_validated",
+      "validated_at": "2026-06-27T21:33:29",
+      "validation": {
+        "validated_at": "2026-06-27T21:33:29",
+        "status": "validated",
+        "bytes": 19424256,
+        "duration": 6.084,
+        "width": 1920,
+        "height": 1080,
+        "source": "redownload_retry_20260627_212849/intro_00/attempt_2/502775cd-3e9d-478c-b588-ce000d725b41_video_1.mp4"
+      }
+    }
+  },
+  {
+    "scene_id": "scene_01",
+    "chapter": "CH1",
+    "type": "main",
+    "title": "短视频入口",
+    "reference_image_path": "ai_video_assets/reference_images/scene_01.png",
+    "image_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene: scene_01 - 短视频入口\ngenerate cinematic keyframe image for AI video generation\nshort video meme intro, social media UI overload, playful tone turning slightly uneasy, slow push toward phone screen, blue neon lighting\nhigh detail, consistent character identity, emotional realism, no watermark, no brand logo",
+    "video_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene_id: scene_01\ngenerate 6 seconds cinematic image-to-video animation\nmust include camera movement, lighting transition, emotional progression, realistic motion, shallow depth of field\nkeep the same protagonist identity from the reference image\nuse smartphone UI overlay only when relevant, keep text abstract and non-branded\nshort video meme intro, social media UI overload, playful tone turning slightly uneasy, slow push toward phone screen, blue neon lighting\nfinal frame should hold for visual novel dialogue transition",
+    "output_image_path": "ai_video_assets/reference_images/scene_01.png",
+    "output_video_path": "ai_video_assets/videos/scene_01.mp4",
+    "dreamina": {
+      "command": "dreamina image2video",
+      "model_version": "seedance2.0_vip",
+      "duration": 6,
+      "video_resolution": "1080p",
+      "submit_id": "459726db-acb7-450b-941a-4c6b56e1cf75",
+      "status": "downloaded_validated",
+      "validated_at": "2026-06-27T21:33:29",
+      "validation": {
+        "validated_at": "2026-06-27T21:33:29",
+        "status": "validated",
+        "bytes": 17465560,
+        "duration": 6.084,
+        "width": 1920,
+        "height": 1080,
+        "source": "redownload_staging_20260627_212505/scene_01/459726db-acb7-450b-941a-4c6b56e1cf75_video_1.mp4"
+      }
+    }
+  },
+  {
+    "scene_id": "scene_02",
+    "chapter": "CH2",
+    "type": "main",
+    "title": "评论区污染",
+    "reference_image_path": "ai_video_assets/reference_images/scene_02.png",
+    "image_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene: scene_02 - 评论区污染\ngenerate cinematic keyframe image for AI video generation\nclose-up face lit by scrolling comments, amused expression fades into uncertainty, comments drift past lens, blue-gray light\nhigh detail, consistent character identity, emotional realism, no watermark, no brand logo",
+    "video_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene_id: scene_02\ngenerate 6 seconds cinematic image-to-video animation\nmust include camera movement, lighting transition, emotional progression, realistic motion, shallow depth of field\nkeep the same protagonist identity from the reference image\nuse smartphone UI overlay only when relevant, keep text abstract and non-branded\nclose-up face lit by scrolling comments, amused expression fades into uncertainty, comments drift past lens, blue-gray light\nfinal frame should hold for visual novel dialogue transition",
+    "output_image_path": "ai_video_assets/reference_images/scene_02.png",
+    "output_video_path": "ai_video_assets/videos/scene_02.mp4",
+    "dreamina": {
+      "command": "dreamina image2video",
+      "model_version": "seedance2.0_vip",
+      "duration": 6,
+      "video_resolution": "1080p",
+      "submit_id": "bf1c418b-330b-4a41-8f01-72c17a59a0ac",
+      "status": "downloaded"
+    }
+  },
+  {
+    "scene_id": "scene_03",
+    "chapter": "CH3",
+    "type": "main",
+    "title": "轻松借贷入口",
+    "reference_image_path": "ai_video_assets/reference_images/scene_03.png",
+    "image_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene: scene_03 - 轻松借贷入口\ngenerate cinematic keyframe image for AI video generation\nloan app instant approval interface, credit limit rises, celebratory UI particles, the student hesitates, neon screen glow\nhigh detail, consistent character identity, emotional realism, no watermark, no brand logo",
+    "video_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene_id: scene_03\ngenerate 6 seconds cinematic image-to-video animation\nmust include camera movement, lighting transition, emotional progression, realistic motion, shallow depth of field\nkeep the same protagonist identity from the reference image\nuse smartphone UI overlay only when relevant, keep text abstract and non-branded\nloan app instant approval interface, credit limit rises, celebratory UI particles, the student hesitates, neon screen glow\nfinal frame should hold for visual novel dialogue transition",
+    "output_image_path": "ai_video_assets/reference_images/scene_03.png",
+    "output_video_path": "ai_video_assets/videos/scene_03.mp4",
+    "dreamina": {
+      "command": "dreamina image2video",
+      "model_version": "seedance2.0_vip",
+      "duration": 6,
+      "video_resolution": "1080p",
+      "submit_id": "6e97ec9c-234b-4eee-bd2c-269353564480",
+      "status": "downloaded"
+    }
+  },
+  {
+    "scene_id": "scene_04",
+    "chapter": "CH4",
+    "type": "main",
+    "title": "以贷养贷",
+    "reference_image_path": "ai_video_assets/reference_images/scene_04.png",
+    "image_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene: scene_04 - 以贷养贷\ngenerate cinematic keyframe image for AI video generation\nfinancial chaos montage, bill stacking effect, overlapping loan notifications, blue light shifts toward dark red, handheld anxiety\nhigh detail, consistent character identity, emotional realism, no watermark, no brand logo",
+    "video_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene_id: scene_04\ngenerate 6 seconds cinematic image-to-video animation\nmust include camera movement, lighting transition, emotional progression, realistic motion, shallow depth of field\nkeep the same protagonist identity from the reference image\nuse smartphone UI overlay only when relevant, keep text abstract and non-branded\nfinancial chaos montage, bill stacking effect, overlapping loan notifications, blue light shifts toward dark red, handheld anxiety\nfinal frame should hold for visual novel dialogue transition",
+    "output_image_path": "ai_video_assets/reference_images/scene_04.png",
+    "output_video_path": "ai_video_assets/videos/scene_04.mp4",
+    "dreamina": {
+      "command": "dreamina image2video",
+      "model_version": "seedance2.0_vip",
+      "duration": 6,
+      "video_resolution": "1080p",
+      "submit_id": "6ec35314-a60b-43fc-ada6-ba2121865d69",
+      "status": "downloaded_validated",
+      "validated_at": "2026-06-27T21:33:29",
+      "validation": {
+        "validated_at": "2026-06-27T21:33:29",
+        "status": "validated",
+        "bytes": 17702504,
+        "duration": 6.084,
+        "width": 1920,
+        "height": 1080,
+        "source": "redownload_staging_20260627_212505/scene_04/6ec35314-a60b-43fc-ada6-ba2121865d69_video_1.mp4"
+      }
+    }
+  },
+  {
+    "scene_id": "scene_05",
+    "chapter": "CH5",
+    "type": "main",
+    "title": "现实压力爆发",
+    "reference_image_path": "ai_video_assets/reference_images/scene_05.png",
+    "image_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene: scene_05 - 现实压力爆发\ngenerate cinematic keyframe image for AI video generation\nincoming calls and debt alerts surround the student, rain outside window, red warning overlays pulse, slow motion tension\nhigh detail, consistent character identity, emotional realism, no watermark, no brand logo",
+    "video_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene_id: scene_05\ngenerate 6 seconds cinematic image-to-video animation\nmust include camera movement, lighting transition, emotional progression, realistic motion, shallow depth of field\nkeep the same protagonist identity from the reference image\nuse smartphone UI overlay only when relevant, keep text abstract and non-branded\nincoming calls and debt alerts surround the student, rain outside window, red warning overlays pulse, slow motion tension\nfinal frame should hold for visual novel dialogue transition",
+    "output_image_path": "ai_video_assets/reference_images/scene_05.png",
+    "output_video_path": "ai_video_assets/videos/scene_05.mp4",
+    "dreamina": {
+      "command": "dreamina image2video",
+      "model_version": "seedance2.0_vip",
+      "duration": 6,
+      "video_resolution": "1080p",
+      "submit_id": "2949569b-ae5f-42d8-9a17-6dc5dec3062d",
+      "status": "downloaded_validated",
+      "validated_at": "2026-06-27T21:33:29",
+      "validation": {
+        "validated_at": "2026-06-27T21:33:29",
+        "status": "validated",
+        "bytes": 20977184,
+        "duration": 6.084,
+        "width": 1920,
+        "height": 1080,
+        "source": "redownload_retry_20260627_212849/scene_05/curl_direct/2949569b-ae5f-42d8-9a17-6dc5dec3062d_video_1.mp4"
+      }
+    }
+  },
+  {
+    "scene_id": "scene_06",
+    "chapter": "CHOICE",
+    "type": "branch",
+    "title": "关键犹豫节点：确认取消",
+    "reference_image_path": "ai_video_assets/reference_images/scene_06.png",
+    "image_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene: scene_06 - 关键犹豫节点：确认取消\ngenerate cinematic keyframe image for AI video generation\nhesitation before loan confirmation, confirm and cancel UI flicker, unstable light, breath held, shallow focus on thumb and screen\nhigh detail, consistent character identity, emotional realism, no watermark, no brand logo",
+    "video_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene_id: scene_06\ngenerate 6 seconds cinematic image-to-video animation\nmust include camera movement, lighting transition, emotional progression, realistic motion, shallow depth of field\nkeep the same protagonist identity from the reference image\nuse smartphone UI overlay only when relevant, keep text abstract and non-branded\nhesitation before loan confirmation, confirm and cancel UI flicker, unstable light, breath held, shallow focus on thumb and screen\nfinal frame should hold for visual novel dialogue transition",
+    "output_image_path": "ai_video_assets/reference_images/scene_06.png",
+    "output_video_path": "ai_video_assets/videos/scene_06.mp4",
+    "dreamina": {
+      "command": "dreamina image2video",
+      "model_version": "seedance2.0_vip",
+      "duration": 6,
+      "video_resolution": "1080p",
+      "submit_id": "fdd0ae6c-295b-4264-af2a-2c888b286cce",
+      "status": "downloaded"
+    }
+  },
+  {
+    "scene_id": "scene_07",
+    "chapter": "CHOICE",
+    "type": "branch",
+    "title": "关键犹豫节点：账单明细",
+    "reference_image_path": "ai_video_assets/reference_images/scene_07.png",
+    "image_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene: scene_07 - 关键犹豫节点：账单明细\ngenerate cinematic keyframe image for AI video generation\ndetailed bill breakdown overwhelms the frame, numbers stack and slide, expression turns serious, colder light, steady camera\nhigh detail, consistent character identity, emotional realism, no watermark, no brand logo",
+    "video_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene_id: scene_07\ngenerate 6 seconds cinematic image-to-video animation\nmust include camera movement, lighting transition, emotional progression, realistic motion, shallow depth of field\nkeep the same protagonist identity from the reference image\nuse smartphone UI overlay only when relevant, keep text abstract and non-branded\ndetailed bill breakdown overwhelms the frame, numbers stack and slide, expression turns serious, colder light, steady camera\nfinal frame should hold for visual novel dialogue transition",
+    "output_image_path": "ai_video_assets/reference_images/scene_07.png",
+    "output_video_path": "ai_video_assets/videos/scene_07.mp4",
+    "dreamina": {
+      "command": "dreamina image2video",
+      "model_version": "seedance2.0_vip",
+      "duration": 6,
+      "video_resolution": "1080p",
+      "submit_id": "aa6d9d16-27fa-43e7-a3b1-af5cbb7d6335",
+      "status": "downloaded"
+    }
+  },
+  {
+    "scene_id": "scene_08",
+    "chapter": "CHOICE",
+    "type": "branch",
+    "title": "关键犹豫节点：求助电话",
+    "reference_image_path": "ai_video_assets/reference_images/scene_08.png",
+    "image_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene: scene_08 - 关键犹豫节点：求助电话\ngenerate cinematic keyframe image for AI video generation\ncalling a teacher or friend for help, hesitant but determined expression, warm light begins to enter, camera slowly stabilizes\nhigh detail, consistent character identity, emotional realism, no watermark, no brand logo",
+    "video_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene_id: scene_08\ngenerate 6 seconds cinematic image-to-video animation\nmust include camera movement, lighting transition, emotional progression, realistic motion, shallow depth of field\nkeep the same protagonist identity from the reference image\nuse smartphone UI overlay only when relevant, keep text abstract and non-branded\ncalling a teacher or friend for help, hesitant but determined expression, warm light begins to enter, camera slowly stabilizes\nfinal frame should hold for visual novel dialogue transition",
+    "output_image_path": "ai_video_assets/reference_images/scene_08.png",
+    "output_video_path": "ai_video_assets/videos/scene_08.mp4",
+    "dreamina": {
+      "command": "dreamina image2video",
+      "model_version": "seedance2.0_vip",
+      "duration": 6,
+      "video_resolution": "1080p",
+      "submit_id": "68c40ac7-043e-43d9-8b88-bbc308921c47",
+      "status": "downloaded_validated",
+      "validated_at": "2026-06-27T21:33:29",
+      "validation": {
+        "validated_at": "2026-06-27T21:33:29",
+        "status": "validated",
+        "bytes": 15794572,
+        "duration": 6.084,
+        "width": 1920,
+        "height": 1080,
+        "source": "redownload_staging_20260627_212505/scene_08/68c40ac7-043e-43d9-8b88-bbc308921c47_video_1.mp4"
+      }
+    }
+  },
+  {
+    "scene_id": "end_01",
+    "chapter": "END",
+    "type": "ending",
+    "title": "压力爆表",
+    "reference_image_path": "ai_video_assets/reference_images/end_01.png",
+    "image_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene: end_01 - 压力爆表\ngenerate cinematic keyframe image for AI video generation\npsychological breakdown, red glitch overload, phone vibrating, infinite debt notifications, rain and chaotic distortion\nhigh detail, consistent character identity, emotional realism, no watermark, no brand logo",
+    "video_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene_id: end_01\ngenerate 6 seconds cinematic image-to-video animation\nmust include camera movement, lighting transition, emotional progression, realistic motion, shallow depth of field\nkeep the same protagonist identity from the reference image\nuse smartphone UI overlay only when relevant, keep text abstract and non-branded\npsychological breakdown, red glitch overload, phone vibrating, infinite debt notifications, rain and chaotic distortion\nfinal frame should hold for visual novel dialogue transition",
+    "output_image_path": "ai_video_assets/reference_images/end_01.png",
+    "output_video_path": "ai_video_assets/videos/end_01.mp4",
+    "dreamina": {
+      "command": "dreamina image2video",
+      "model_version": "seedance2.0_vip",
+      "duration": 6,
+      "video_resolution": "1080p",
+      "submit_id": "10f4d954-5952-4f16-8363-562f2dc00477",
+      "status": "downloaded"
+    }
+  },
+  {
+    "scene_id": "end_02",
+    "chapter": "END",
+    "type": "ending",
+    "title": "流量麻痹",
+    "reference_image_path": "ai_video_assets/reference_images/end_02.png",
+    "image_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene: end_02 - 流量麻痹\ngenerate cinematic keyframe image for AI video generation\nsurreal social media numbness, floating comments and emojis, warm neon masks anxiety, empty expression, slow orbiting camera\nhigh detail, consistent character identity, emotional realism, no watermark, no brand logo",
+    "video_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene_id: end_02\ngenerate 6 seconds cinematic image-to-video animation\nmust include camera movement, lighting transition, emotional progression, realistic motion, shallow depth of field\nkeep the same protagonist identity from the reference image\nuse smartphone UI overlay only when relevant, keep text abstract and non-branded\nsurreal social media numbness, floating comments and emojis, warm neon masks anxiety, empty expression, slow orbiting camera\nfinal frame should hold for visual novel dialogue transition",
+    "output_image_path": "ai_video_assets/reference_images/end_02.png",
+    "output_video_path": "ai_video_assets/videos/end_02.mp4",
+    "dreamina": {
+      "command": "dreamina image2video",
+      "model_version": "seedance2.0_vip",
+      "duration": 6,
+      "video_resolution": "1080p",
+      "submit_id": "72b3235f-181b-4e43-bb49-aba2587df723",
+      "status": "downloaded_validated",
+      "validated_at": "2026-06-27T21:33:29",
+      "validation": {
+        "validated_at": "2026-06-27T21:33:29",
+        "status": "validated",
+        "bytes": 20372221,
+        "duration": 6.084,
+        "width": 1920,
+        "height": 1080,
+        "source": "redownload_retry_20260627_212849/end_02/attempt_2/72b3235f-181b-4e43-bb49-aba2587df723_video_1.mp4"
+      }
+    }
+  },
+  {
+    "scene_id": "end_03",
+    "chapter": "END",
+    "type": "ending",
+    "title": "额度错觉",
+    "reference_image_path": "ai_video_assets/reference_images/end_03.png",
+    "image_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene: end_03 - 额度错觉\ngenerate cinematic keyframe image for AI video generation\ncredit limit illusion, glowing finance interface keeps increasing, celebratory effects feel hollow, uneasy face in neon light\nhigh detail, consistent character identity, emotional realism, no watermark, no brand logo",
+    "video_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene_id: end_03\ngenerate 6 seconds cinematic image-to-video animation\nmust include camera movement, lighting transition, emotional progression, realistic motion, shallow depth of field\nkeep the same protagonist identity from the reference image\nuse smartphone UI overlay only when relevant, keep text abstract and non-branded\ncredit limit illusion, glowing finance interface keeps increasing, celebratory effects feel hollow, uneasy face in neon light\nfinal frame should hold for visual novel dialogue transition",
+    "output_image_path": "ai_video_assets/reference_images/end_03.png",
+    "output_video_path": "ai_video_assets/videos/end_03.mp4",
+    "dreamina": {
+      "command": "dreamina image2video",
+      "model_version": "seedance2.0_vip",
+      "duration": 6,
+      "video_resolution": "1080p",
+      "submit_id": "d3acd39d-2e11-43e6-b1a0-1ce68565c5a6",
+      "status": "downloaded_validated",
+      "validated_at": "2026-06-27T21:33:29",
+      "validation": {
+        "validated_at": "2026-06-27T21:33:29",
+        "status": "validated",
+        "bytes": 16398466,
+        "duration": 6.084,
+        "width": 1920,
+        "height": 1080,
+        "source": "redownload_staging_20260627_212505/end_03/d3acd39d-2e11-43e6-b1a0-1ce68565c5a6_video_1.mp4"
+      }
+    }
+  },
+  {
+    "scene_id": "end_04",
+    "chapter": "END",
+    "type": "ending",
+    "title": "边缘悬停",
+    "reference_image_path": "ai_video_assets/reference_images/end_04.png",
+    "image_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene: end_04 - 边缘悬停\ngenerate cinematic keyframe image for AI video generation\nquiet suspended dorm room, unread notifications faintly visible, rain outside, cold blue-gray stillness, nearly static camera\nhigh detail, consistent character identity, emotional realism, no watermark, no brand logo",
+    "video_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene_id: end_04\ngenerate 6 seconds cinematic image-to-video animation\nmust include camera movement, lighting transition, emotional progression, realistic motion, shallow depth of field\nkeep the same protagonist identity from the reference image\nuse smartphone UI overlay only when relevant, keep text abstract and non-branded\nquiet suspended dorm room, unread notifications faintly visible, rain outside, cold blue-gray stillness, nearly static camera\nfinal frame should hold for visual novel dialogue transition",
+    "output_image_path": "ai_video_assets/reference_images/end_04.png",
+    "output_video_path": "ai_video_assets/videos/end_04.mp4",
+    "dreamina": {
+      "command": "dreamina image2video",
+      "model_version": "seedance2.0_vip",
+      "duration": 6,
+      "video_resolution": "1080p",
+      "submit_id": "0ddde351-1e01-4d17-ab4a-34e1f64b8d63",
+      "status": "downloaded_validated",
+      "validated_at": "2026-06-27T21:33:29",
+      "validation": {
+        "validated_at": "2026-06-27T21:33:29",
+        "status": "validated",
+        "bytes": 14281341,
+        "duration": 6.084,
+        "width": 1920,
+        "height": 1080,
+        "source": "redownload_staging_20260627_212505/end_04/0ddde351-1e01-4d17-ab4a-34e1f64b8d63_video_1.mp4"
+      }
+    }
+  },
+  {
+    "scene_id": "end_05",
+    "chapter": "END",
+    "type": "ending",
+    "title": "清醒止损",
+    "reference_image_path": "ai_video_assets/reference_images/end_05.png",
+    "image_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene: end_05 - 清醒止损\ngenerate cinematic keyframe image for AI video generation\nmorning recovery, organizing documents and bills, phone turned off, warm sunlight enters, calm grounded ending\nhigh detail, consistent character identity, emotional realism, no watermark, no brand logo",
+    "video_prompt": "chinese male college student, junior year university student, ordinary asian face, short black hair, hoodie or t-shirt, realistic cinematic emotion progression\ncinematic realistic style, chinese male college student, dorm room, smartphone UI overlay, social media interface, loan app UI, shallow depth of field, emotional storytelling, handheld camera, 4k film style\nscene_id: end_05\ngenerate 6 seconds cinematic image-to-video animation\nmust include camera movement, lighting transition, emotional progression, realistic motion, shallow depth of field\nkeep the same protagonist identity from the reference image\nuse smartphone UI overlay only when relevant, keep text abstract and non-branded\nmorning recovery, organizing documents and bills, phone turned off, warm sunlight enters, calm grounded ending\nfinal frame should hold for visual novel dialogue transition",
+    "output_image_path": "ai_video_assets/reference_images/end_05.png",
+    "output_video_path": "ai_video_assets/videos/end_05.mp4",
+    "dreamina": {
+      "command": "dreamina image2video",
+      "model_version": "seedance2.0_vip",
+      "duration": 6,
+      "video_resolution": "1080p",
+      "submit_id": "552e4bcd-8210-446e-a5df-20b9af5412df",
+      "status": "downloaded_validated",
+      "validated_at": "2026-06-27T21:33:29",
+      "validation": {
+        "validated_at": "2026-06-27T21:33:29",
+        "status": "validated",
+        "bytes": 20015618,
+        "duration": 6.084,
+        "width": 1920,
+        "height": 1080,
+        "source": "redownload_staging_20260627_212505/end_05/552e4bcd-8210-446e-a5df-20b9af5412df_video_1.mp4"
+      }
+    }
+  }
+]

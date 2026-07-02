@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>知投学堂 | 本土化智能投教学习平台</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="prototype-stage" aria-label="知投学堂 Web 原型">
+      <div class="app-view" id="app"></div>
+      <nav class="bottom-tabs" id="bottomTabs" aria-label="底部导航"></nav>
+    </main>
+
+    <div class="story-viewer" id="storyViewer" hidden></div>
+
+    <script>
+      window.ZTX_AI_TRANSPORT = "http";
+      window.ZTX_CLOUDBASE_CONFIG = {
+        enabled: true,
+        envId: "zhitou-xuetang-d4g4cw845a2883397",
+        region: "ap-shanghai"
+      };
+    </script>
+    <script src="./assets/vendor/supabase.js"></script>
+    <script src="./assets/vendor/cloudbase.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

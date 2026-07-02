@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 160" role="img" aria-label="投资防坑课程插画">
+  <rect width="220" height="160" rx="28" fill="#fff0e8"/>
+  <path d="M110 34l66 110H44L110 34z" fill="#fff" stroke="#ef7c45" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M110 72v34" stroke="#ef7c45" stroke-width="11" stroke-linecap="round"/>
+  <circle cx="110" cy="124" r="7" fill="#ef7c45"/>
+  <path d="M52 42l30 24M168 42l-30 24" stroke="#f2b84b" stroke-width="9" stroke-linecap="round"/>
+</svg>
