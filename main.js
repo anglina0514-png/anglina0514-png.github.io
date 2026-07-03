@@ -3,6 +3,22 @@ import { createTransitionEngine } from "./transition-engine.js";
 import { createWorksCarousel } from "./works-carousel.js";
 
 const cases = {
+  dragon: {
+    label: "AI Film",
+    title: "龙影之后",
+    lead: "以 1970 年代唐人街武馆为叙事空间，完成从 30 镜头脚本、角色设定、首尾帧控制到成片输出的 AI 短片制作链路。",
+    media: { type: "video", src: "assets/media/dragon-case-loop.mp4", poster: "assets/media/dragon-poster.jpg" },
+    points: ["30 镜头故事板", "角色设定", "首尾帧控制"],
+    role: "Writer / Prompt System / AI Film Direction",
+    method: "30-shot storyboard + character continuity + keyframe control",
+    result: "AI short film production proof",
+    gallery: [
+      "assets/cases/dragon-process/dragon-role-sheet.jpg",
+      "assets/cases/dragon-process/dragon-cut04-first.jpg",
+      "assets/cases/dragon-process/dragon-cut04-end.jpg",
+      "assets/cases/dragon-process/dragon-final-frame.jpg"
+    ]
+  },
   qwen: {
     label: "AI Commercial",
     title: "千问有千手",
