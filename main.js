@@ -100,6 +100,12 @@ const cases = {
   }
 };
 
+const stageSections = ["hero", "news", "works", "about", "products", "final"];
+const hudNumbers = [...document.querySelectorAll("[data-hud]")].reduce((map, node) => {
+  map[node.dataset.hud] = node;
+  return map;
+}, {});
+const hudOrb = document.querySelector("[data-hud-orb]");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const prismScene = initPrismScene({
   canvas: document.getElementById("prismCanvas"),
@@ -118,6 +124,7 @@ const modal = document.getElementById("caseModal");
 const modalContent = document.getElementById("modalContent");
 const navLinks = [...document.querySelectorAll(".nav-link")];
 const parallaxItems = [...document.querySelectorAll("[data-parallax]")];
+const productCaseButtons = [...document.querySelectorAll("[data-open-case]")];
 const heroParticles = initHeroParticleTitle({
   wrap: document.getElementById("heroParticleTitle"),
   canvas: document.getElementById("heroParticleTitleCanvas"),
@@ -127,11 +134,13 @@ const heroParticles = initHeroParticleTitle({
 
 let latestScroll = -1;
 let ticking = false;
+let pointerState = { x: 0, y: 0 };
 
 initNavigation();
 initMagneticHover();
 initParallax();
 initModal();
+initProductButtons();
 updateScrollState();
 
 window.addEventListener("scroll", requestScrollUpdate, { passive: true });
@@ -162,20 +171,41 @@ function updateScrollState() {
   const works = document.getElementById("works");
   const about = document.getElementById("about");
   const hero = document.getElementById("hero");
+  const news = document.getElementById("news");
+  const products = document.getElementById("products");
+  const finalSection = document.getElementById("final");
 
   const worksProgress = sectionProgress(works);
   const aboutProgress = sectionProgress(about);
   const heroProgress = sectionProgress(hero);
+  const newsProgress = sectionProgress(news);
+  const productsProgress = sectionProgress(products);
+  const finalProgress = sectionProgress(finalSection);
 
+  document.documentElement.style.setProperty("--hero-progress", heroProgress.toFixed(4));
+  document.documentElement.style.setProperty("--news-progress", newsProgress.toFixed(4));
   document.documentElement.style.setProperty("--works-progress", worksProgress.toFixed(4));
   document.documentElement.style.setProperty("--about-progress", aboutProgress.toFixed(4));
+  document.documentElement.style.setProperty("--products-progress", productsProgress.toFixed(4));
   prismScene.setScroll?.({
     page: pageProgress,
     hero: heroProgress,
+    news: newsProgress,
     works: worksProgress,
-    about: aboutProgress
+    about: aboutProgress,
+    products: productsProgress,
+    final: finalProgress
   });
   carousel.setProgress?.(worksProgress);
+  updateHud({
+    page: pageProgress,
+    hero: heroProgress,
+    news: newsProgress,
+    works: worksProgress,
+    about: aboutProgress,
+    products: productsProgress,
+    final: finalProgress
+  });
 
   const active = pickActiveSection();
   document.body.dataset.activeSection = active;
@@ -194,10 +224,9 @@ function sectionProgress(section) {
 }
 
 function pickActiveSection() {
-  const anchors = ["works", "about", "resume", "final"];
   let current = "hero";
-  for (const id of anchors) {
-    const node = id === "final" ? document.querySelector(".final-section") : document.getElementById(id);
+  for (const id of stageSections.slice(1)) {
+    const node = document.getElementById(id);
     if (node && node.getBoundingClientRect().top < window.innerHeight * 0.42) {
       current = id;
     }
@@ -217,6 +246,13 @@ function initNavigation() {
         beforeSwap: () => prismScene.triggerGlitch?.(0.5),
         afterSwap: requestScrollUpdate
       });
+    });
+  });
+  document.getElementById("resetStage")?.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
+    transitionEngine.run({
+      beforeSwap: () => prismScene.triggerGlitch?.(0.65),
+      afterSwap: requestScrollUpdate
     });
   });
 }
@@ -240,13 +276,21 @@ function initParallax() {
   window.addEventListener("pointermove", (event) => {
     const x = event.clientX / window.innerWidth - 0.5;
     const y = event.clientY / window.innerHeight - 0.5;
+    pointerState = { x, y };
     prismScene.setPointer?.(x, y);
+    updateHudPointer();
     if (reducedMotion) return;
     parallaxItems.forEach((item) => {
       const depth = Number(item.dataset.parallax || 0.08);
       item.style.transform = `translate3d(${x * depth * 40}px, ${y * depth * 32}px, 0)`;
     });
   }, { passive: true });
+}
+
+function initProductButtons() {
+  productCaseButtons.forEach((button) => {
+    button.addEventListener("click", () => openCase(button.dataset.openCase));
+  });
 }
 
 function initModal() {
@@ -273,7 +317,7 @@ function closeModal() {
   modal.classList.remove("is-open");
   modal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
-  modalContent.querySelectorAll("video").forEach((video) => video.pause());
+  modalContent?.querySelectorAll("video").forEach((video) => video.pause());
 }
 
 function renderCase(item) {
@@ -341,6 +385,35 @@ function renderMedia(media) {
       <img src="${media.src}" alt="${media.alt || ""}" loading="lazy">
     </div>
   `;
+}
+
+function updateHud(progress) {
+  const page = progress.page;
+  const stageBias = progress.works * 0.42 + progress.products * 0.28 + progress.news * 0.14;
+  const qx = pointerState.y * -0.18 + progress.about * 0.11;
+  const qy = pointerState.x * 0.22 + stageBias;
+  const qz = Math.sin(page * Math.PI * 1.7) * 0.12;
+  const qw = Math.max(0.72, 1 - Math.abs(qx) * 0.16 - Math.abs(qy) * 0.12 - progress.final * 0.1);
+  setHudValue("qx", qx, 3);
+  setHudValue("qy", qy, 3);
+  setHudValue("qz", qz, 3);
+  setHudValue("qw", qw, 3);
+  setHudValue("roughness", 0.03 + progress.works * 0.18 + progress.about * 0.08, 2);
+  setHudValue("noise", 1 + progress.news * 1.6 + progress.works * 2.4 + progress.products * 1.1, 2);
+  updateHudPointer();
+}
+
+function updateHudPointer() {
+  if (!hudOrb) return;
+  const x = pointerState.x * 46;
+  const y = pointerState.y * 46;
+  hudOrb.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+}
+
+function setHudValue(key, value, digits) {
+  const node = hudNumbers[key];
+  if (!node) return;
+  node.textContent = Number(value).toFixed(digits);
 }
 
 function initHeroParticleTitle({ wrap, canvas, text, reducedMotion }) {

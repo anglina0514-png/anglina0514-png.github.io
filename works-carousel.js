@@ -15,22 +15,24 @@ export function createWorksCarousel({ root, onOpen }) {
     width = Math.max(360, root.clientWidth || window.innerWidth);
     const travel = cards.length - 1;
     const focus = progress * travel;
-    const radius = Math.min(720, Math.max(360, width * 0.52));
+    const radius = Math.min(920, Math.max(420, width * 0.62));
+    const mobile = window.innerWidth < 720;
 
     cards.forEach((card, index) => {
       const offset = index - focus;
       const abs = Math.abs(offset);
-      const angle = offset * 22;
+      const angle = offset * (mobile ? 18 : 27);
       const x = Math.sin(angle * Math.PI / 180) * radius;
-      const z = Math.cos(angle * Math.PI / 180) * 180 - 180 - abs * 52;
-      const y = Math.sin((progress + index) * Math.PI) * 18;
-      const scale = Math.max(0.58, 1 - abs * 0.16);
-      const opacity = abs > 3.2 ? 0 : Math.max(0.24, 1 - abs * 0.22);
-      const blur = abs > 1.6 ? Math.min(4, abs * 0.8) : 0;
+      const z = Math.cos(angle * Math.PI / 180) * 220 - 235 - abs * 68;
+      const y = Math.sin((progress * 1.8 + index) * Math.PI) * (mobile ? 10 : 24);
+      const scale = Math.max(mobile ? 0.62 : 0.5, 1.04 - abs * (mobile ? 0.13 : 0.18));
+      const opacity = abs > (mobile ? 2.6 : 3.35) ? 0 : Math.max(0.18, 1 - abs * 0.24);
+      const blur = abs > 1.35 ? Math.min(5, abs * 0.85) : 0;
 
       card.style.transform = `
         translate3d(calc(-50% + ${x}px), calc(-50% + ${y}px), ${z}px)
-        rotateY(${-angle}deg)
+        rotateY(${-angle * 0.92}deg)
+        rotateX(${Math.min(8, abs * 2.2)}deg)
         scale(${scale})
       `;
       card.style.opacity = opacity;

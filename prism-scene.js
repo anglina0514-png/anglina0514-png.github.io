@@ -25,8 +25,9 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   const gridRoot = new THREE.Group();
   const markRoot = new THREE.Group();
   const spectralRoot = new THREE.Group();
+  const shardRoot = new THREE.Group();
   scene.add(root);
-  root.add(gridRoot, markRoot, spectralRoot);
+  root.add(gridRoot, markRoot, spectralRoot, shardRoot);
 
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     color: 0xb8c8ff,
@@ -68,6 +69,12 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   const curveWall = makeCurvedWall();
   gridRoot.add(curveWall);
 
+  const tunnelLines = makeTunnelLines();
+  gridRoot.add(tunnelLines);
+
+  const logoNoise = makeLogoNoise();
+  shardRoot.add(logoNoise);
+
   const rings = [];
   for (let i = 0; i < 4; i += 1) {
     const ring = new THREE.Mesh(
@@ -91,7 +98,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   scene.add(key, blue, rim, new THREE.HemisphereLight(0xffffff, 0x060712, 0.95));
 
   const pointer = { x: 0, y: 0 };
-  const scroll = { page: 0, hero: 0, works: 0, about: 0 };
+  const scroll = { page: 0, hero: 0, news: 0, works: 0, about: 0, products: 0, final: 0 };
   let glitchUntil = 0;
   let width = 1;
   let height = 1;
@@ -126,19 +133,26 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     const glitchActive = time < glitchUntil;
     const glitch = glitchActive ? Math.sin(time * 0.12) * 0.075 : 0;
     const drift = reducedMotion ? 0 : seconds;
-    const aboutFade = smoothstep(0.08, 0.6, scroll.about);
+    const aboutFade = smoothstep(0.08, 0.76, scroll.about);
     const worksDepth = smoothstep(0.05, 0.86, scroll.works);
+    const newsDepth = smoothstep(0.08, 0.82, scroll.news);
+    const productDepth = smoothstep(0.08, 0.86, scroll.products);
+    const finalDepth = smoothstep(0.12, 0.88, scroll.final);
+    const stageDepth = Math.max(worksDepth, productDepth * 0.78, newsDepth * 0.46);
 
-    root.rotation.y = THREE.MathUtils.lerp(root.rotation.y, pointer.x * 0.09 - worksDepth * 0.2, 0.05);
+    root.rotation.y = THREE.MathUtils.lerp(root.rotation.y, pointer.x * 0.09 - worksDepth * 0.28 + productDepth * 0.18, 0.05);
     root.rotation.x = THREE.MathUtils.lerp(root.rotation.x, -pointer.y * 0.05, 0.05);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, 0.22 - scroll.page * 0.62, 0.04);
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, (width < 720 ? 12.5 : 9.6) - worksDepth * 1.5, 0.035);
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, pointer.x * 0.34 + productDepth * 0.55 - finalDepth * 0.28, 0.04);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, 0.22 - scroll.page * 0.78 + newsDepth * 0.22, 0.04);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, (width < 720 ? 12.5 : 9.6) - stageDepth * 1.85 + finalDepth * 1.2, 0.035);
 
-    markRoot.rotation.y = drift * 0.11 + pointer.x * 0.18 + glitch + worksDepth * 0.36;
-    markRoot.rotation.x = Math.sin(drift * 0.38) * 0.035 - pointer.y * 0.08;
-    markRoot.position.y = -scroll.page * 1.8 + Math.sin(drift * 0.8) * 0.03;
-    markRoot.scale.setScalar(1 + worksDepth * 0.16 - aboutFade * 0.24);
-    markRoot.visible = aboutFade < 0.96;
+    markRoot.rotation.y = drift * 0.12 + pointer.x * 0.18 + glitch + worksDepth * 0.46 - productDepth * 0.42;
+    markRoot.rotation.x = Math.sin(drift * 0.38) * 0.035 - pointer.y * 0.08 + newsDepth * 0.18;
+    markRoot.rotation.z = glitch * 0.7 + finalDepth * 0.1;
+    markRoot.position.x = productDepth * -0.55 + finalDepth * 0.35;
+    markRoot.position.y = -scroll.page * 1.2 + Math.sin(drift * 0.8) * 0.03 + productDepth * 0.5;
+    markRoot.scale.setScalar(1.02 + worksDepth * 0.12 - aboutFade * 0.18 + finalDepth * 0.2);
+    markRoot.visible = finalDepth < 0.94;
 
     spectralRoot.rotation.copy(markRoot.rotation);
     spectralRoot.position.copy(markRoot.position);
@@ -149,20 +163,28 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       line.material.opacity = glitchActive ? 0.55 : 0.26;
     });
 
-    gridRoot.rotation.y = drift * 0.025 + pointer.x * 0.05 - worksDepth * 0.45;
-    gridRoot.position.z = -worksDepth * 2.4;
-    gridRoot.position.y = -scroll.page * 1.2;
-    curveWall.material.opacity = 0.18 + (worksDepth * 0.12) - aboutFade * 0.16;
+    shardRoot.rotation.copy(markRoot.rotation);
+    shardRoot.position.copy(markRoot.position);
+    shardRoot.scale.copy(markRoot.scale);
+    logoNoise.rotation.z = -drift * 0.04 + glitch * 2;
+    logoNoise.material.opacity = 0.16 + newsDepth * 0.18 + worksDepth * 0.14 + (glitchActive ? 0.2 : 0);
 
-    glassMaterial.opacity = Math.max(0.16, 0.42 - aboutFade * 0.3 + (glitchActive ? 0.1 : 0));
-    edgeMaterial.opacity = Math.max(0.1, 0.74 - aboutFade * 0.55);
+    gridRoot.rotation.y = drift * 0.025 + pointer.x * 0.05 - worksDepth * 0.54 + productDepth * 0.28;
+    gridRoot.position.z = -stageDepth * 2.9;
+    gridRoot.position.y = -scroll.page * 1.38 + productDepth * 0.4;
+    curveWall.material.opacity = 0.18 + (stageDepth * 0.16) - finalDepth * 0.08;
+    tunnelLines.material.opacity = 0.12 + stageDepth * 0.18 - finalDepth * 0.04;
+
+    glassMaterial.opacity = Math.max(0.16, 0.45 - aboutFade * 0.18 + productDepth * 0.08 + (glitchActive ? 0.1 : 0));
+    glassMaterial.roughness = 0.03 + worksDepth * 0.16 + productDepth * 0.08;
+    edgeMaterial.opacity = Math.max(0.12, 0.74 - aboutFade * 0.36);
     rings.forEach((ring, index) => {
       ring.rotation.z = drift * (0.02 + index * 0.01);
       ring.material.opacity = Math.max(0.03, 0.11 - aboutFade * 0.08);
     });
 
     stars.rotation.y = drift * 0.01;
-    stars.material.opacity = Math.max(0.05, 0.28 - aboutFade * 0.22);
+    stars.material.opacity = Math.max(0.05, 0.28 - aboutFade * 0.08 + productDepth * 0.06);
 
     renderer.render(scene, camera);
     rafId = requestAnimationFrame(render);
@@ -249,6 +271,50 @@ function makeCurvedWall() {
   geometry.setAttribute("position", new THREE.Float32BufferAttribute(points, 3));
   const material = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18 });
   return new THREE.LineSegments(geometry, material);
+}
+
+function makeTunnelLines() {
+  const points = [];
+  const radius = 13.5;
+  const depth = 20;
+  for (let i = 0; i < 34; i += 1) {
+    const angle = -Math.PI * 0.46 + i * (Math.PI * 0.92 / 33);
+    const x = Math.sin(angle) * radius;
+    const z = Math.cos(angle) * radius - radius - 2;
+    points.push(x, -4.8, z, x * 0.42, 4.8, z - depth);
+  }
+  for (let i = 0; i < 13; i += 1) {
+    const y = -4.8 + i * 0.8;
+    points.push(-8.8, y, -6, 8.8, y, -13);
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(points, 3));
+  const material = new THREE.LineBasicMaterial({ color: 0x9aa8ff, transparent: true, opacity: 0.18 });
+  return new THREE.LineSegments(geometry, material);
+}
+
+function makeLogoNoise() {
+  const vertices = [];
+  for (let i = 0; i < 520; i += 1) {
+    const row = i % 4;
+    const angle = Math.random() * Math.PI * 2;
+    const radius = 0.55 + Math.random() * (row === 0 ? 1.8 : 2.35);
+    vertices.push(
+      Math.cos(angle) * radius,
+      Math.sin(angle) * radius * 0.82 + (Math.random() - 0.5) * 0.45,
+      (Math.random() - 0.5) * 0.34
+    );
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+  const material = new THREE.PointsMaterial({
+    color: 0xe7eeff,
+    size: 0.018,
+    transparent: true,
+    opacity: 0.18,
+    blending: THREE.AdditiveBlending
+  });
+  return new THREE.Points(geometry, material);
 }
 
 function makeStars() {
