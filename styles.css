@@ -563,7 +563,7 @@ main {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 1px;
   margin-top: clamp(50px, 7vw, 92px);
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -592,17 +592,36 @@ main {
 .capability-matrix h3 {
   margin: 0;
   color: inherit;
-  font-size: clamp(18px, 1.8vw, 30px);
+  font-size: clamp(16px, 1.35vw, 26px);
   line-height: 1;
   letter-spacing: 0;
 }
 
 .capability-matrix p {
-  margin: 28px 0 0;
+  margin: 22px 0 0;
   color: color-mix(in srgb, currentColor 58%, transparent);
   font-family: var(--font-mono);
   font-size: 12px;
   line-height: 1.7;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skill-tags li {
+  padding: 4px 7px;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  color: color-mix(in srgb, currentColor 66%, transparent);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .capability-link span {
