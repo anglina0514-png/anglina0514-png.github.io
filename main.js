@@ -52,6 +52,17 @@ const cases = {
     result: "Public event video output",
     gallery: ["assets/media/quanyun-poster.jpg"]
   },
+  marxism: {
+    label: "Theory Visual",
+    title: "马克思主义中国化时代化",
+    lead: "围绕马克思主义中国化时代化主题，用历史场景、现代交通、城市建设和未来意象串联理论表达。",
+    media: { type: "video", src: "assets/media/marxism-full.mp4", poster: "assets/media/marxism-poster.jpg" },
+    points: ["理论视频", "AI 视觉", "主题叙事"],
+    role: "Theme Script / AI Visual / Edit",
+    method: "Historical imagery + modernization narrative",
+    result: "Coursework theory video output",
+    gallery: ["assets/media/marxism-poster.jpg"]
+  },
   ue5: {
     label: "UE5 Visual",
     title: "UE5 视觉实验",
