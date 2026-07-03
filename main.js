@@ -9,6 +9,9 @@ const cases = {
     lead: "用竖屏广告语言呈现多任务场景中的 AI 协作能力，把一个人的忙乱转化为被技术托住的高识别度叙事。",
     media: { type: "video", src: "assets/media/qwen-full.mp4", poster: "assets/media/qwen-poster.jpg" },
     points: ["竖屏叙事", "AI 助手广告", "脚本 分镜 成片"],
+    role: "Script / AI Visual / Edit",
+    method: "Vertical attention narrative",
+    result: "AI assistant commercial proof",
     gallery: ["assets/cases/qwen-overview.jpg"]
   },
   haoshi: {
@@ -17,6 +20,9 @@ const cases = {
     lead: "从食品品牌、工厂空间和鸟背视角建立动画制作稿，突出品牌资产、镜头调度和商业分镜控制。",
     media: { type: "video", src: "assets/media/haoshi-full.mp4", poster: "assets/media/haoshi-poster.jpg" },
     points: ["横屏品牌片", "工厂空间", "故事板制作"],
+    role: "Storyboard / Brand Film / Visual Plan",
+    method: "Factory space + character journey",
+    result: "Brand film concept delivery",
     gallery: ["assets/cases/haoshi-storyboard.jpg", "assets/cases/haoshi-factory.jpg"]
   },
   quanyun: {
@@ -25,6 +31,9 @@ const cases = {
     lead: "以城市公共空间和活动现场为素材，完成宣传视频的节奏组织、镜头选择与事件氛围表达。",
     media: { type: "video", src: "assets/media/quanyun-full.mp4", poster: "assets/media/quanyun-poster.jpg" },
     points: ["活动记录", "宣传剪辑", "现场叙事"],
+    role: "Footage Selection / Rhythm Edit",
+    method: "Event atmosphere through motion",
+    result: "Public event video output",
     gallery: ["assets/media/quanyun-poster.jpg"]
   },
   ue5: {
@@ -33,6 +42,9 @@ const cases = {
     lead: "用 Unreal Engine 建立大场景镜头和科幻运动视觉，展示实时引擎画面、镜头氛围和空间调度能力。",
     media: { type: "video", src: "assets/media/ue5-full.mp4", poster: "assets/media/ue5-poster.jpg" },
     points: ["Unreal Engine", "Cinematic shot", "3D space"],
+    role: "UE5 Scene / Camera / Cinematic",
+    method: "Realtime spatial composition",
+    result: "Next-gen visual proof",
     gallery: ["assets/media/ue5-poster.jpg"]
   },
   zhitou: {
@@ -41,6 +53,9 @@ const cases = {
     lead: "面向投资小白的本土化智能投教学习平台，用课程 Stories、AI 问答和学习计划把金融知识转化为行动流。",
     media: { type: "iframe", src: "cases/zhitou/", title: "知投学堂原型预览" },
     points: ["投教产品", "AI 问答", "可点击原型"],
+    role: "Product Strategy / Prototype / AI Q&A",
+    method: "Beginner investing learning flow",
+    result: "Clickable education product",
     gallery: ["assets/cases/zhitou-main.jpg", "assets/cases/zhitou-deck.jpg"],
     actions: [["Open Prototype", "cases/zhitou/", true]]
   },
@@ -50,6 +65,9 @@ const cases = {
     lead: "把网贷娱乐化风险做成视觉小说式 H5，用压力条、评论判断和求助节点建立可体验的风险教育过程。",
     media: { type: "iframe", src: "cases/loan-game/", title: "防网贷视觉游戏预览" },
     points: ["H5 game", "风险叙事", "压力条机制"],
+    role: "Interactive Narrative / H5 Game",
+    method: "Pressure bar + decision nodes",
+    result: "Risk education experience",
     gallery: ["assets/cases/loan-home.jpg", "assets/cases/loan-pressure.jpg"],
     actions: [["Open Game", "cases/loan-game/", true]]
   }
@@ -108,19 +126,25 @@ function updateScrollState() {
   document.documentElement.style.setProperty("--page-progress", pageProgress.toFixed(4));
 
   const works = document.getElementById("works");
+  const process = document.getElementById("process");
   const about = document.getElementById("about");
   const hero = document.getElementById("hero");
 
   const worksProgress = sectionProgress(works);
+  const processProgress = sectionProgress(process);
   const aboutProgress = sectionProgress(about);
   const heroProgress = sectionProgress(hero);
 
   document.documentElement.style.setProperty("--works-progress", worksProgress.toFixed(4));
+  document.documentElement.style.setProperty("--process-progress", processProgress.toFixed(4));
+  document.documentElement.style.setProperty("--process-shift", `${((0.5 - processProgress) * 8).toFixed(3)}vw`);
+  document.documentElement.style.setProperty("--process-frame-shift", `${((processProgress - 0.5) * 60).toFixed(2)}px`);
   document.documentElement.style.setProperty("--about-progress", aboutProgress.toFixed(4));
   prismScene.setScroll?.({
     page: pageProgress,
     hero: heroProgress,
     works: worksProgress,
+    process: processProgress,
     about: aboutProgress
   });
   carousel.setProgress?.(worksProgress);
@@ -226,6 +250,7 @@ function closeModal() {
 
 function renderCase(item) {
   const points = item.points.map((point) => `<span>${point}</span>`).join("");
+  const breakdown = renderBreakdown(item);
   const gallery = item.gallery?.length
     ? `<div class="modal-gallery">${item.gallery.map((src) => `<img src="${src}" alt="${item.title} 过程素材" loading="lazy">`).join("")}</div>`
     : "";
@@ -241,8 +266,28 @@ function renderCase(item) {
       <div class="modal-tags">${points}</div>
     </div>
     ${renderMedia(item.media)}
+    ${breakdown}
     ${gallery}
     ${actions}
+  `;
+}
+
+function renderBreakdown(item) {
+  return `
+    <div class="modal-breakdown" aria-label="${item.title} 项目拆解">
+      <article>
+        <span>Role</span>
+        <p>${item.role}</p>
+      </article>
+      <article>
+        <span>Method</span>
+        <p>${item.method}</p>
+      </article>
+      <article>
+        <span>Result</span>
+        <p>${item.result}</p>
+      </article>
+    </div>
   `;
 }
 
