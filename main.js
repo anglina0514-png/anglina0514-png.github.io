@@ -25,7 +25,23 @@ const cases = {
     label: "商业 AI 广告",
     title: "千问有千手 × 豪士工厂",
     lead: "两个商业命题合并展示 一个偏 AI 助手广告 一个偏食品工厂品牌片 重点呈现脚本 分镜和风格控制",
-    media: { type: "image", src: "assets/cases/qwen-overview.jpg", alt: "千问有千手故事板总览" },
+    media: {
+      type: "videoPair",
+      items: [
+        {
+          label: "千问有千手",
+          orientation: "portrait",
+          src: "assets/media/qwen-full.mp4",
+          poster: "assets/media/qwen-poster.jpg"
+        },
+        {
+          label: "豪士工厂",
+          orientation: "landscape",
+          src: "assets/media/haoshi-full.mp4",
+          poster: "assets/media/haoshi-poster.jpg"
+        }
+      ]
+    },
     meta: [
       ["角色", "脚本拆解与视觉预演"],
       ["产出", "故事板 风格板 制作稿"],
@@ -299,6 +315,20 @@ function renderCase(detail) {
 }
 
 function renderMedia(media) {
+  if (media.type === "videoPair") {
+    return `
+      <div class="case-video-pair">
+        ${media.items.map((item) => `
+          <figure class="case-video-item ${item.orientation}">
+            <video controls playsinline preload="metadata" poster="${item.poster || ""}">
+              <source src="${item.src}" type="video/mp4">
+            </video>
+            <figcaption>${item.label}</figcaption>
+          </figure>
+        `).join("")}
+      </div>
+    `;
+  }
   if (media.type === "video") {
     return `<video autoplay muted playsinline loop controls poster="${media.poster || ""}"><source src="${media.src}" type="video/mp4"></video>`;
   }
