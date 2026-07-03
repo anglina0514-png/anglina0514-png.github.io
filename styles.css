@@ -915,7 +915,8 @@ main {
     grid-template-columns: 1fr;
   }
 
-  .capability-matrix article {
+  .capability-matrix article,
+  .capability-link {
     min-height: 118px;
   }
 
