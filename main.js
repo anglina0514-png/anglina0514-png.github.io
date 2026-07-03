@@ -142,25 +142,19 @@ function updateScrollState() {
   document.documentElement.style.setProperty("--page-progress", pageProgress.toFixed(4));
 
   const works = document.getElementById("works");
-  const process = document.getElementById("process");
   const about = document.getElementById("about");
   const hero = document.getElementById("hero");
 
   const worksProgress = sectionProgress(works);
-  const processProgress = sectionProgress(process);
   const aboutProgress = sectionProgress(about);
   const heroProgress = sectionProgress(hero);
 
   document.documentElement.style.setProperty("--works-progress", worksProgress.toFixed(4));
-  document.documentElement.style.setProperty("--process-progress", processProgress.toFixed(4));
-  document.documentElement.style.setProperty("--process-shift", `${((0.5 - processProgress) * 8).toFixed(3)}vw`);
-  document.documentElement.style.setProperty("--process-frame-shift", `${((processProgress - 0.5) * 60).toFixed(2)}px`);
   document.documentElement.style.setProperty("--about-progress", aboutProgress.toFixed(4));
   prismScene.setScroll?.({
     page: pageProgress,
     hero: heroProgress,
     works: worksProgress,
-    process: processProgress,
     about: aboutProgress
   });
   carousel.setProgress?.(worksProgress);
