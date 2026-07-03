@@ -1,26 +1,5 @@
 import * as THREE from "./vendor/three.module.js";
 
-const themePalette = {
-  night: {
-    clear: 0x000000,
-    prism: 0xeafaff,
-    line: 0xffffff,
-    lineOpacity: 0.18,
-    accent: 0x9ef7ff,
-    second: 0xff4df0,
-    fog: 0x000000
-  },
-  day: {
-    clear: 0xffffff,
-    prism: 0xffffff,
-    line: 0x8994a8,
-    lineOpacity: 0.16,
-    accent: 0x006dff,
-    second: 0xff6adf,
-    fog: 0xffffff
-  }
-};
-
 export function initPrismScene({ canvas, reducedMotion = false }) {
   if (!canvas) return createNoopScene();
 
@@ -28,104 +7,91 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     canvas,
     antialias: true,
     alpha: true,
-    preserveDrawingBuffer: true,
     powerPreference: "high-performance"
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.18;
+  renderer.toneMappingExposure = 1.08;
+  renderer.setClearColor(0x000000, 0);
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x000000, 0.016);
+  scene.fog = new THREE.FogExp2(0x010105, 0.018);
 
-  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 120);
-  camera.position.set(0, 0.35, 9.2);
+  const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 140);
+  camera.position.set(0, 0.22, 9.6);
 
   const root = new THREE.Group();
   const gridRoot = new THREE.Group();
-  const prismRoot = new THREE.Group();
+  const markRoot = new THREE.Group();
+  const spectralRoot = new THREE.Group();
   scene.add(root);
-  root.add(gridRoot, prismRoot);
+  root.add(gridRoot, markRoot, spectralRoot);
 
-  const prismGeometry = new THREE.CylinderGeometry(1.42, 1.42, 2.9, 3, 1, false, Math.PI / 6);
-  prismGeometry.rotateZ(Math.PI / 2);
-
-  const prismMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xeafaff,
+  const glassMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xb8c8ff,
     metalness: 0,
-    roughness: 0.05,
-    transmission: 0.72,
-    thickness: 1.25,
-    ior: 1.8,
+    roughness: 0.03,
+    transmission: 0.78,
+    thickness: 1.6,
+    ior: 1.68,
     transparent: true,
-    opacity: 0.56,
+    opacity: 0.42,
     clearcoat: 1,
-    clearcoatRoughness: 0.02,
+    clearcoatRoughness: 0.03,
     side: THREE.DoubleSide
   });
 
-  const prism = new THREE.Mesh(prismGeometry, prismMaterial);
-  prismRoot.add(prism);
+  const triangle = new THREE.Mesh(makeTriangleGeometry(3.8, 3.35), glassMaterial);
+  triangle.position.y = 0.05;
+  markRoot.add(triangle);
 
   const edgeMaterial = new THREE.LineBasicMaterial({
     color: 0xffffff,
     transparent: true,
-    opacity: 0.72
+    opacity: 0.74
   });
-  const prismEdges = new THREE.LineSegments(new THREE.EdgesGeometry(prismGeometry), edgeMaterial);
-  prismRoot.add(prismEdges);
+  const outline = makeTriangleOutline(4.1, 3.6, edgeMaterial);
+  const inner = makeTriangleOutline(1.35, 1.18, edgeMaterial);
+  inner.position.y = -0.42;
+  markRoot.add(outline, inner);
 
-  const chromaPrisms = [
-    makeGhostPrism(prismGeometry, 0xff2eea, -0.035),
-    makeGhostPrism(prismGeometry, 0x28f8ff, 0.035)
-  ];
-  chromaPrisms.forEach((ghost) => prismRoot.add(ghost));
+  const aBars = makeABars();
+  markRoot.add(aBars);
 
-  const ringMaterials = [];
-  for (let i = 0; i < 5; i += 1) {
-    const material = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.08,
-      wireframe: true
-    });
-    ringMaterials.push(material);
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(2.5 + i * 0.78, 0.006, 8, 160), material);
-    ring.rotation.set(Math.PI / 2 + i * 0.18, i * 0.36, i * 0.11);
-    prismRoot.add(ring);
+  const cyanGhost = makeTriangleOutline(4.12, 3.62, new THREE.LineBasicMaterial({ color: 0x00eaff, transparent: true, opacity: 0.34 }));
+  const magentaGhost = makeTriangleOutline(4.08, 3.58, new THREE.LineBasicMaterial({ color: 0xff3df0, transparent: true, opacity: 0.28 }));
+  cyanGhost.position.x = 0.045;
+  magentaGhost.position.x = -0.045;
+  spectralRoot.add(cyanGhost, magentaGhost);
+
+  const curveWall = makeCurvedWall();
+  gridRoot.add(curveWall);
+
+  const rings = [];
+  for (let i = 0; i < 4; i += 1) {
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(2.35 + i * 0.78, 0.005, 8, 180),
+      new THREE.MeshBasicMaterial({ color: i % 2 ? 0x7597ff : 0xffffff, wireframe: true, transparent: true, opacity: 0.1 })
+    );
+    ring.rotation.set(Math.PI / 2 + i * 0.09, i * 0.22, i * 0.08);
+    markRoot.add(ring);
+    rings.push(ring);
   }
 
-  const lineMaterial = new THREE.LineBasicMaterial({
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.18
-  });
-  const geometryLines = makeGeometryLines(120);
-  const lineSegments = new THREE.LineSegments(geometryLines, lineMaterial);
-  gridRoot.add(lineSegments);
+  const stars = makeStars();
+  scene.add(stars);
 
-  const grid = new THREE.GridHelper(28, 28, 0xffffff, 0xffffff);
-  grid.material.transparent = true;
-  grid.material.opacity = 0.08;
-  grid.position.y = -3.2;
-  grid.rotation.x = Math.PI * 0.02;
-  gridRoot.add(grid);
-
-  const axes = makeAxes();
-  gridRoot.add(axes);
-
-  const key = new THREE.DirectionalLight(0xffffff, 2.2);
-  key.position.set(3.8, 5.2, 5);
-  const fill = new THREE.PointLight(0x9ef7ff, 4.4, 18);
-  fill.position.set(-4, 1, 4);
-  const rim = new THREE.PointLight(0xff4df0, 2.8, 18);
-  rim.position.set(4, -2, -3);
-  const hemi = new THREE.HemisphereLight(0xffffff, 0x1b1e2c, 1.5);
-  scene.add(key, fill, rim, hemi);
+  const key = new THREE.DirectionalLight(0xffffff, 2.4);
+  key.position.set(2.8, 4.8, 5.2);
+  const blue = new THREE.PointLight(0x4558ff, 5.8, 20);
+  blue.position.set(-3, 0.8, 3.4);
+  const rim = new THREE.PointLight(0xe8f4ff, 2.8, 18);
+  rim.position.set(3.4, -1.2, 2.6);
+  scene.add(key, blue, rim, new THREE.HemisphereLight(0xffffff, 0x060712, 0.95));
 
   const pointer = { x: 0, y: 0 };
-  let targetTheme = "night";
+  const scroll = { page: 0, hero: 0, works: 0, about: 0 };
   let glitchUntil = 0;
   let width = 1;
   let height = 1;
@@ -137,34 +103,12 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     height = window.innerHeight;
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
-    camera.position.z = width < 720 ? 11.5 : 9.2;
+    camera.position.z = width < 720 ? 12.5 : 9.6;
     camera.updateProjectionMatrix();
   }
 
-  function setTheme(theme) {
-    targetTheme = theme === "day" ? "day" : "night";
-    const palette = themePalette[targetTheme];
-    renderer.setClearColor(palette.clear, 0);
-    scene.fog.color.setHex(palette.fog);
-    prismMaterial.color.setHex(palette.prism);
-    prismMaterial.opacity = targetTheme === "day" ? 0.38 : 0.56;
-    prismMaterial.transmission = targetTheme === "day" ? 0.88 : 0.72;
-    edgeMaterial.color.setHex(palette.line);
-    edgeMaterial.opacity = targetTheme === "day" ? 0.4 : 0.72;
-    lineMaterial.color.setHex(palette.line);
-    lineMaterial.opacity = palette.lineOpacity;
-    grid.material.color.setHex(palette.line);
-    grid.material.opacity = targetTheme === "day" ? 0.05 : 0.08;
-    ringMaterials.forEach((material, index) => {
-      material.color.setHex(index % 2 ? palette.accent : palette.line);
-      material.opacity = targetTheme === "day" ? 0.06 : 0.09;
-    });
-    fill.color.setHex(palette.accent);
-    rim.color.setHex(palette.second);
-  }
-
-  function triggerGlitch(intensity = 1) {
-    glitchUntil = performance.now() + 680 * intensity;
+  function setScroll(next) {
+    Object.assign(scroll, next);
   }
 
   function setPointer(x, y) {
@@ -172,31 +116,53 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     pointer.y = y;
   }
 
+  function triggerGlitch(intensity = 1) {
+    glitchUntil = performance.now() + 520 * intensity;
+  }
+
   function render(time) {
     if (!running) return;
     const seconds = time * 0.001;
     const glitchActive = time < glitchUntil;
-    const glitch = glitchActive ? Math.sin(time * 0.08) * 0.08 : 0;
+    const glitch = glitchActive ? Math.sin(time * 0.12) * 0.075 : 0;
     const drift = reducedMotion ? 0 : seconds;
+    const aboutFade = smoothstep(0.08, 0.6, scroll.about);
+    const worksDepth = smoothstep(0.05, 0.86, scroll.works);
 
-    root.rotation.y = THREE.MathUtils.lerp(root.rotation.y, pointer.x * 0.12, 0.05);
-    root.rotation.x = THREE.MathUtils.lerp(root.rotation.x, -pointer.y * 0.08, 0.05);
-    prismRoot.rotation.y = drift * 0.28 + pointer.x * 0.22 + glitch;
-    prismRoot.rotation.x = Math.sin(drift * 0.42) * 0.12 - pointer.y * 0.18;
-    prismRoot.rotation.z = Math.sin(drift * 0.31) * 0.05;
-    gridRoot.rotation.y = drift * 0.035 + pointer.x * 0.04;
-    gridRoot.position.x = pointer.x * 0.3;
-    gridRoot.position.y = pointer.y * 0.2;
+    root.rotation.y = THREE.MathUtils.lerp(root.rotation.y, pointer.x * 0.09 - worksDepth * 0.2, 0.05);
+    root.rotation.x = THREE.MathUtils.lerp(root.rotation.x, -pointer.y * 0.05, 0.05);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, 0.22 - scroll.page * 0.62, 0.04);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, (width < 720 ? 12.5 : 9.6) - worksDepth * 1.5, 0.035);
 
-    chromaPrisms.forEach((ghost, index) => {
-      const direction = index === 0 ? -1 : 1;
-      ghost.position.x = direction * (glitchActive ? 0.18 : 0.05);
-      ghost.position.y = direction * (glitchActive ? 0.04 : 0.01);
-      ghost.material.opacity = glitchActive ? 0.34 : 0.11;
+    markRoot.rotation.y = drift * 0.11 + pointer.x * 0.18 + glitch + worksDepth * 0.36;
+    markRoot.rotation.x = Math.sin(drift * 0.38) * 0.035 - pointer.y * 0.08;
+    markRoot.position.y = -scroll.page * 1.8 + Math.sin(drift * 0.8) * 0.03;
+    markRoot.scale.setScalar(1 + worksDepth * 0.16 - aboutFade * 0.24);
+    markRoot.visible = aboutFade < 0.96;
+
+    spectralRoot.rotation.copy(markRoot.rotation);
+    spectralRoot.position.copy(markRoot.position);
+    spectralRoot.scale.copy(markRoot.scale);
+    spectralRoot.children.forEach((line, index) => {
+      line.position.x = (index ? -1 : 1) * (glitchActive ? 0.18 : 0.055);
+      line.position.y = (index ? 1 : -1) * (glitchActive ? 0.04 : 0.015);
+      line.material.opacity = glitchActive ? 0.55 : 0.26;
     });
 
-    lineSegments.material.opacity = themePalette[targetTheme].lineOpacity + (glitchActive ? 0.12 : 0);
-    prism.scale.setScalar(glitchActive ? 1 + Math.abs(Math.sin(time * 0.13)) * 0.06 : 1);
+    gridRoot.rotation.y = drift * 0.025 + pointer.x * 0.05 - worksDepth * 0.45;
+    gridRoot.position.z = -worksDepth * 2.4;
+    gridRoot.position.y = -scroll.page * 1.2;
+    curveWall.material.opacity = 0.18 + (worksDepth * 0.12) - aboutFade * 0.16;
+
+    glassMaterial.opacity = Math.max(0.16, 0.42 - aboutFade * 0.3 + (glitchActive ? 0.1 : 0));
+    edgeMaterial.opacity = Math.max(0.1, 0.74 - aboutFade * 0.55);
+    rings.forEach((ring, index) => {
+      ring.rotation.z = drift * (0.02 + index * 0.01);
+      ring.material.opacity = Math.max(0.03, 0.11 - aboutFade * 0.08);
+    });
+
+    stars.rotation.y = drift * 0.01;
+    stars.material.opacity = Math.max(0.05, 0.28 - aboutFade * 0.22);
 
     renderer.render(scene, camera);
     rafId = requestAnimationFrame(render);
@@ -204,88 +170,113 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
 
   window.addEventListener("resize", resize);
   resize();
-  setTheme("night");
   rafId = requestAnimationFrame(render);
 
   return {
-    setTheme,
-    triggerGlitch,
+    setScroll,
     setPointer,
+    triggerGlitch,
     destroy() {
       running = false;
       cancelAnimationFrame(rafId);
       window.removeEventListener("resize", resize);
       renderer.dispose();
-      prismGeometry.dispose();
-      prismMaterial.dispose();
-      edgeMaterial.dispose();
-      geometryLines.dispose();
-      lineMaterial.dispose();
-      ringMaterials.forEach((material) => material.dispose());
     }
   };
 }
 
-function makeGhostPrism(geometry, color, x) {
-  const material = new THREE.MeshBasicMaterial({
-    color,
-    transparent: true,
-    opacity: 0.11,
-    wireframe: true,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false
-  });
-  const mesh = new THREE.Mesh(geometry, material);
-  mesh.position.x = x;
-  mesh.scale.setScalar(1.02);
+function makeTriangleGeometry(width, height) {
+  const shape = new THREE.Shape();
+  shape.moveTo(0, height / 2);
+  shape.lineTo(-width / 2, -height / 2);
+  shape.lineTo(width / 2, -height / 2);
+  shape.closePath();
+  return new THREE.ShapeGeometry(shape);
+}
+
+function makeTriangleOutline(width, height, material) {
+  const points = [
+    new THREE.Vector3(0, height / 2, 0.05),
+    new THREE.Vector3(-width / 2, -height / 2, 0.05),
+    new THREE.Vector3(width / 2, -height / 2, 0.05),
+    new THREE.Vector3(0, height / 2, 0.05)
+  ];
+  return new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), material);
+}
+
+function makeABars() {
+  const group = new THREE.Group();
+  const material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.32 });
+  const left = makeBar(-0.78, -0.22, 1.62, Math.PI * -0.16, material);
+  const right = makeBar(0.78, -0.22, 1.62, Math.PI * 0.16, material);
+  const cross = makeBar(0, -0.68, 1.05, Math.PI / 2, material);
+  group.add(left, right, cross);
+  return group;
+}
+
+function makeBar(x, y, length, rotation, material) {
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(0.09, length, 0.04), material);
+  mesh.position.set(x, y, 0.12);
+  mesh.rotation.z = rotation;
   return mesh;
 }
 
-function makeGeometryLines(count) {
-  const positions = [];
-  for (let i = 0; i < count; i += 1) {
-    const z = -18 + Math.random() * 28;
-    const y = -5 + Math.random() * 10;
-    const x = -12 + Math.random() * 24;
-    const length = 1.2 + Math.random() * 5.5;
-    if (i % 3 === 0) {
-      positions.push(x, y, z, x + length, y, z);
-    } else if (i % 3 === 1) {
-      positions.push(x, y, z, x, y + length * 0.5, z);
-    } else {
-      positions.push(x, y, z, x + length * 0.55, y + length * 0.55, z);
+function makeCurvedWall() {
+  const points = [];
+  const radius = 10.5;
+  const rows = 15;
+  const cols = 34;
+  const arc = Math.PI * 0.92;
+  for (let r = 0; r <= rows; r += 1) {
+    const y = -4.2 + r * 0.58;
+    for (let c = 0; c < cols; c += 1) {
+      const a1 = -arc / 2 + (arc / cols) * c;
+      const a2 = -arc / 2 + (arc / cols) * (c + 1);
+      points.push(Math.sin(a1) * radius, y, Math.cos(a1) * radius - radius - 3);
+      points.push(Math.sin(a2) * radius, y, Math.cos(a2) * radius - radius - 3);
+    }
+  }
+  for (let c = 0; c <= cols; c += 1) {
+    const a = -arc / 2 + (arc / cols) * c;
+    for (let r = 0; r < rows; r += 1) {
+      const y1 = -4.2 + r * 0.58;
+      const y2 = -4.2 + (r + 1) * 0.58;
+      points.push(Math.sin(a) * radius, y1, Math.cos(a) * radius - radius - 3);
+      points.push(Math.sin(a) * radius, y2, Math.cos(a) * radius - radius - 3);
     }
   }
   const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-  return geometry;
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(points, 3));
+  const material = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18 });
+  return new THREE.LineSegments(geometry, material);
 }
 
-function makeAxes() {
-  const group = new THREE.Group();
-  const colors = [0x9ef7ff, 0xff4df0, 0xf7ff6a];
-  const vectors = [
-    [new THREE.Vector3(-7, 0, 0), new THREE.Vector3(7, 0, 0)],
-    [new THREE.Vector3(0, -4, 0), new THREE.Vector3(0, 4, 0)],
-    [new THREE.Vector3(0, 0, -8), new THREE.Vector3(0, 0, 8)]
-  ];
-  vectors.forEach(([start, end], index) => {
-    const geometry = new THREE.BufferGeometry().setFromPoints([start, end]);
-    const material = new THREE.LineBasicMaterial({
-      color: colors[index],
-      transparent: true,
-      opacity: 0.22
-    });
-    group.add(new THREE.Line(geometry, material));
+function makeStars() {
+  const vertices = [];
+  for (let i = 0; i < 220; i += 1) {
+    vertices.push((Math.random() - 0.5) * 28, (Math.random() - 0.5) * 14, -Math.random() * 18 - 4);
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+  const material = new THREE.PointsMaterial({
+    color: 0xffffff,
+    size: 0.018,
+    transparent: true,
+    opacity: 0.28
   });
-  return group;
+  return new THREE.Points(geometry, material);
+}
+
+function smoothstep(edge0, edge1, value) {
+  const x = Math.min(1, Math.max(0, (value - edge0) / (edge1 - edge0)));
+  return x * x * (3 - 2 * x);
 }
 
 function createNoopScene() {
   return {
-    setTheme() {},
-    triggerGlitch() {},
+    setScroll() {},
     setPointer() {},
+    triggerGlitch() {},
     destroy() {}
   };
 }

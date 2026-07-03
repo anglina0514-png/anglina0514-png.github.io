@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>许智宁 | WebGL 未来空间作品集</title>
-  <meta name="description" content="许智宁的 WebGL 未来空间作品集：内容增长、AIGC 影视、交互叙事游戏与投资教育产品。">
-  <meta property="og:title" content="许智宁 | WebGL 未来空间作品集">
-  <meta property="og:description" content="日夜双轨、3D 棱镜、全息看板与弧形作品传送带。">
-  <meta property="og:image" content="https://xuzhining.top/assets/media/dragon-poster.jpg">
+  <title>许智宁 | NING WebGL Portfolio</title>
+  <meta name="description" content="许智宁的滚动式 WebGL 未来空间作品集：AIGC 视觉、内容增长、交互叙事与投资教育产品。">
+  <meta property="og:title" content="许智宁 | NING WebGL Portfolio">
+  <meta property="og:description" content="以 NING 为核心的 WebGL 滚动式作品集。">
+  <meta property="og:image" content="https://xuzhining.top/assets/media/ue5-poster.jpg">
   <link rel="icon" href="data:,">
   <link rel="preload" href="vendor/three.module.js" as="script" crossorigin>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="theme-night">
-  <div class="space-stage" aria-hidden="true">
+<body>
+  <div class="webgl-space" aria-hidden="true">
     <canvas id="prismCanvas"></canvas>
-    <canvas id="signalCanvas"></canvas>
-    <div class="depth-word depth-word-a">ALCHE</div>
-    <div class="depth-word depth-word-b">WORKS</div>
+    <div class="depth-word depth-word-top">NING</div>
+    <div class="depth-word depth-word-bottom">WORKS</div>
     <div class="scanline-layer"></div>
   </div>
 
@@ -25,99 +24,108 @@
     <div class="transition-grid"></div>
   </div>
 
-  <header class="topbar panel-cut">
-    <a class="brand-lockup magnetic" href="#top" aria-label="返回首页">
+  <header class="site-header" aria-label="主导航">
+    <a class="brand-lockup magnetic" href="#hero" aria-label="返回 NING 首页">
       <span class="brand-mark">XZ</span>
-      <span>许智宁</span>
+      <span>NING</span>
     </a>
-    <nav class="topnav" aria-label="页面导航">
-      <button class="nav-item is-active magnetic" type="button" data-page="about">终端信息</button>
-      <button class="nav-item magnetic" type="button" data-page="capabilities">核心运算</button>
-      <button class="nav-item magnetic" type="button" data-page="works">作品轨道</button>
-      <button class="nav-item magnetic" type="button" data-page="evidence">证据栈</button>
-      <button class="nav-item magnetic" type="button" data-page="contact">通信</button>
+    <nav class="site-nav">
+      <a class="nav-link magnetic" href="#works">Works</a>
+      <a class="nav-link magnetic" href="#about">About</a>
+      <a class="nav-link magnetic" href="#resume">Resume</a>
     </nav>
-    <button class="theme-toggle magnetic" id="themeToggle" type="button" aria-label="切换日夜模式">
-      <span class="theme-icon">☾</span>
-      <span class="theme-label">NIGHT</span>
-    </button>
   </header>
 
-  <main id="top" class="page-shell">
-    <section class="hero-section page-panel is-active page-anim-1" id="about" data-page-panel="about" data-parallax="0.08">
-      <div class="hero-copy">
-        <p class="eyebrow">IMMERSIVE MEDIA CONTROL</p>
-        <h1 class="glitch-text" data-text="许智宁">许智宁</h1>
-        <p class="hero-subtitle">内容增长 AI 视觉 互动叙事 金融教育产品</p>
-        <div class="typewriter-box" id="typewriter" aria-label="个人定位"></div>
-        <div class="hero-actions">
-          <a class="cta magnetic" href="新媒体运营经历-许智宁.pdf" download>下载简历</a>
-          <button class="cta ghost magnetic" type="button" data-page="works">进入作品轨道</button>
-        </div>
+  <main>
+    <section class="hero-section scroll-section" id="hero" data-section="hero">
+      <div class="hero-lockup" data-parallax="0.08">
+        <p class="system-label">Immersive Media Portfolio</p>
+        <h1 class="hero-word" aria-label="NING">
+          <span>N</span><span>I</span><span>N</span><span>G</span>
+        </h1>
+        <p class="hero-line">Build media systems that move attention</p>
       </div>
-
-      <aside class="holo-dashboard panel-cut" data-parallax="0.2">
-        <p class="eyebrow">HOLOGRAPHIC DASHBOARD</p>
-        <div class="dashboard-grid" id="dynamicDashboard"></div>
-      </aside>
+      <div class="hero-caption">
+        <span>Content Growth</span>
+        <span>AI Visuals</span>
+        <span>Interactive Narrative</span>
+        <span>Financial Education</span>
+      </div>
+      <div class="scroll-cue" aria-hidden="true">Scroll</div>
     </section>
 
-    <section class="section-panel page-panel page-anim-2" id="capabilities" data-page-panel="capabilities">
-      <div class="section-heading">
-        <p class="eyebrow">CAPABILITY MAP</p>
-        <h2>四条能力主线</h2>
-      </div>
-      <div class="capability-grid">
-        <article class="panel-cut tilt-card" data-parallax="0.12">
-          <span>01</span>
-          <h3>内容矩阵运营</h3>
-          <p>从 IP 直播间到短视频矩阵复盘，用数据判断选题、节奏和增长路径。</p>
-        </article>
-        <article class="panel-cut tilt-card" data-parallax="0.1">
-          <span>02</span>
-          <h3>AIGC 影视视觉</h3>
-          <p>串联脚本、分镜、关键帧、视频生成和剪辑交付，形成可展示视觉链路。</p>
-        </article>
-        <article class="panel-cut tilt-card" data-parallax="0.14">
-          <span>03</span>
-          <h3>交互叙事产品</h3>
-          <p>把社会议题转化为可点击 H5、压力条机制、剧情节点和课堂演示体验。</p>
-        </article>
-        <article class="panel-cut tilt-card" data-parallax="0.11">
-          <span>04</span>
-          <h3>金融教育原型</h3>
-          <p>用课程、热点拆解和 AI 问答，把复杂金融知识处理成低门槛学习流。</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section-panel page-panel page-anim-3" id="works" data-page-panel="works">
-      <div class="section-heading works-heading">
-        <div>
-          <p class="eyebrow">WORK ORBIT</p>
-          <h2>3D 弧形作品传送带</h2>
+    <section class="works-section" id="works" data-section="works">
+      <div class="works-sticky">
+        <div class="side-index" aria-hidden="true">
+          <span></span>
+          <strong>WORKS</strong>
+          <span></span>
         </div>
-        <div class="track-controls" aria-label="作品轨道控制">
-          <button type="button" class="track-btn magnetic" data-carousel-dir="-1" aria-label="上一组作品">‹</button>
-          <button type="button" class="track-btn magnetic" data-carousel-dir="1" aria-label="下一组作品">›</button>
+        <div class="works-title">
+          <p class="system-label">Selected Motion Works</p>
+          <h2>Six screens moving through one space</h2>
         </div>
-      </div>
-
-      <div class="carousel-viewport panel-cut" id="workCarousel" tabindex="0" aria-label="精选作品 3D 传送带">
-        <div class="carousel-ring">
-          <article class="work-card" data-case="ads">
-            <div class="work-media split-media video-pair-card">
-              <video class="qwen-preview" autoplay muted playsinline loop preload="metadata" poster="assets/media/qwen-poster.jpg" aria-label="千问有千手广告预览">
+        <div class="work-track" id="workCarousel" aria-label="精选作品滚动轨道">
+          <article class="work-card" data-case="qwen">
+            <div class="work-media portrait-media">
+              <video autoplay muted playsinline loop preload="metadata" poster="assets/media/qwen-poster.jpg">
                 <source src="assets/media/qwen-preview.mp4" type="video/mp4">
               </video>
-              <video class="haoshi-preview" autoplay muted playsinline loop preload="metadata" poster="assets/media/haoshi-poster.jpg" aria-label="豪士工厂品牌片预览">
+            </div>
+            <div class="work-meta">
+              <span>2026</span>
+              <h3>千问有千手</h3>
+              <p>AI assistant commercial</p>
+            </div>
+          </article>
+
+          <article class="work-card" data-case="haoshi">
+            <div class="work-media">
+              <video autoplay muted playsinline loop preload="metadata" poster="assets/media/haoshi-poster.jpg">
                 <source src="assets/media/haoshi-preview.mp4" type="video/mp4">
               </video>
             </div>
-            <div class="work-body">
-              <p class="case-label">商业 AI 广告</p>
-              <h3>千问有千手 × 豪士工厂</h3>
-              <p>脚本 分镜 风格板 关键视觉</p>
+            <div class="work-meta">
+              <span>2026</span>
+              <h3>豪士工厂</h3>
+              <p>Factory brand film</p>
+            </div>
+          </article>
+
+          <article class="work-card" data-case="quanyun">
+            <div class="work-media">
+              <video autoplay muted playsinline loop preload="metadata" poster="assets/media/quanyun-poster.jpg">
+                <source src="assets/media/quanyun-preview.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="work-meta">
+              <span>2025</span>
+              <h3>全运会宣传视频</h3>
+              <p>Event documentary edit</p>
+            </div>
+          </article>
+
+          <article class="work-card" data-case="ue5">
+            <div class="work-media">
+              <video autoplay muted playsinline loop preload="metadata" poster="assets/media/ue5-poster.jpg">
+                <source src="assets/media/ue5-preview.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="work-meta">
+              <span>2026</span>
+              <h3>UE5 视觉实验</h3>
+              <p>Unreal Engine cinematic</p>
+            </div>
+          </article>
+
+          <article class="work-card" data-case="zhitou">
+            <div class="work-media">
+              <img src="assets/cases/zhitou-main.jpg" alt="知投学堂投资教育产品界面" loading="lazy">
+            </div>
+            <div class="work-meta">
+              <span>2026</span>
+              <h3>知投学堂</h3>
+              <p>Investment education product</p>
             </div>
           </article>
 
@@ -125,90 +133,60 @@
             <div class="work-media">
               <img src="assets/cases/loan-home.jpg" alt="防网贷视觉游戏界面" loading="lazy">
             </div>
-            <div class="work-body">
-              <p class="case-label">交互叙事游戏</p>
-              <h3>网贷娱乐化压力条游戏</h3>
-              <p>视觉小说 风险判断 求助节点</p>
-            </div>
-          </article>
-
-          <article class="work-card" data-case="zhitou">
-            <div class="work-media">
-              <img src="assets/cases/zhitou-main.jpg" alt="知投学堂投资教育视觉" loading="lazy">
-            </div>
-            <div class="work-body">
-              <p class="case-label">投资教育产品</p>
-              <h3>知投学堂</h3>
-              <p>课程流 热点小课堂 AI 问答</p>
-            </div>
-          </article>
-
-          <article class="work-card" data-case="dragon">
-            <div class="work-media video-card">
-              <video autoplay muted playsinline loop preload="metadata" poster="assets/media/dragon-poster.jpg">
-                <source src="assets/media/dragon-case-loop.mp4" type="video/mp4">
-              </video>
-            </div>
-            <div class="work-body">
-              <p class="case-label">AI / UE 视觉</p>
-              <h3>龙影之后</h3>
-              <p>4K AI 动画 成片 分镜 视觉生成</p>
+            <div class="work-meta">
+              <span>2026</span>
+              <h3>防网贷视觉游戏</h3>
+              <p>Interactive risk narrative</p>
             </div>
           </article>
         </div>
+        <p class="works-hint">Click any screen to expand</p>
       </div>
     </section>
 
-    <section class="section-panel page-panel page-anim-4" id="evidence" data-page-panel="evidence">
-      <div class="section-heading">
-        <p class="eyebrow">EVIDENCE STACK</p>
-        <h2>可验证交付栈</h2>
+    <section class="about-section scroll-section" id="about" data-section="about">
+      <div class="about-grid">
+        <div class="about-statement">
+          <p class="system-label">About NING</p>
+          <h2>
+            内容增长<br>
+            AI 视觉<br>
+            互动叙事<br>
+            金融教育产品
+          </h2>
+          <p>
+            I build media experiences where strategy, visuals and interaction move together.
+            From traffic operations to AI-generated films and product prototypes, every work is treated as a system.
+          </p>
+        </div>
+        <div class="stat-stack" aria-label="能力数据">
+          <div class="stat-card"><strong>1000W+</strong><span>全网流量操盘</span></div>
+          <div class="stat-card"><strong>3.89</strong><span>专业排名前 10%</span></div>
+          <div class="stat-card"><strong>30+</strong><span>行研标的库搭建</span></div>
+          <div class="stat-card"><strong>UE5/AI</strong><span>次世代视觉引擎</span></div>
+        </div>
       </div>
-      <div class="evidence-grid">
-        <a class="panel-cut magnetic" href="新媒体运营经历-许智宁.pdf" download>
-          <span>PDF</span>
-          <strong>新媒体矩阵数据全览</strong>
-          <small>运营经历 简历材料</small>
-        </a>
-        <a class="panel-cut magnetic" href="AI短剧漫剧出海框架.pptx" download>
-          <span>PPT</span>
-          <strong>AI 短剧出海业务框架</strong>
-          <small>内容产业 商业拆解</small>
-        </a>
-        <a class="panel-cut magnetic" href="AI短剧漫剧出海框架收费模式.pptx" download>
-          <span>PPT</span>
-          <strong>AI 短剧出海收费模式</strong>
-          <small>模型设计 变现路径</small>
-        </a>
-        <a class="panel-cut magnetic" href="cases/zhitou/" target="_blank" rel="noreferrer">
-          <span>HTML</span>
-          <strong>知投学堂可点击原型</strong>
-          <small>产品设计 教育交互</small>
+      <div class="resume-entry" id="resume">
+        <a class="resume-link magnetic" href="新媒体运营经历-许智宁.pdf" download>
+          Download Resume
+          <span>新媒体运营经历-许智宁.pdf</span>
         </a>
       </div>
     </section>
 
-    <section class="contact-section page-panel page-anim-5" id="contact" data-page-panel="contact">
-      <div>
-        <p class="eyebrow">OPEN CHANNEL</p>
-        <h2>如果你想看完整作品链路 可以直接联系我</h2>
-      </div>
-      <a class="mail-cta magnetic" href="mailto:anglina0514@gmail.com">anglina0514@gmail.com</a>
+    <section class="final-section scroll-section" data-section="final">
+      <h2>NING</h2>
+      <p>© 2026 许智宁</p>
     </section>
   </main>
 
   <div class="case-modal" id="caseModal" aria-hidden="true">
     <div class="modal-backdrop" data-close-modal></div>
-    <section class="modal-panel panel-cut" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button class="modal-close magnetic" type="button" data-close-modal aria-label="关闭案例详情">×</button>
+    <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close magnetic" type="button" data-close-modal aria-label="关闭案例详情">Close</button>
       <div class="modal-content" id="modalContent"></div>
     </section>
   </div>
-
-  <footer>
-    <span>© 2026 许智宁</span>
-    <span>WebGL Future Space Portfolio</span>
-  </footer>
 
   <script type="module" src="main.js"></script>
 </body>

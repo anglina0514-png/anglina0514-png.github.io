@@ -1,53 +1,49 @@
 export function createWorksCarousel({ root, onOpen }) {
   if (!root) return createNoopCarousel();
 
-  const ring = root.querySelector(".carousel-ring");
   const cards = [...root.querySelectorAll(".work-card")];
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let index = 0;
-  let radius = 520;
-  let autoTimer = 0;
+  let progress = 0;
+  let width = 1;
+
+  function setProgress(nextProgress) {
+    progress = clamp(nextProgress, 0, 1);
+    layout();
+  }
 
   function layout() {
-    radius = Math.max(360, Math.min(660, root.clientWidth * 0.46));
-    cards.forEach((card, cardIndex) => {
-      const angle = (360 / cards.length) * cardIndex;
-      card.style.transform = `translate(-50%, -50%) rotateY(${angle}deg) translateZ(${radius}px)`;
-    });
-    update();
-  }
+    width = Math.max(360, root.clientWidth || window.innerWidth);
+    const travel = cards.length - 1;
+    const focus = progress * travel;
+    const radius = Math.min(720, Math.max(360, width * 0.52));
 
-  function update() {
-    const angle = -(360 / cards.length) * index;
-    ring.style.transform = `translateZ(${-radius}px) rotateY(${angle}deg)`;
-    cards.forEach((card, cardIndex) => {
-      const distance = Math.min(
-        Math.abs(cardIndex - index),
-        Math.abs(cardIndex - index + cards.length),
-        Math.abs(cardIndex - index - cards.length)
-      );
-      card.classList.toggle("is-front", distance === 0);
-      card.classList.toggle("is-dimmed", distance > 1);
-      card.tabIndex = distance === 0 ? 0 : -1;
-      card.style.zIndex = String(20 - distance);
-      card.style.pointerEvents = distance === 0 ? "" : "none";
-    });
-  }
+    cards.forEach((card, index) => {
+      const offset = index - focus;
+      const abs = Math.abs(offset);
+      const angle = offset * 22;
+      const x = Math.sin(angle * Math.PI / 180) * radius;
+      const z = Math.cos(angle * Math.PI / 180) * 180 - 180 - abs * 52;
+      const y = Math.sin((progress + index) * Math.PI) * 18;
+      const scale = Math.max(0.58, 1 - abs * 0.16);
+      const opacity = abs > 3.2 ? 0 : Math.max(0.24, 1 - abs * 0.22);
+      const blur = abs > 1.6 ? Math.min(4, abs * 0.8) : 0;
 
-  function go(direction) {
-    index = (index + direction + cards.length) % cards.length;
-    update();
+      card.style.transform = `
+        translate3d(calc(-50% + ${x}px), calc(-50% + ${y}px), ${z}px)
+        rotateY(${-angle}deg)
+        scale(${scale})
+      `;
+      card.style.opacity = opacity;
+      card.style.filter = `blur(${blur}px)`;
+      card.style.zIndex = String(100 - Math.round(abs * 10));
+      card.classList.toggle("is-front", abs < 0.55);
+      card.tabIndex = abs < 0.8 ? 0 : -1;
+    });
   }
 
   function open(card) {
     const id = card.dataset.case;
     if (!id) return;
-    const cardIndex = cards.indexOf(card);
-    if (cardIndex !== index) {
-      index = cardIndex;
-      update();
-      return;
-    }
     onOpen?.(id, card);
   }
 
@@ -61,28 +57,13 @@ export function createWorksCarousel({ root, onOpen }) {
     });
   });
 
-  root.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowRight") go(1);
-    if (event.key === "ArrowLeft") go(-1);
-  });
-
-  root.addEventListener("pointerenter", () => clearInterval(autoTimer));
-  root.addEventListener("pointerleave", startAuto);
   window.addEventListener("resize", layout);
-
-  function startAuto() {
-    clearInterval(autoTimer);
-    if (!reducedMotion) autoTimer = window.setInterval(() => go(1), 9000);
-  }
-
   layout();
-  startAuto();
 
   return {
-    go,
+    setProgress,
     refresh: layout,
     destroy() {
-      clearInterval(autoTimer);
       window.removeEventListener("resize", layout);
     }
   };
@@ -90,8 +71,12 @@ export function createWorksCarousel({ root, onOpen }) {
 
 function createNoopCarousel() {
   return {
-    go() {},
+    setProgress() {},
     refresh() {},
     destroy() {}
   };
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
 }
