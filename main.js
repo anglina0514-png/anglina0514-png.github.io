@@ -118,6 +118,12 @@ const modal = document.getElementById("caseModal");
 const modalContent = document.getElementById("modalContent");
 const navLinks = [...document.querySelectorAll(".nav-link")];
 const parallaxItems = [...document.querySelectorAll("[data-parallax]")];
+const heroParticles = initHeroParticleTitle({
+  wrap: document.getElementById("heroParticleTitle"),
+  canvas: document.getElementById("heroParticleTitleCanvas"),
+  text: "NING",
+  reducedMotion
+});
 
 let latestScroll = -1;
 let ticking = false;
@@ -132,6 +138,7 @@ window.addEventListener("scroll", requestScrollUpdate, { passive: true });
 window.addEventListener("resize", requestScrollUpdate);
 document.addEventListener("pointerdown", (event) => {
   transitionEngine.pulse(event.clientX, event.clientY);
+  heroParticles.burst?.(event.clientX, event.clientY);
 });
 
 function requestScrollUpdate() {
@@ -334,6 +341,178 @@ function renderMedia(media) {
       <img src="${media.src}" alt="${media.alt || ""}" loading="lazy">
     </div>
   `;
+}
+
+function initHeroParticleTitle({ wrap, canvas, text, reducedMotion }) {
+  if (!wrap || !canvas || reducedMotion) return {};
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return {};
+  const sampleCanvas = document.createElement("canvas");
+  const sampleCtx = sampleCanvas.getContext("2d");
+  if (!sampleCtx) return {};
+
+  const particles = [];
+  const mouse = { x: -9999, y: -9999, active: false };
+  let animationFrame = 0;
+  let resizeTimer = 0;
+  let cssWidth = 0;
+  let cssHeight = 0;
+
+  function resize() {
+    const rect = wrap.getBoundingClientRect();
+    cssWidth = Math.max(1, Math.floor(rect.width));
+    cssHeight = Math.max(1, Math.floor(rect.height));
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+
+    canvas.width = Math.floor(cssWidth * dpr);
+    canvas.height = Math.floor(cssHeight * dpr);
+    canvas.style.width = `${cssWidth}px`;
+    canvas.style.height = `${cssHeight}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    createParticles();
+  }
+
+  function fitFontSize() {
+    let fontSize = Math.min(cssWidth / 2.05, cssHeight * 0.86);
+    const minFontSize = 64;
+
+    while (fontSize > minFontSize) {
+      ctx.font = `950 ${fontSize}px ${getComputedStyle(document.documentElement).getPropertyValue("--font-main") || "system-ui"}`;
+      if (ctx.measureText(text).width <= cssWidth * 0.94) break;
+      fontSize -= 3;
+    }
+
+    return fontSize;
+  }
+
+  function createParticles() {
+    particles.length = 0;
+    sampleCanvas.width = cssWidth;
+    sampleCanvas.height = cssHeight;
+    sampleCtx.clearRect(0, 0, cssWidth, cssHeight);
+    sampleCtx.save();
+    sampleCtx.fillStyle = "#fff";
+    sampleCtx.textAlign = "center";
+    sampleCtx.textBaseline = "middle";
+    sampleCtx.font = `950 ${fitFontSize()}px ${getComputedStyle(document.documentElement).getPropertyValue("--font-main") || "system-ui"}`;
+    sampleCtx.fillText(text, cssWidth / 2, cssHeight / 2);
+    sampleCtx.restore();
+
+    const imageData = sampleCtx.getImageData(0, 0, cssWidth, cssHeight);
+    const data = imageData.data;
+    const gap = cssWidth < 680 ? 4 : 5;
+
+    for (let y = 0; y < cssHeight; y += gap) {
+      for (let x = 0; x < cssWidth; x += gap) {
+        const index = (y * cssWidth + x) * 4;
+        if (data[index + 3] <= 120) continue;
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 90 + Math.random() * Math.max(120, cssWidth * 0.28);
+        particles.push({
+          x: cssWidth / 2 + Math.cos(angle) * distance,
+          y: cssHeight / 2 + Math.sin(angle) * distance,
+          baseX: x,
+          baseY: y,
+          vx: 0,
+          vy: 0,
+          size: 0.9 + Math.random() * 1.75,
+          phase: Math.random() * Math.PI * 2,
+          opacity: 0.5 + Math.random() * 0.48,
+          color: pickParticleColor(particles.length)
+        });
+      }
+    }
+
+    ctx.clearRect(0, 0, cssWidth, cssHeight);
+    document.body.classList.add("hero-particles-ready");
+  }
+
+  function pickParticleColor(index) {
+    if (index % 41 === 0) return "rgba(178, 238, 255, 0.96)";
+    if (index % 23 === 0) return "rgba(142, 125, 255, 0.92)";
+    if (index % 17 === 0) return "rgba(244, 247, 255, 0.88)";
+    return "rgba(220, 228, 218, 0.8)";
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+    particles.forEach((particle) => {
+      const dx = particle.baseX - particle.x;
+      const dy = particle.baseY - particle.y;
+      particle.vx += dx * 0.012;
+      particle.vy += dy * 0.012;
+
+      if (mouse.active) {
+        const mx = particle.x - mouse.x;
+        const my = particle.y - mouse.y;
+        const distance = Math.hypot(mx, my);
+        const radius = Math.min(180, Math.max(96, cssWidth * 0.13));
+
+        if (distance < radius && distance > 0.1) {
+          const force = (radius - distance) / radius;
+          const angle = Math.atan2(my, mx);
+          particle.vx += Math.cos(angle) * force * 1.7;
+          particle.vy += Math.sin(angle) * force * 1.7;
+        }
+      }
+
+      particle.vx *= 0.88;
+      particle.vy *= 0.88;
+      particle.x += particle.vx;
+      particle.y += particle.vy;
+      particle.phase += 0.018;
+
+      ctx.beginPath();
+      ctx.globalAlpha = Math.max(0.18, Math.min(1, particle.opacity + Math.sin(particle.phase) * 0.11));
+      ctx.fillStyle = particle.color;
+      ctx.shadowColor = "rgba(116, 130, 255, 0.86)";
+      ctx.shadowBlur = 8;
+      ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+    animationFrame = requestAnimationFrame(draw);
+  }
+
+  function setMouse(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = clientX - rect.left;
+    mouse.y = clientY - rect.top;
+    mouse.active = true;
+  }
+
+  canvas.addEventListener("pointermove", (event) => setMouse(event.clientX, event.clientY));
+  canvas.addEventListener("pointerleave", () => {
+    mouse.active = false;
+    mouse.x = -9999;
+    mouse.y = -9999;
+  });
+  window.addEventListener("resize", () => {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(resize, 160);
+  });
+
+  resize();
+  draw();
+
+  return {
+    burst(clientX, clientY) {
+      const rect = canvas.getBoundingClientRect();
+      if (clientX < rect.left || clientX > rect.right || clientY < rect.top || clientY > rect.bottom) return;
+      setMouse(clientX, clientY);
+      window.setTimeout(() => {
+        mouse.active = false;
+      }, 260);
+    },
+    destroy() {
+      cancelAnimationFrame(animationFrame);
+    }
+  };
 }
 
 function clamp(value, min, max) {

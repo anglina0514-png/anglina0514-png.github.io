@@ -234,10 +234,13 @@ main {
 }
 
 .hero-word {
+  position: relative;
   margin: 0;
-  width: min-content;
+  width: min(88vw, 1180px);
+  height: clamp(118px, 22vw, 305px);
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: clamp(4px, 0.9vw, 13px);
   font-size: clamp(86px, 19vw, 320px);
   line-height: 0.78;
@@ -247,9 +250,29 @@ main {
   text-shadow: 0 0 34px rgba(95, 104, 255, 0.28);
 }
 
+.hero-particle-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: crosshair;
+  transform: translateY(calc(var(--page-progress) * -18px));
+  transition: opacity 520ms ease;
+}
+
+body.hero-particles-ready .hero-particle-canvas {
+  opacity: 1;
+}
+
 .hero-word span {
   display: block;
   transform: translateY(calc(var(--page-progress) * -18px));
+  transition: opacity 260ms ease;
+}
+
+body.hero-particles-ready .hero-word span {
+  opacity: 0;
 }
 
 .hero-line {
@@ -971,6 +994,8 @@ main {
   }
 
   .hero-word {
+    width: 100%;
+    height: clamp(92px, 28vw, 138px);
     font-size: clamp(74px, 25vw, 132px);
   }
 
