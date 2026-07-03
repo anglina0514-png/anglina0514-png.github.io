@@ -35,10 +35,23 @@ body {
   color: #fff;
   font-family: var(--font-main);
   overflow-x: hidden;
+  animation: pageReveal 1600ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 body.modal-open {
   overflow: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(104, 122, 255, 0.28), transparent 20%),
+    #000;
+  animation: introCurtain 1900ms cubic-bezier(0.16, 1, 0.3, 1) 220ms both;
 }
 
 img,
@@ -146,6 +159,7 @@ button {
   font-size: 12px;
   letter-spacing: 0;
   mix-blend-mode: difference;
+  animation: navReveal 1100ms cubic-bezier(0.16, 1, 0.3, 1) 920ms both;
 }
 
 .brand-lockup,
@@ -257,6 +271,15 @@ button {
   font-family: var(--font-mono);
   font-size: 11px;
   pointer-events: auto;
+  transition: opacity 420ms ease, visibility 420ms ease, transform 420ms ease;
+  animation: hudReveal 1200ms cubic-bezier(0.16, 1, 0.3, 1) 1180ms both;
+}
+
+body:not([data-active-section="hero"]) .stage-hud {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none;
+  transform: translateX(24px);
 }
 
 .hud-block {
@@ -367,6 +390,7 @@ button {
   display: grid;
   align-content: center;
   transition: transform 180ms ease;
+  animation: heroCopyReveal 1300ms cubic-bezier(0.16, 1, 0.3, 1) 780ms both;
 }
 
 .system-label {
@@ -394,6 +418,8 @@ button {
   letter-spacing: 0;
   text-transform: uppercase;
   text-shadow: 0 0 34px rgba(106, 113, 255, 0.24);
+  opacity: 0.72;
+  mix-blend-mode: screen;
 }
 
 .hero-particle-canvas {
@@ -408,7 +434,7 @@ button {
 }
 
 body.hero-particles-ready .hero-particle-canvas {
-  opacity: 1;
+  opacity: 0.76;
 }
 
 .hero-word span {
@@ -427,6 +453,7 @@ body.hero-particles-ready .hero-word span {
   color: rgba(255, 255, 255, 0.74);
   font-family: var(--font-mono);
   font-size: clamp(13px, 1.4vw, 18px);
+  transform: translateY(clamp(18px, 5vh, 58px));
 }
 
 .hero-caption {
@@ -440,6 +467,7 @@ body.hero-particles-ready .hero-word span {
   color: rgba(255, 255, 255, 0.52);
   font-family: var(--font-mono);
   font-size: 11px;
+  animation: navReveal 1100ms cubic-bezier(0.16, 1, 0.3, 1) 1250ms both;
 }
 
 .scroll-cue {
@@ -1131,6 +1159,64 @@ body.hero-particles-ready .hero-word span {
   28% { opacity: 0.5; transform: translateX(9px); }
   48% { opacity: 0.7; transform: translateX(-4px); }
   100% { opacity: 0; transform: translateX(0); }
+}
+
+@keyframes introCurtain {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+  58% {
+    opacity: 0.72;
+    transform: scale(1.08);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.18);
+    filter: blur(28px);
+  }
+}
+
+@keyframes pageReveal {
+  0% { background-color: #000; }
+  100% { background-color: #000; }
+}
+
+@keyframes navReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hudReveal {
+  0% {
+    opacity: 0;
+    transform: translateX(34px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes heroCopyReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(44px) scale(0.96);
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
 }
 
 @media (max-width: 1060px) {

@@ -30,40 +30,40 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   root.add(gridRoot, markRoot, spectralRoot, shardRoot);
 
   const glassMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xb8c8ff,
+    color: 0x9bdfff,
     metalness: 0,
-    roughness: 0.03,
-    transmission: 0.78,
-    thickness: 1.6,
-    ior: 1.68,
+    roughness: 0.08,
+    transmission: 0.92,
+    thickness: 2.6,
+    ior: 1.72,
     transparent: true,
-    opacity: 0.42,
+    opacity: 0.62,
     clearcoat: 1,
-    clearcoatRoughness: 0.03,
-    side: THREE.DoubleSide
+    clearcoatRoughness: 0.02,
+    reflectivity: 0.92,
+    side: THREE.DoubleSide,
+    depthWrite: false
   });
-
-  const triangle = new THREE.Mesh(makeTriangleGeometry(3.8, 3.35), glassMaterial);
-  triangle.position.y = 0.05;
-  markRoot.add(triangle);
 
   const edgeMaterial = new THREE.LineBasicMaterial({
     color: 0xffffff,
     transparent: true,
-    opacity: 0.74
+    opacity: 0.58
   });
-  const outline = makeTriangleOutline(4.1, 3.6, edgeMaterial);
-  const inner = makeTriangleOutline(1.35, 1.18, edgeMaterial);
-  inner.position.y = -0.42;
-  markRoot.add(outline, inner);
 
-  const aBars = makeABars();
-  markRoot.add(aBars);
+  const nLogo = makeGlassN(glassMaterial, edgeMaterial);
+  markRoot.add(nLogo);
 
-  const cyanGhost = makeTriangleOutline(4.12, 3.62, new THREE.LineBasicMaterial({ color: 0x00eaff, transparent: true, opacity: 0.34 }));
-  const magentaGhost = makeTriangleOutline(4.08, 3.58, new THREE.LineBasicMaterial({ color: 0xff3df0, transparent: true, opacity: 0.28 }));
-  cyanGhost.position.x = 0.045;
-  magentaGhost.position.x = -0.045;
+  const spectralMaterialCyan = glassMaterial.clone();
+  spectralMaterialCyan.color = new THREE.Color(0x00eaff);
+  spectralMaterialCyan.opacity = 0.17;
+  const spectralMaterialMagenta = glassMaterial.clone();
+  spectralMaterialMagenta.color = new THREE.Color(0xff36f1);
+  spectralMaterialMagenta.opacity = 0.14;
+  const cyanGhost = makeGlassN(spectralMaterialCyan, new THREE.LineBasicMaterial({ color: 0x00eaff, transparent: true, opacity: 0.25 }));
+  const magentaGhost = makeGlassN(spectralMaterialMagenta, new THREE.LineBasicMaterial({ color: 0xff3df0, transparent: true, opacity: 0.2 }));
+  cyanGhost.position.x = 0.075;
+  magentaGhost.position.x = -0.075;
   spectralRoot.add(cyanGhost, magentaGhost);
 
   const curveWall = makeCurvedWall();
@@ -74,6 +74,11 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
 
   const logoNoise = makeLogoNoise();
   shardRoot.add(logoNoise);
+
+  const caustics = makeCausticStripes();
+  const fractureLines = makeFractureLines();
+  const surfaceBlocks = makeSurfaceBlocks();
+  markRoot.add(caustics, fractureLines, surfaceBlocks);
 
   const rings = [];
   for (let i = 0; i < 4; i += 1) {
@@ -130,6 +135,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   function render(time) {
     if (!running) return;
     const seconds = time * 0.001;
+    const intro = reducedMotion ? 1 : smoothstep(0.1, 2.05, seconds);
     const glitchActive = time < glitchUntil;
     const glitch = glitchActive ? Math.sin(time * 0.12) * 0.075 : 0;
     const drift = reducedMotion ? 0 : seconds;
@@ -144,14 +150,14 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     root.rotation.x = THREE.MathUtils.lerp(root.rotation.x, -pointer.y * 0.05, 0.05);
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, pointer.x * 0.34 + productDepth * 0.55 - finalDepth * 0.28, 0.04);
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, 0.22 - scroll.page * 0.78 + newsDepth * 0.22, 0.04);
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, (width < 720 ? 12.5 : 9.6) - stageDepth * 1.85 + finalDepth * 1.2, 0.035);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, (width < 720 ? 12.5 : 9.6) - intro * 1.25 - stageDepth * 1.85 + finalDepth * 1.2, 0.035);
 
-    markRoot.rotation.y = drift * 0.12 + pointer.x * 0.18 + glitch + worksDepth * 0.46 - productDepth * 0.42;
-    markRoot.rotation.x = Math.sin(drift * 0.38) * 0.035 - pointer.y * 0.08 + newsDepth * 0.18;
+    markRoot.rotation.y = (1 - intro) * -1.08 + drift * 0.12 + pointer.x * 0.18 + glitch + worksDepth * 0.46 - productDepth * 0.42;
+    markRoot.rotation.x = (1 - intro) * 0.34 + Math.sin(drift * 0.38) * 0.035 - pointer.y * 0.08 + newsDepth * 0.18;
     markRoot.rotation.z = glitch * 0.7 + finalDepth * 0.1;
     markRoot.position.x = productDepth * -0.55 + finalDepth * 0.35;
-    markRoot.position.y = -scroll.page * 1.2 + Math.sin(drift * 0.8) * 0.03 + productDepth * 0.5;
-    markRoot.scale.setScalar(1.02 + worksDepth * 0.12 - aboutFade * 0.18 + finalDepth * 0.2);
+    markRoot.position.y = -0.24 + intro * 0.24 - scroll.page * 1.2 + Math.sin(drift * 0.8) * 0.03 + productDepth * 0.5;
+    markRoot.scale.setScalar((0.52 + intro * 0.52) * (1.02 + worksDepth * 0.12 - aboutFade * 0.18 + finalDepth * 0.2));
     markRoot.visible = finalDepth < 0.94;
 
     spectralRoot.rotation.copy(markRoot.rotation);
@@ -160,14 +166,16 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     spectralRoot.children.forEach((line, index) => {
       line.position.x = (index ? -1 : 1) * (glitchActive ? 0.18 : 0.055);
       line.position.y = (index ? 1 : -1) * (glitchActive ? 0.04 : 0.015);
-      line.material.opacity = glitchActive ? 0.55 : 0.26;
+      line.children.forEach((child) => {
+        if (child.material) child.material.opacity = (glitchActive ? 0.34 : 0.13) * intro;
+      });
     });
 
     shardRoot.rotation.copy(markRoot.rotation);
     shardRoot.position.copy(markRoot.position);
     shardRoot.scale.copy(markRoot.scale);
     logoNoise.rotation.z = -drift * 0.04 + glitch * 2;
-    logoNoise.material.opacity = 0.16 + newsDepth * 0.18 + worksDepth * 0.14 + (glitchActive ? 0.2 : 0);
+    logoNoise.material.opacity = (0.16 + newsDepth * 0.18 + worksDepth * 0.14 + (glitchActive ? 0.2 : 0)) * intro;
 
     gridRoot.rotation.y = drift * 0.025 + pointer.x * 0.05 - worksDepth * 0.54 + productDepth * 0.28;
     gridRoot.position.z = -stageDepth * 2.9;
@@ -175,9 +183,18 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     curveWall.material.opacity = 0.18 + (stageDepth * 0.16) - finalDepth * 0.08;
     tunnelLines.material.opacity = 0.12 + stageDepth * 0.18 - finalDepth * 0.04;
 
-    glassMaterial.opacity = Math.max(0.16, 0.45 - aboutFade * 0.18 + productDepth * 0.08 + (glitchActive ? 0.1 : 0));
+    glassMaterial.opacity = Math.max(0.16, 0.62 - aboutFade * 0.18 + productDepth * 0.08 + (glitchActive ? 0.1 : 0)) * intro;
     glassMaterial.roughness = 0.03 + worksDepth * 0.16 + productDepth * 0.08;
     edgeMaterial.opacity = Math.max(0.12, 0.74 - aboutFade * 0.36);
+    caustics.children.forEach((stripe, index) => {
+      stripe.position.y = Math.sin(drift * 0.8 + index * 1.8) * 0.18 + (index - 1.5) * 0.46;
+      stripe.material.opacity = (0.16 + Math.sin(drift * 1.2 + index) * 0.05) * intro;
+    });
+    fractureLines.material.opacity = (0.22 + newsDepth * 0.08 + (glitchActive ? 0.2 : 0)) * intro;
+    surfaceBlocks.children.forEach((block, index) => {
+      block.material.opacity = (0.08 + Math.sin(drift * 0.9 + index * 0.7) * 0.035) * intro;
+      block.position.z = 0.62 + Math.sin(drift * 0.6 + index) * 0.018;
+    });
     rings.forEach((ring, index) => {
       ring.rotation.z = drift * (0.02 + index * 0.01);
       ring.material.opacity = Math.max(0.03, 0.11 - aboutFade * 0.08);
@@ -207,40 +224,119 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   };
 }
 
-function makeTriangleGeometry(width, height) {
-  const shape = new THREE.Shape();
-  shape.moveTo(0, height / 2);
-  shape.lineTo(-width / 2, -height / 2);
-  shape.lineTo(width / 2, -height / 2);
-  shape.closePath();
-  return new THREE.ShapeGeometry(shape);
-}
-
-function makeTriangleOutline(width, height, material) {
-  const points = [
-    new THREE.Vector3(0, height / 2, 0.05),
-    new THREE.Vector3(-width / 2, -height / 2, 0.05),
-    new THREE.Vector3(width / 2, -height / 2, 0.05),
-    new THREE.Vector3(0, height / 2, 0.05)
-  ];
-  return new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), material);
-}
-
-function makeABars() {
+function makeGlassN(material, edgeMaterial) {
   const group = new THREE.Group();
-  const material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.32 });
-  const left = makeBar(-0.78, -0.22, 1.62, Math.PI * -0.16, material);
-  const right = makeBar(0.78, -0.22, 1.62, Math.PI * 0.16, material);
-  const cross = makeBar(0, -0.68, 1.05, Math.PI / 2, material);
-  group.add(left, right, cross);
+  const barSpecs = [
+    { x: -1.28, y: 0, length: 3.75, width: 0.54, rotation: 0 },
+    { x: 1.28, y: 0, length: 3.75, width: 0.54, rotation: 0 },
+    { x: 0, y: 0, length: 4.36, width: 0.6, rotation: -0.63 }
+  ];
+  barSpecs.forEach((spec) => {
+    const mesh = makeBar(spec.x, spec.y, spec.length, spec.width, spec.rotation, material);
+    const edge = new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry, 18), edgeMaterial);
+    edge.position.copy(mesh.position);
+    edge.rotation.copy(mesh.rotation);
+    group.add(mesh, edge);
+  });
+  group.rotation.z = 0.01;
   return group;
 }
 
-function makeBar(x, y, length, rotation, material) {
-  const mesh = new THREE.Mesh(new THREE.BoxGeometry(0.09, length, 0.04), material);
+function makeBar(x, y, length, width, rotation, material) {
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, length, 0.78, 7, 24, 5), material);
   mesh.position.set(x, y, 0.12);
   mesh.rotation.z = rotation;
   return mesh;
+}
+
+function makeCausticStripes() {
+  const group = new THREE.Group();
+  const colors = [0xffffff, 0x84f2ff, 0x6e7bff, 0xff54f1];
+  for (let i = 0; i < 4; i += 1) {
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(3.6 - i * 0.34, 0.1),
+      new THREE.MeshBasicMaterial({
+        color: colors[i],
+        transparent: true,
+        opacity: 0.14,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      })
+    );
+    mesh.position.set((i - 1.5) * 0.16, (i - 1.5) * 0.46, 0.56 + i * 0.01);
+    mesh.rotation.z = -0.1 + i * 0.025;
+    group.add(mesh);
+  }
+  return group;
+}
+
+function makeFractureLines() {
+  const points = [];
+  const random = seededRandom(27);
+  for (let i = 0; i < 58; i += 1) {
+    const side = random() > 0.52 ? 1 : -1;
+    const x = side * (0.42 + random() * 1.15);
+    const y = -1.72 + random() * 3.44;
+    const length = 0.24 + random() * 0.82;
+    const angle = -0.86 + random() * 1.72;
+    points.push(
+      x,
+      y,
+      0.64,
+      x + Math.cos(angle) * length,
+      y + Math.sin(angle) * length,
+      0.64
+    );
+  }
+  for (let i = 0; i < 30; i += 1) {
+    const y = -1.58 + random() * 3.16;
+    const x = -0.58 + random() * 1.16;
+    points.push(x, y, 0.65, x + 0.58 + random() * 0.6, y - 0.4 + random() * 0.8, 0.65);
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(points, 3));
+  const material = new THREE.LineBasicMaterial({
+    color: 0xf2f7ff,
+    transparent: true,
+    opacity: 0.24,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+  return new THREE.LineSegments(geometry, material);
+}
+
+function makeSurfaceBlocks() {
+  const group = new THREE.Group();
+  const random = seededRandom(91);
+  const colors = [0xdfeaff, 0x76f3ff, 0x8d87ff, 0xffffff];
+  for (let i = 0; i < 24; i += 1) {
+    const width = 0.18 + random() * 0.5;
+    const height = 0.06 + random() * 0.24;
+    const material = new THREE.MeshBasicMaterial({
+      color: colors[i % colors.length],
+      transparent: true,
+      opacity: 0.08,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      side: THREE.DoubleSide
+    });
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, height), material);
+    const column = i % 3;
+    mesh.position.x = column === 0 ? -1.28 + (random() - 0.5) * 0.32 : column === 1 ? (random() - 0.5) * 0.96 : 1.28 + (random() - 0.5) * 0.32;
+    mesh.position.y = -1.65 + random() * 3.3;
+    mesh.position.z = 0.62;
+    mesh.rotation.z = column === 1 ? -0.62 + (random() - 0.5) * 0.28 : (random() - 0.5) * 0.3;
+    group.add(mesh);
+  }
+  return group;
+}
+
+function seededRandom(seed) {
+  let state = seed >>> 0;
+  return () => {
+    state = (state * 1664525 + 1013904223) >>> 0;
+    return state / 4294967296;
+  };
 }
 
 function makeCurvedWall() {
