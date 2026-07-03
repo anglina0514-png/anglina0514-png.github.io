@@ -730,7 +730,8 @@ main {
   background: rgba(0, 0, 0, 0.12);
 }
 
-.capability-matrix article {
+.capability-matrix article,
+.capability-link {
   min-height: 168px;
   padding: 22px;
   display: grid;
@@ -738,9 +739,19 @@ main {
   background: rgba(247, 250, 248, 0.9);
 }
 
+.capability-link {
+  color: #000;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.capability-link:hover {
+  background: #000;
+  color: #fff;
+}
+
 .capability-matrix h3 {
   margin: 0;
-  color: #000;
+  color: inherit;
   font-size: clamp(18px, 1.8vw, 30px);
   line-height: 1;
   letter-spacing: 0;
@@ -748,10 +759,18 @@ main {
 
 .capability-matrix p {
   margin: 28px 0 0;
-  color: rgba(0, 0, 0, 0.56);
+  color: color-mix(in srgb, currentColor 58%, transparent);
   font-family: var(--font-mono);
   font-size: 12px;
   line-height: 1.7;
+}
+
+.capability-link span {
+  margin-top: 20px;
+  color: color-mix(in srgb, currentColor 62%, transparent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
 }
 
 .resume-entry {

@@ -73,7 +73,7 @@ const cases = {
     method: "Beginner investing learning flow",
     result: "Clickable education product",
     gallery: ["assets/cases/zhitou-main.jpg", "assets/cases/zhitou-deck.jpg"],
-    actions: [["Open Prototype", "cases/zhitou/", true]]
+    actions: [["Open Product", "https://zhitou-xuetang-d4g4cw845a2883397-1448213860.tcloudbaseapp.com/?v=auth-fix-20260702#home", true]]
   },
   loan: {
     label: "Interactive Game",
