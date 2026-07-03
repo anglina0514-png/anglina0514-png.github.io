@@ -115,9 +115,19 @@ const transitionEngine = createTransitionEngine({
   overlay: document.getElementById("transitionOverlay"),
   prismScene
 });
+const worksCounter = document.getElementById("worksCounter");
+const worksCurrentTitle = document.getElementById("worksCurrentTitle");
+const workHitbox = document.getElementById("workHitbox");
+
+let latestScroll = -1;
+let ticking = false;
+let pointerState = { x: 0, y: 0 };
+let activeWorkCard = null;
+
 const carousel = createWorksCarousel({
   root: document.getElementById("workCarousel"),
-  onOpen: (id) => openCase(id)
+  onOpen: (id) => openCase(id),
+  onFocus: (card, index, total) => updateWorkFocus(card, index, total)
 });
 
 const modal = document.getElementById("caseModal");
@@ -132,15 +142,12 @@ const heroParticles = initHeroParticleTitle({
   reducedMotion
 });
 
-let latestScroll = -1;
-let ticking = false;
-let pointerState = { x: 0, y: 0 };
-
 initNavigation();
 initMagneticHover();
 initParallax();
 initModal();
 initProductButtons();
+initWorkHitbox();
 updateScrollState();
 
 window.addEventListener("scroll", requestScrollUpdate, { passive: true });
@@ -197,6 +204,10 @@ function updateScrollState() {
     final: finalProgress
   });
   carousel.setProgress?.(worksProgress);
+  if (activeWorkCard) {
+    const intensity = worksProgress > 0 && worksProgress < 1 ? smoothstep(0.06, 0.24, worksProgress) * (1 - smoothstep(0.9, 1, worksProgress)) : 0;
+    applyWorkAccent(activeWorkCard, intensity);
+  }
   updateHud({
     page: pageProgress,
     hero: heroProgress,
@@ -213,6 +224,32 @@ function updateScrollState() {
     const id = link.getAttribute("href")?.replace("#", "");
     link.classList.toggle("is-active", id === active);
   });
+}
+
+function updateWorkFocus(card, index, total) {
+  if (!card) return;
+  activeWorkCard = card;
+  const title = card.querySelector(".work-meta h3")?.textContent?.trim() || "";
+  const label = String(index + 1).padStart(2, "0");
+  const count = String(total).padStart(2, "0");
+  if (worksCounter) worksCounter.textContent = `${label} / ${count}`;
+  if (worksCurrentTitle) worksCurrentTitle.textContent = title;
+  if (workHitbox) workHitbox.setAttribute("aria-label", `打开${title}详情`);
+  applyWorkAccent(card, Number(getComputedStyle(document.documentElement).getPropertyValue("--works-progress")) || 0);
+}
+
+function applyWorkAccent(card, intensity = 1) {
+  const accent = card.dataset.accent || "#6078ff";
+  const accentAlt = card.dataset.accentAlt || "#92e9ff";
+  const amount = clamp(intensity, 0, 1);
+  document.documentElement.style.setProperty("--work-accent", accent);
+  document.documentElement.style.setProperty("--work-accent-alt", accentAlt);
+  document.documentElement.style.setProperty("--work-accent-strength", amount.toFixed(3));
+  document.documentElement.style.setProperty("--work-accent-soft", `${Math.round(amount * 24)}%`);
+  document.documentElement.style.setProperty("--work-accent-mid", `${Math.round(amount * 38)}%`);
+  document.documentElement.style.setProperty("--work-accent-strong", `${Math.round(amount * 54)}%`);
+  document.documentElement.style.setProperty("--work-accent-max", `${Math.round(amount * 72)}%`);
+  prismScene.setAccent?.(accent, accentAlt, amount);
 }
 
 function sectionProgress(section) {
@@ -290,6 +327,14 @@ function initParallax() {
 function initProductButtons() {
   productCaseButtons.forEach((button) => {
     button.addEventListener("click", () => openCase(button.dataset.openCase));
+  });
+}
+
+function initWorkHitbox() {
+  if (!workHitbox) return;
+  workHitbox.addEventListener("click", () => {
+    const id = activeWorkCard?.dataset.case;
+    if (id) openCase(id);
   });
 }
 
@@ -590,4 +635,9 @@ function initHeroParticleTitle({ wrap, canvas, text, reducedMotion }) {
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
+}
+
+function smoothstep(edge0, edge1, value) {
+  const x = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+  return x * x * (3 - 2 * x);
 }

@@ -104,6 +104,11 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
 
   const pointer = { x: 0, y: 0 };
   const scroll = { page: 0, hero: 0, news: 0, works: 0, about: 0, products: 0, final: 0 };
+  const accent = {
+    primary: new THREE.Color(0x6078ff),
+    secondary: new THREE.Color(0x92e9ff),
+    strength: 0
+  };
   let glitchUntil = 0;
   let width = 1;
   let height = 1;
@@ -128,6 +133,12 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     pointer.y = y;
   }
 
+  function setAccent(primary = "#6078ff", secondary = "#92e9ff", strength = 0) {
+    accent.primary.set(primary);
+    accent.secondary.set(secondary);
+    accent.strength = Math.min(1, Math.max(0, strength));
+  }
+
   function triggerGlitch(intensity = 1) {
     glitchUntil = performance.now() + 520 * intensity;
   }
@@ -145,6 +156,17 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     const productDepth = smoothstep(0.08, 0.86, scroll.products);
     const finalDepth = smoothstep(0.12, 0.88, scroll.final);
     const stageDepth = Math.max(worksDepth, productDepth * 0.78, newsDepth * 0.46);
+    const accentMix = worksDepth * accent.strength;
+    const glassColor = new THREE.Color(0x9bdfff).lerp(accent.primary, accentMix * 0.58);
+    const lineColor = new THREE.Color(0xffffff).lerp(accent.secondary, accentMix * 0.68);
+    const wallColor = new THREE.Color(0xffffff).lerp(accent.primary, accentMix * 0.72);
+    glassMaterial.color.copy(glassColor);
+    edgeMaterial.color.copy(lineColor);
+    blue.color.copy(new THREE.Color(0x4558ff).lerp(accent.primary, accentMix));
+    rim.color.copy(new THREE.Color(0xe8f4ff).lerp(accent.secondary, accentMix * 0.9));
+    curveWall.material.color.copy(wallColor);
+    tunnelLines.material.color.copy(new THREE.Color(0x9aa8ff).lerp(accent.secondary, accentMix));
+    stars.material.color.copy(new THREE.Color(0xffffff).lerp(accent.secondary, accentMix * 0.38));
 
     root.rotation.y = THREE.MathUtils.lerp(root.rotation.y, pointer.x * 0.09 - worksDepth * 0.28 + productDepth * 0.18, 0.05);
     root.rotation.x = THREE.MathUtils.lerp(root.rotation.x, -pointer.y * 0.05, 0.05);
@@ -214,6 +236,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   return {
     setScroll,
     setPointer,
+    setAccent,
     triggerGlitch,
     destroy() {
       running = false;
