@@ -172,6 +172,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     const productDepth = smoothstep(0.08, 0.86, scroll.products);
     const finalDepth = smoothstep(0.12, 0.88, scroll.final);
     const stageDepth = Math.max(worksDepth, productDepth * 0.78, newsDepth * 0.46);
+    const detailMix = Math.min(1, stageDepth * 1.25);
     const preset = materialPresets[materialPreset];
     const accentMix = Math.max(worksDepth * accent.strength, productDepth * 0.18);
     const glassColor = new THREE.Color(preset.base).lerp(accent.primary, accentMix * 0.5);
@@ -219,19 +220,19 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     shardRoot.position.copy(markRoot.position);
     shardRoot.scale.copy(markRoot.scale);
     logoNoise.rotation.z = -drift * 0.04 + glitch * 2;
-    logoNoise.material.opacity = (0.24 + newsDepth * 0.06 + worksDepth * 0.1 + (glitchActive ? 0.16 : 0)) * intro;
+    logoNoise.material.opacity = (detailMix * 0.11 + (glitchActive ? 0.12 : 0)) * intro;
 
     gridRoot.rotation.y = drift * 0.016 + pointer.x * 0.035 - worksDepth * 0.54 + productDepth * 0.28;
     gridRoot.position.z = -stageDepth * 2.9;
     gridRoot.position.y = -scroll.page * 1.38 + productDepth * 0.4;
-    curveWall.material.opacity = 0.42 + (stageDepth * 0.22) - finalDepth * 0.1;
-    tunnelLines.material.opacity = 0.075 + stageDepth * 0.11 - finalDepth * 0.035;
-    crossMarkers.material.opacity = 0.14 + stageDepth * 0.1 - finalDepth * 0.08;
+    curveWall.material.opacity = 0.24 + (stageDepth * 0.2) - finalDepth * 0.08;
+    tunnelLines.material.opacity = 0.018 + stageDepth * 0.075 - finalDepth * 0.03;
+    crossMarkers.material.opacity = 0.055 + stageDepth * 0.08 - finalDepth * 0.055;
     bgGlyphs.children.forEach((glyph, index) => {
       glyph.material.opacity = (0.08 + index * 0.012 + stageDepth * 0.04) * (1 - finalDepth * 0.55);
     });
     darkPanels.children.forEach((panel, index) => {
-      panel.material.opacity = (0.18 + stageDepth * 0.22 + Math.sin(drift * 0.34 + index) * 0.022) * (1 - finalDepth * 0.5);
+      panel.material.opacity = (0.1 + stageDepth * 0.2 + Math.sin(drift * 0.34 + index) * 0.016) * (1 - finalDepth * 0.5);
     });
 
     glassMaterial.opacity = Math.max(0.18, 0.5 - worksDepth * 0.08 - aboutFade * 0.14 + productDepth * 0.06 + (glitchActive ? 0.1 : 0)) * intro;
@@ -239,16 +240,16 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     edgeMaterial.opacity = Math.max(0.24, 0.78 - worksDepth * 0.2 - aboutFade * 0.3);
     caustics.children.forEach((stripe, index) => {
       stripe.position.y = Math.sin(drift * 0.8 + index * 1.8) * 0.18 + (index - 1.5) * 0.46;
-      stripe.material.opacity = (0.28 + Math.sin(drift * 1.2 + index) * 0.08) * intro;
+      stripe.material.opacity = (detailMix * (0.1 + Math.sin(drift * 1.2 + index) * 0.024)) * intro;
     });
-    fractureLines.material.opacity = (0.32 + newsDepth * 0.06 + (glitchActive ? 0.2 : 0)) * intro;
+    fractureLines.material.opacity = (detailMix * 0.09 + (glitchActive ? 0.12 : 0)) * intro;
     surfaceBlocks.children.forEach((block, index) => {
-      block.material.opacity = (0.13 + Math.sin(drift * 0.9 + index * 0.7) * 0.045) * intro;
+      block.material.opacity = (detailMix * (0.07 + Math.sin(drift * 0.9 + index * 0.7) * 0.014)) * intro;
       block.position.z = 0.62 + Math.sin(drift * 0.6 + index) * 0.018;
     });
     rings.forEach((ring, index) => {
       ring.rotation.z = drift * (0.02 + index * 0.01);
-      ring.material.opacity = Math.max(0.02, 0.065 - aboutFade * 0.04);
+      ring.material.opacity = Math.max(0, detailMix * 0.04 - aboutFade * 0.03);
     });
 
     stars.rotation.y = drift * 0.01;
@@ -296,7 +297,7 @@ function makeGlassN(material, edgeMaterial) {
 }
 
 function makeBar(x, y, length, width, rotation, material) {
-  const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, length, 1.08, 8, 28, 7), material);
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, length, 1.08, 1, 1, 1), material);
   mesh.position.set(x, y, 0.12);
   mesh.rotation.z = rotation;
   return mesh;
