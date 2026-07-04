@@ -30,23 +30,30 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   root.add(gridRoot, markRoot, spectralRoot, shardRoot);
 
   const frostTexture = makeFrostTexture();
+  const reflectionTexture = makeReflectionTexture();
+  scene.environment = reflectionTexture;
   const glassMaterial = new THREE.MeshPhysicalMaterial({
     color: 0xf3fbff,
     metalness: 0,
-    roughness: 0.035,
+    roughness: 0.024,
     transmission: 0.98,
-    thickness: 6.2,
+    thickness: 8.4,
     ior: 1.84,
     transparent: true,
-    opacity: 0.58,
+    opacity: 0.3,
     alphaMap: frostTexture,
     roughnessMap: frostTexture,
+    metalnessMap: frostTexture,
+    envMap: reflectionTexture,
+    envMapIntensity: 2.45,
     clearcoat: 1,
-    clearcoatRoughness: 0.01,
+    clearcoatRoughness: 0.006,
     reflectivity: 1,
     side: THREE.DoubleSide,
     depthWrite: false
   });
+  glassMaterial.iridescence = 0.34;
+  glassMaterial.iridescenceIOR = 1.72;
 
   const edgeMaterial = new THREE.LineBasicMaterial({
     color: 0xffffff,
@@ -126,7 +133,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       edge: 0xd8fbff,
       ghostA: 0x00eaff,
       ghostB: 0xf8fbff,
-      opacity: 0.5,
+      opacity: 0.24,
       roughness: 0.045,
       transmission: 0.98
     },
@@ -138,7 +145,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       edge: 0xffffff,
       ghostA: 0xeef6ff,
       ghostB: 0xffffff,
-      opacity: 0.34,
+      opacity: 0.2,
       roughness: 0.018,
       transmission: 1
     },
@@ -150,7 +157,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       edge: 0xe6ceff,
       ghostA: 0xff48f7,
       ghostB: 0x69eaff,
-      opacity: 0.56,
+      opacity: 0.28,
       roughness: 0.068,
       transmission: 0.9
     },
@@ -162,7 +169,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       edge: 0x89f2ff,
       ghostA: 0x1a2d62,
       ghostB: 0x00e8ff,
-      opacity: 0.68,
+      opacity: 0.34,
       roughness: 0.14,
       transmission: 0.58
     }
@@ -229,6 +236,8 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     glassMaterial.transmission = preset.transmission;
     glassMaterial.attenuationColor = new THREE.Color(preset.secondary);
     glassMaterial.attenuationDistance = materialPreset === "carbon" ? 1.7 : 3.6;
+    glassMaterial.envMapIntensity = 2.1 + Math.sin(drift * 0.42) * 0.22 + detailMix * 0.44 + accentMix * 0.52;
+    glassMaterial.iridescence = 0.28 + detailMix * 0.18 + (glitchActive ? 0.2 : 0);
     edgeMaterial.color.copy(lineColor);
     spectralMaterialCyan.color.copy(new THREE.Color(preset.ghostA).lerp(accent.secondary, accentMix * 0.32));
     spectralMaterialMagenta.color.copy(new THREE.Color(preset.ghostB).lerp(accent.primary, accentMix * 0.26));
@@ -254,7 +263,8 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     markRoot.rotation.z = glitch * 0.7 + finalDepth * 0.1;
     markRoot.position.x = -0.12 * (1 - stageDepth) + productDepth * -0.42 + finalDepth * 0.28;
     markRoot.position.y = -0.04 + intro * 0.1 - scroll.page * 0.54 + Math.sin(drift * 0.58) * 0.022 + productDepth * 0.38;
-    markRoot.scale.setScalar((0.52 + intro * 0.3) * (1.01 + worksDepth * 0.02 - aboutFade * 0.1 + finalDepth * 0.08));
+    const viewportScale = width < 720 ? 0.74 : 1;
+    markRoot.scale.setScalar((0.62 + intro * 0.34) * (1.01 + worksDepth * 0.02 - aboutFade * 0.1 + finalDepth * 0.08) * viewportScale);
     markRoot.visible = finalDepth < 0.94;
 
     spectralRoot.rotation.copy(markRoot.rotation);
@@ -290,9 +300,9 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       panel.material.opacity = (0.1 + stageDepth * 0.2 + Math.sin(drift * 0.34 + index) * 0.016) * (1 - finalDepth * 0.5);
     });
 
-    glassMaterial.opacity = Math.max(0.18, preset.opacity + 0.08 - worksDepth * 0.06 - aboutFade * 0.34 + productDepth * 0.06 + (glitchActive ? 0.1 : 0)) * intro;
-    glassMaterial.roughness = Math.max(0.018, preset.roughness - 0.012 + worksDepth * 0.08 + productDepth * 0.06);
-    edgeMaterial.opacity = Math.max(0.34, 0.94 - worksDepth * 0.18 + aboutFade * 0.18);
+    glassMaterial.opacity = Math.max(0.08, preset.opacity - 0.03 - worksDepth * 0.03 - aboutFade * 0.18 + productDepth * 0.03 + (glitchActive ? 0.06 : 0)) * intro;
+    glassMaterial.roughness = Math.max(0.014, preset.roughness - 0.018 + worksDepth * 0.075 + productDepth * 0.05 + Math.sin(drift * 0.36) * 0.006);
+    edgeMaterial.opacity = Math.max(0.14, 0.38 - worksDepth * 0.08 + aboutFade * 0.18 + (glitchActive ? 0.16 : 0));
     caustics.children.forEach((stripe, index) => {
       stripe.position.y = stripe.userData.baseY + Math.sin(drift * 0.8 + index * 1.8) * 0.08;
       stripe.material.color.copy(new THREE.Color(index % 2 ? preset.secondary : preset.edge).lerp(accent.secondary, accentMix * 0.46));
@@ -336,44 +346,137 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
 
 function makeGlassN(material, edgeMaterial) {
   const group = new THREE.Group();
-  const barSpecs = [
-    { x: -1.34, y: 0, length: 4.34, width: 0.72, rotation: 0 },
-    { x: 1.34, y: 0, length: 4.34, width: 0.72, rotation: 0 },
-    { x: 0, y: 0, length: 5.15, width: 0.76, rotation: -0.62 }
-  ];
-  barSpecs.forEach((spec) => {
-    const mesh = makeBar(spec.x, spec.y, spec.length, spec.width, spec.rotation, material);
-    const edge = new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry, 18), edgeMaterial);
-    edge.position.copy(mesh.position);
-    edge.rotation.copy(mesh.rotation);
-    group.add(mesh, edge);
-  });
+  const geometry = makeNGeometry();
+  const mesh = new THREE.Mesh(geometry, material);
+  const edge = new THREE.LineSegments(new THREE.EdgesGeometry(geometry, 28), edgeMaterial);
+  const innerMaterial = edgeMaterial.clone();
+  innerMaterial.opacity = 0.12;
+  const innerLine = makeNContourLines(innerMaterial);
+  const film = makeLetterGlassFilm();
+  group.add(mesh, edge, innerLine, film);
   group.rotation.z = 0.01;
   return group;
 }
 
-function makeBar(x, y, length, width, rotation, material) {
+function makeNGeometry() {
   const shape = new THREE.Shape();
-  const halfWidth = width / 2;
-  const halfLength = length / 2;
-  shape.moveTo(-halfWidth, -halfLength);
-  shape.lineTo(halfWidth, -halfLength);
-  shape.lineTo(halfWidth, halfLength);
-  shape.lineTo(-halfWidth, halfLength);
-  shape.lineTo(-halfWidth, -halfLength);
+  const points = getNOutlinePoints();
+  shape.moveTo(points[0].x, points[0].y);
+  points.slice(1).forEach((point) => shape.lineTo(point.x, point.y));
+  shape.closePath();
   const geometry = new THREE.ExtrudeGeometry(shape, {
-    depth: 1.18,
+    depth: 0.46,
     bevelEnabled: true,
-    bevelThickness: 0.15,
-    bevelSize: 0.14,
-    bevelSegments: 4,
-    curveSegments: 1
+    bevelThickness: 0.08,
+    bevelSize: 0.12,
+    bevelSegments: 9,
+    curveSegments: 4
   });
-  geometry.translate(0, 0, -0.59);
-  const mesh = new THREE.Mesh(geometry, material);
-  mesh.position.set(x, y, 0.12);
-  mesh.rotation.z = rotation;
+  geometry.translate(0, 0, -0.23);
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+function getNOutlinePoints() {
+  return [
+    { x: -1.68, y: -2.18 },
+    { x: -1.68, y: 2.18 },
+    { x: -0.68, y: 2.18 },
+    { x: 0.82, y: -2.18 },
+    { x: 1.68, y: -2.18 },
+    { x: 1.68, y: 2.18 },
+    { x: 0.68, y: 2.18 },
+    { x: -0.82, y: -2.18 }
+  ];
+}
+
+function makeNContourLines(material) {
+  const points = [];
+  const z = 0.66;
+  const add = (a, b) => points.push(a.x, a.y, z, b.x, b.y, z);
+  const outline = getNOutlinePoints();
+  outline.forEach((point, index) => add(point, outline[(index + 1) % outline.length]));
+  add({ x: -1.28, y: -1.78 }, { x: -1.28, y: 1.78 });
+  add({ x: 1.28, y: -1.78 }, { x: 1.28, y: 1.78 });
+  add({ x: -0.42, y: 1.72 }, { x: 1.02, y: -1.72 });
+  add({ x: -1.02, y: 1.72 }, { x: 0.42, y: -1.72 });
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(points, 3));
+  const line = new THREE.LineSegments(geometry, material);
+  line.position.z = 0.02;
+  return line;
+}
+
+function makeLetterGlassFilm() {
+  const texture = makeLetterFilmTexture();
+  const material = new THREE.MeshBasicMaterial({
+    map: texture,
+    transparent: true,
+    opacity: 0.86,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide
+  });
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(4.35, 5.2), material);
+  mesh.position.z = 0.7;
   return mesh;
+}
+
+function makeLetterFilmTexture() {
+  const size = 1024;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  const random = seededRandom(6197);
+
+  ctx.clearRect(0, 0, size, size);
+  ctx.save();
+  ctx.translate(size / 2, size / 2 + 12);
+  ctx.scale(0.88, 1.08);
+  ctx.font = "900 850px Arial Black, Impact, system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillStyle = "rgba(230,248,255,.42)";
+  ctx.fillText("N", 0, 0);
+  ctx.globalCompositeOperation = "source-in";
+  const gradient = ctx.createLinearGradient(-size * 0.42, -size * 0.3, size * 0.46, size * 0.38);
+  gradient.addColorStop(0, "rgba(5,18,34,.12)");
+  gradient.addColorStop(0.22, "rgba(120,210,255,.42)");
+  gradient.addColorStop(0.42, "rgba(255,255,255,.96)");
+  gradient.addColorStop(0.58, "rgba(93,88,255,.34)");
+  gradient.addColorStop(0.78, "rgba(255,255,255,.58)");
+  gradient.addColorStop(1, "rgba(8,12,24,.16)");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(-size / 2, -size / 2, size, size);
+
+  ctx.globalCompositeOperation = "source-atop";
+  for (let i = 0; i < 120; i += 1) {
+    const x = -size * 0.5 + random() * size;
+    const y = -size * 0.5 + random() * size;
+    const w = 36 + random() * 240;
+    const h = 2 + random() * 16;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((random() - 0.5) * 0.36);
+    ctx.fillStyle = i % 4 === 0 ? "rgba(255,255,255,.48)" : "rgba(0,0,0,.22)";
+    ctx.fillRect(-w / 2, -h / 2, w, h);
+    ctx.restore();
+  }
+
+  for (let i = 0; i < 5200; i += 1) {
+    const x = -size * 0.5 + random() * size;
+    const y = -size * 0.5 + random() * size;
+    const alpha = random() > 0.52 ? 0.18 + random() * 0.22 : 0.05;
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.fillRect(x, y, 1.2 + random() * 1.4, 1.2 + random() * 1.4);
+  }
+  ctx.restore();
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.needsUpdate = true;
+  return texture;
 }
 
 function makeCausticStripes() {
@@ -627,12 +730,12 @@ function makeTunnelLines() {
 function makeLogoNoise() {
   const vertices = [];
   const random = seededRandom(717);
-  for (let i = 0; i < 980; i += 1) {
+  for (let i = 0; i < 1500; i += 1) {
     const point = sampleNPoint(random);
     vertices.push(
-      point.x + (random() - 0.5) * 0.32,
-      point.y + (random() - 0.5) * 0.32,
-      (random() - 0.5) * 0.34
+      point.x + (random() - 0.5) * 0.18,
+      point.y + (random() - 0.5) * 0.18,
+      (random() - 0.5) * 0.28
     );
   }
   const geometry = new THREE.BufferGeometry();
@@ -648,20 +751,28 @@ function makeLogoNoise() {
 }
 
 function sampleNPoint(random, preferredBar) {
-  const bar = preferredBar ?? Math.floor(random() * 3);
-  const width = bar === 1 ? 0.76 : 0.72;
-  const length = bar === 1 ? 5.15 : 4.34;
-  const localX = (random() - 0.5) * width;
-  const localY = (random() - 0.5) * length;
-  if (bar === 0) return { x: -1.34 + localX, y: localY };
-  if (bar === 2) return { x: 1.34 + localX, y: localY };
-  const rotation = -0.62;
-  const cos = Math.cos(rotation);
-  const sin = Math.sin(rotation);
-  return {
-    x: localX * cos - localY * sin,
-    y: localX * sin + localY * cos
-  };
+  if (preferredBar === 0) {
+    return { x: -1.42 + random() * 0.66, y: -1.96 + random() * 3.92 };
+  }
+  if (preferredBar === 2) {
+    return { x: 0.76 + random() * 0.66, y: -1.96 + random() * 3.92 };
+  }
+  if (preferredBar === 1) {
+    const t = random();
+    const center = { x: -0.64 + t * 1.28, y: 1.72 - t * 3.44 };
+    const normal = { x: 0.94, y: 0.34 };
+    const offset = (random() - 0.5) * 0.68;
+    return { x: center.x + normal.x * offset, y: center.y + normal.y * offset };
+  }
+  const outline = getNOutlinePoints();
+  for (let i = 0; i < 80; i += 1) {
+    const point = {
+      x: -1.62 + random() * 3.24,
+      y: -2.08 + random() * 4.16
+    };
+    if (pointInPolygon(point, outline)) return point;
+  }
+  return { x: 0, y: 0 };
 }
 
 function makeFrostTexture() {
@@ -700,6 +811,61 @@ function makeFrostTexture() {
   texture.repeat.set(2.4, 2.4);
   texture.needsUpdate = true;
   return texture;
+}
+
+function makeReflectionTexture() {
+  const width = 1024;
+  const height = 512;
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  const gradient = ctx.createLinearGradient(0, 0, width, height);
+  gradient.addColorStop(0, "#05050a");
+  gradient.addColorStop(0.2, "#153d73");
+  gradient.addColorStop(0.38, "#f7f7ff");
+  gradient.addColorStop(0.5, "#070910");
+  gradient.addColorStop(0.66, "#663eff");
+  gradient.addColorStop(0.82, "#dff9ff");
+  gradient.addColorStop(1, "#02030a");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, width, height);
+  ctx.globalCompositeOperation = "screen";
+  const random = seededRandom(8801);
+  for (let i = 0; i < 96; i += 1) {
+    const x = random() * width;
+    const y = random() * height;
+    const w = 50 + random() * 260;
+    const h = 3 + random() * 18;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((random() - 0.5) * 0.42);
+    ctx.fillStyle = i % 5 === 0 ? "rgba(255,255,255,.34)" : "rgba(128,205,255,.18)";
+    ctx.fillRect(-w / 2, -h / 2, w, h);
+    ctx.restore();
+  }
+  ctx.globalCompositeOperation = "multiply";
+  ctx.fillStyle = "rgba(0,0,0,.34)";
+  for (let y = 0; y < height; y += 7) ctx.fillRect(0, y, width, 1);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function pointInPolygon(point, polygon) {
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i, i += 1) {
+    const xi = polygon[i].x;
+    const yi = polygon[i].y;
+    const xj = polygon[j].x;
+    const yj = polygon[j].y;
+    const intersect = ((yi > point.y) !== (yj > point.y))
+      && (point.x < ((xj - xi) * (point.y - yi)) / (yj - yi) + xi);
+    if (intersect) inside = !inside;
+  }
+  return inside;
 }
 
 function makeStars() {

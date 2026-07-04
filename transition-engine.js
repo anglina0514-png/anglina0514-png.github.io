@@ -1,12 +1,13 @@
 export function createTransitionEngine({ overlay, prismScene }) {
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let locked = false;
+  let sectionTimer = 0;
 
   async function run({ source, beforeSwap, afterSwap } = {}) {
     if (locked) return;
     locked = true;
     document.body.classList.add("is-transitioning");
-    overlay?.classList.add("is-active");
+    overlay?.classList.add("is-active", "is-route");
     prismScene?.triggerGlitch(reducedMotion ? 0.35 : 1);
 
     if (!reducedMotion) scatterFragments(source);
@@ -16,9 +17,23 @@ export function createTransitionEngine({ overlay, prismScene }) {
     afterSwap?.();
     await wait(reducedMotion ? 80 : 430);
 
-    overlay?.classList.remove("is-active");
+    overlay?.classList.remove("is-active", "is-route");
     document.body.classList.remove("is-transitioning");
     locked = false;
+  }
+
+  function sectionShift(nextSection, previousSection) {
+    if (reducedMotion || locked || nextSection === previousSection) return;
+    window.clearTimeout(sectionTimer);
+    document.body.classList.add("is-section-shifting");
+    overlay?.classList.add("is-active", "is-section");
+    overlay?.setAttribute("data-section", nextSection || "");
+    prismScene?.triggerGlitch(0.42);
+    scatterFragments(document.querySelector(`a[href="#${nextSection}"]`) || document.querySelector("[data-rail-section].is-active"));
+    sectionTimer = window.setTimeout(() => {
+      overlay?.classList.remove("is-active", "is-section");
+      document.body.classList.remove("is-section-shifting");
+    }, 360);
   }
 
   function pulse(x, y) {
@@ -30,7 +45,7 @@ export function createTransitionEngine({ overlay, prismScene }) {
     dot.addEventListener("animationend", () => dot.remove(), { once: true });
   }
 
-  return { run, pulse };
+  return { run, pulse, sectionShift };
 }
 
 function scatterFragments(source) {

@@ -21,6 +21,11 @@
   --material-accent-alt: #f7fbff;
   --stage-light: 0;
   --stage-dark: 1;
+  --ambient-hue: 212;
+  --ambient-shift: 0;
+  --ambient-strength: 0.22;
+  --stage-chroma: hsl(var(--ambient-hue) 82% 48%);
+  --stage-chroma-alt: hsl(calc(var(--ambient-hue) + 58) 74% 56%);
   --work-accent-strength: 0;
   --work-accent-soft: 0%;
   --work-accent-mid: 0%;
@@ -101,6 +106,9 @@ button {
   pointer-events: none;
   background:
     linear-gradient(rgba(223, 233, 233, calc(var(--stage-light) * 0.92)), rgba(223, 233, 233, calc(var(--stage-light) * 0.92))),
+    radial-gradient(circle at calc(34% + var(--ambient-shift) * 18%) 28%, color-mix(in srgb, var(--stage-chroma) calc(var(--ambient-strength) * 74%), transparent), transparent 36%),
+    radial-gradient(circle at calc(76% - var(--ambient-shift) * 14%) 64%, color-mix(in srgb, var(--stage-chroma-alt) calc(var(--ambient-strength) * 62%), transparent), transparent 38%),
+    linear-gradient(115deg, color-mix(in srgb, var(--work-accent) var(--work-accent-soft), transparent), transparent 44%, color-mix(in srgb, var(--work-accent-alt) var(--work-accent-mid), transparent)),
     radial-gradient(circle at 50% 44%, color-mix(in srgb, var(--material-accent) 20%, transparent), transparent 30%),
     radial-gradient(circle at 74% 62%, color-mix(in srgb, var(--material-accent-alt) 12%, transparent), transparent 28%),
     radial-gradient(circle at 22% 36%, rgba(20, 25, 46, 0.82), transparent 34%),
@@ -139,6 +147,7 @@ button {
   background:
     linear-gradient(rgba(222, 234, 234, calc(var(--stage-light) * 0.42)), rgba(222, 234, 234, calc(var(--stage-light) * 0.42))),
     linear-gradient(90deg, rgba(0, 0, 0, calc(0.68 * var(--stage-dark))) 0%, rgba(0, 0, 0, calc(0.18 * var(--stage-dark))) 38%, rgba(0, 0, 0, calc(0.52 * var(--stage-dark))) 100%),
+    linear-gradient(120deg, color-mix(in srgb, var(--stage-chroma) calc(var(--ambient-strength) * 22%), transparent), transparent 50%, color-mix(in srgb, var(--stage-chroma-alt) calc(var(--ambient-strength) * 18%), transparent)),
     radial-gradient(ellipse at 50% 48%, transparent 0 36%, rgba(0, 0, 0, 0.34) 72%, rgba(0, 0, 0, 0.74) 100%),
     linear-gradient(90deg, transparent 0 49.8%, rgba(255,255,255,0.08) 50%, transparent 50.2%),
     linear-gradient(transparent 0 49.8%, rgba(255,255,255,0.07) 50%, transparent 50.2%);
@@ -171,6 +180,16 @@ body[data-active-section="about"] .depth-word {
 
 body[data-active-section="about"] .scanline-layer {
   opacity: 0.08;
+}
+
+body[data-active-section="works"] .webgl-space,
+body[data-active-section="products"] .webgl-space {
+  filter: saturate(1.18) contrast(1.08);
+}
+
+body.is-transitioning .webgl-space,
+body.is-section-shifting .webgl-space {
+  filter: saturate(1.7) contrast(1.22) brightness(1.08);
 }
 
 .depth-word-top {
@@ -1700,20 +1719,60 @@ body:not([data-active-section="hero"]) .hero-news {
   z-index: 70;
   pointer-events: none;
   opacity: 0;
+  overflow: hidden;
+  mix-blend-mode: screen;
 }
 
 .transition-overlay.is-active {
   opacity: 1;
-  animation: glitchFlash 680ms ease both;
+  animation: glitchFlash 720ms steps(5, end) both;
+}
+
+.transition-overlay.is-section {
+  animation-duration: 360ms;
+}
+
+.transition-overlay.is-section::before,
+.transition-overlay.is-section::after,
+.transition-overlay.is-section .transition-grid::before,
+.transition-overlay.is-section .transition-grid::after {
+  animation-duration: 360ms;
+}
+
+.transition-overlay::before,
+.transition-overlay::after {
+  content: "";
+  position: absolute;
+  inset: -10%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.transition-overlay.is-active::before {
+  background:
+    linear-gradient(92deg, transparent 0 18%, rgba(255,255,255,0.78) 19%, transparent 21%),
+    linear-gradient(100deg, color-mix(in srgb, var(--stage-chroma) 46%, transparent), transparent 34%, color-mix(in srgb, var(--stage-chroma-alt) 38%, transparent));
+  mix-blend-mode: difference;
+  animation: transitionSlab 720ms steps(4, end) both;
+}
+
+.transition-overlay.is-active::after {
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.36) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(90deg, transparent 0 92px, color-mix(in srgb, var(--work-accent) 42%, transparent) 94px, transparent 100px);
+  mix-blend-mode: screen;
+  animation: transitionNoise 720ms steps(6, end) both;
 }
 
 .transition-grid {
   position: absolute;
   inset: 0;
   background:
-    repeating-linear-gradient(90deg, transparent 0 42px, rgba(255,255,255,0.22) 43px, transparent 46px),
-    repeating-linear-gradient(0deg, transparent 0 28px, rgba(76,92,255,0.18) 29px, transparent 31px);
+    linear-gradient(90deg, rgba(255,255,255,0.16), transparent 22%, rgba(0,0,0,0.28) 48%, transparent 74%, rgba(255,255,255,0.12)),
+    repeating-linear-gradient(90deg, transparent 0 42px, rgba(255,255,255,0.26) 43px, transparent 46px),
+    repeating-linear-gradient(0deg, transparent 0 28px, color-mix(in srgb, var(--stage-chroma) 30%, transparent) 29px, transparent 31px);
   mix-blend-mode: difference;
+  filter: contrast(1.25) saturate(1.4);
 }
 
 .transition-grid::before,
@@ -1760,11 +1819,12 @@ body:not([data-active-section="hero"]) .hero-news {
 }
 
 @keyframes glitchFlash {
-  0% { opacity: 0; transform: translateX(0); }
-  18% { opacity: 0.9; transform: translateX(-12px); }
-  28% { opacity: 0.5; transform: translateX(9px); }
-  48% { opacity: 0.7; transform: translateX(-4px); }
-  100% { opacity: 0; transform: translateX(0); }
+  0% { opacity: 0; transform: translateX(0) scale(1); filter: hue-rotate(0deg); }
+  12% { opacity: 0.95; transform: translateX(-18px) scale(1.015); filter: hue-rotate(70deg); }
+  24% { opacity: 0.55; transform: translateX(12px) scale(1); filter: hue-rotate(-40deg); }
+  42% { opacity: 0.82; transform: translateX(-6px) skewX(-2deg); filter: hue-rotate(110deg); }
+  70% { opacity: 0.36; transform: translateX(4px); filter: hue-rotate(20deg); }
+  100% { opacity: 0; transform: translateX(0) scale(1); filter: hue-rotate(0deg); }
 }
 
 @keyframes scanTear {
@@ -1772,6 +1832,20 @@ body:not([data-active-section="hero"]) .hero-news {
   22% { opacity: 0.86; transform: translateX(26px) skewX(3deg); }
   58% { opacity: 0.48; transform: translateX(-10px) skewX(-2deg); }
   100% { opacity: 0; transform: translateX(0) skewX(0); }
+}
+
+@keyframes transitionSlab {
+  0% { opacity: 0; transform: translate3d(-18%, 0, 0) skewX(-12deg); }
+  16% { opacity: 0.9; transform: translate3d(8%, 0, 0) skewX(8deg); }
+  48% { opacity: 0.48; transform: translate3d(-4%, 0, 0) skewX(-4deg); }
+  100% { opacity: 0; transform: translate3d(22%, 0, 0) skewX(0deg); }
+}
+
+@keyframes transitionNoise {
+  0% { opacity: 0; transform: translateY(-20px); }
+  18% { opacity: 0.8; transform: translateY(12px); }
+  52% { opacity: 0.5; transform: translateY(-6px); }
+  100% { opacity: 0; transform: translateY(20px); }
 }
 
 @keyframes fragmentScatter {

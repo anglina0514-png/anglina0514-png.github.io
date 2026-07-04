@@ -130,6 +130,9 @@ let latestScroll = -1;
 let ticking = false;
 let pointerState = { x: 0, y: 0 };
 let activeWorkCard = null;
+let activeStageSection = "hero";
+let activeAccent = { primary: "#6078ff", secondary: "#92e9ff", strength: 0 };
+let hasSettledInitialSection = false;
 
 const carousel = createWorksCarousel({
   root: document.getElementById("workCarousel"),
@@ -162,6 +165,7 @@ initProductButtons();
 initWorkHitbox();
 initMaterialControls();
 initAutoplayVideos();
+initAmbientStage();
 updateScrollState();
 
 window.addEventListener("scroll", requestScrollUpdate, { passive: true });
@@ -235,6 +239,12 @@ function updateScrollState() {
   });
 
   const active = pickActiveSection();
+  if (active !== activeStageSection) {
+    const previous = activeStageSection;
+    activeStageSection = active;
+    if (hasSettledInitialSection) transitionEngine.sectionShift?.(active, previous);
+  }
+  hasSettledInitialSection = true;
   document.body.dataset.activeSection = active;
   navLinks.forEach((link) => {
     const id = link.getAttribute("href")?.replace("#", "");
@@ -261,6 +271,7 @@ function applyWorkAccent(card, intensity = 1) {
   const accent = card.dataset.accent || "#6078ff";
   const accentAlt = card.dataset.accentAlt || "#92e9ff";
   const amount = clamp(intensity, 0, 1);
+  activeAccent = { primary: accent, secondary: accentAlt, strength: amount };
   document.documentElement.style.setProperty("--work-accent", accent);
   document.documentElement.style.setProperty("--work-accent-alt", accentAlt);
   document.documentElement.style.setProperty("--work-accent-strength", amount.toFixed(3));
@@ -269,6 +280,42 @@ function applyWorkAccent(card, intensity = 1) {
   document.documentElement.style.setProperty("--work-accent-strong", `${Math.round(amount * 54)}%`);
   document.documentElement.style.setProperty("--work-accent-max", `${Math.round(amount * 72)}%`);
   prismScene.setAccent?.(accent, accentAlt, amount);
+}
+
+function initAmbientStage() {
+  if (reducedMotion) {
+    document.documentElement.style.setProperty("--ambient-hue", "210");
+    document.documentElement.style.setProperty("--ambient-shift", "0");
+    document.documentElement.style.setProperty("--ambient-strength", "0.24");
+    return;
+  }
+
+  const baseHues = {
+    hero: 214,
+    news: 232,
+    works: 248,
+    about: 190,
+    products: 222,
+    final: 260
+  };
+
+  function tick(time) {
+    const t = time * 0.001;
+    const accentHue = hueFromHex(activeAccent.primary);
+    const sectionHue = baseHues[activeStageSection] ?? 214;
+    const workBlend = activeStageSection === "works" ? activeAccent.strength : activeStageSection === "products" ? 0.28 : 0;
+    const drift = Math.sin(t * 0.18) * 18 + Math.sin(t * 0.07 + 1.4) * 10;
+    const hue = normalizeHue(lerp(sectionHue + drift, accentHue + Math.sin(t * 0.22) * 8, workBlend));
+    const strength = activeStageSection === "about"
+      ? 0.12 + Math.sin(t * 0.2) * 0.02
+      : 0.24 + activeAccent.strength * 0.38 + Math.max(0, Math.sin(t * 0.16)) * 0.08;
+    document.documentElement.style.setProperty("--ambient-hue", hue.toFixed(1));
+    document.documentElement.style.setProperty("--ambient-shift", Math.sin(t * 0.13).toFixed(3));
+    document.documentElement.style.setProperty("--ambient-strength", clamp(strength, 0.08, 0.72).toFixed(3));
+    requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
 }
 
 function initMaterialControls() {
@@ -319,19 +366,23 @@ function initNavigation() {
       const target = id ? document.getElementById(id) : null;
       if (!target) return;
       event.preventDefault();
-      target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
       transitionEngine.run({
         source: link,
-        beforeSwap: () => prismScene.triggerGlitch?.(0.5),
+        beforeSwap: () => {
+          prismScene.triggerGlitch?.(0.5);
+          target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+        },
         afterSwap: requestScrollUpdate
       });
     });
   });
   document.getElementById("resetStage")?.addEventListener("click", () => {
     setMaterialPreset("ice");
-    window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
     transitionEngine.run({
-      beforeSwap: () => prismScene.triggerGlitch?.(0.65),
+      beforeSwap: () => {
+        prismScene.triggerGlitch?.(0.65);
+        window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
+      },
       afterSwap: requestScrollUpdate
     });
   });
@@ -796,4 +847,29 @@ function clamp(value, min, max) {
 function smoothstep(edge0, edge1, value) {
   const x = clamp((value - edge0) / (edge1 - edge0), 0, 1);
   return x * x * (3 - 2 * x);
+}
+
+function hueFromHex(hex) {
+  const value = String(hex || "").replace("#", "");
+  if (value.length !== 6) return 214;
+  const r = parseInt(value.slice(0, 2), 16) / 255;
+  const g = parseInt(value.slice(2, 4), 16) / 255;
+  const b = parseInt(value.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const delta = max - min;
+  if (!delta) return 214;
+  let hue = 0;
+  if (max === r) hue = ((g - b) / delta) % 6;
+  else if (max === g) hue = (b - r) / delta + 2;
+  else hue = (r - g) / delta + 4;
+  return (hue * 60 + 360) % 360;
+}
+
+function normalizeHue(value) {
+  return ((value % 360) + 360) % 360;
+}
+
+function lerp(a, b, t) {
+  return a + (b - a) * clamp(t, 0, 1);
 }
