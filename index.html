@@ -51,7 +51,7 @@
   </aside>
 
   <aside class="stage-hud" aria-label="WebGL 技术参数面板">
-    <div class="hud-block">
+    <div class="hud-block hud-quaternion">
       <p>MainLogo Quaternion</p>
       <dl>
         <div><dt>x</dt><dd data-hud="qx">0.000</dd></div>
@@ -60,13 +60,13 @@
         <div><dt>w</dt><dd data-hud="qw">1.000</dd></div>
       </dl>
     </div>
-    <div class="hud-orbit">
+    <div class="hud-orbit hud-quaternion-orbit">
       <span class="hud-axis hud-axis-x"></span>
       <span class="hud-axis hud-axis-y"></span>
       <span class="hud-axis hud-axis-z"></span>
       <i data-hud-orb></i>
     </div>
-    <div class="hud-block">
+    <div class="hud-block hud-material">
       <p>MainLogo Material</p>
       <dl>
         <div><dt>roughness</dt><dd data-hud="roughness">0.03</dd></div>
@@ -81,7 +81,7 @@
         <button class="material-swatch" type="button" data-material="carbon" aria-label="Carbon Blue"></button>
       </div>
     </div>
-    <button class="hud-reset magnetic" type="button" id="resetStage">Reset Quaternion</button>
+    <button class="hud-reset hud-quaternion-reset magnetic" type="button" id="resetStage">Reset Quaternion</button>
   </aside>
 
   <main class="stage-flow">

@@ -199,9 +199,9 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     markRoot.rotation.y = (1 - intro) * -1.18 + drift * 0.038 + pointer.x * 0.1 + glitch + worksDepth * 0.44 - productDepth * 0.42;
     markRoot.rotation.x = (1 - intro) * 0.34 + Math.sin(drift * 0.28) * 0.018 - pointer.y * 0.052 + newsDepth * 0.04;
     markRoot.rotation.z = glitch * 0.7 + finalDepth * 0.1;
-    markRoot.position.x = productDepth * -0.42 + finalDepth * 0.28;
+    markRoot.position.x = -0.12 * (1 - stageDepth) + productDepth * -0.42 + finalDepth * 0.28;
     markRoot.position.y = -0.04 + intro * 0.1 - scroll.page * 0.54 + Math.sin(drift * 0.58) * 0.022 + productDepth * 0.38;
-    markRoot.scale.setScalar((0.46 + intro * 0.34) * (1.02 + worksDepth * 0.02 - aboutFade * 0.16 + finalDepth * 0.08));
+    markRoot.scale.setScalar((0.43 + intro * 0.31) * (1.01 + worksDepth * 0.02 - aboutFade * 0.16 + finalDepth * 0.08));
     markRoot.visible = finalDepth < 0.94;
 
     spectralRoot.rotation.copy(markRoot.rotation);
@@ -219,14 +219,14 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     shardRoot.position.copy(markRoot.position);
     shardRoot.scale.copy(markRoot.scale);
     logoNoise.rotation.z = -drift * 0.04 + glitch * 2;
-    logoNoise.material.opacity = (0.32 + newsDepth * 0.08 + worksDepth * 0.12 + (glitchActive ? 0.2 : 0)) * intro;
+    logoNoise.material.opacity = (0.24 + newsDepth * 0.06 + worksDepth * 0.1 + (glitchActive ? 0.16 : 0)) * intro;
 
     gridRoot.rotation.y = drift * 0.016 + pointer.x * 0.035 - worksDepth * 0.54 + productDepth * 0.28;
     gridRoot.position.z = -stageDepth * 2.9;
     gridRoot.position.y = -scroll.page * 1.38 + productDepth * 0.4;
     curveWall.material.opacity = 0.42 + (stageDepth * 0.22) - finalDepth * 0.1;
-    tunnelLines.material.opacity = 0.12 + stageDepth * 0.16 - finalDepth * 0.04;
-    crossMarkers.material.opacity = 0.18 + stageDepth * 0.12 - finalDepth * 0.08;
+    tunnelLines.material.opacity = 0.075 + stageDepth * 0.11 - finalDepth * 0.035;
+    crossMarkers.material.opacity = 0.14 + stageDepth * 0.1 - finalDepth * 0.08;
     bgGlyphs.children.forEach((glyph, index) => {
       glyph.material.opacity = (0.08 + index * 0.012 + stageDepth * 0.04) * (1 - finalDepth * 0.55);
     });
