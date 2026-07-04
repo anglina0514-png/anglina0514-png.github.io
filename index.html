@@ -24,7 +24,7 @@
     <div class="transition-grid"></div>
   </div>
 
-  <header class="site-header liquid-glass" aria-label="主导航">
+  <header class="site-header" aria-label="主导航">
     <a class="brand-lockup magnetic" href="#hero" aria-label="返回 NING 首页">
       <span class="brand-mark">N</span>
       <span>NING</span>
@@ -86,20 +86,13 @@
 
   <main class="stage-flow">
     <section class="hero-section stage-section" id="hero" data-section="hero">
-      <video id="heroBackgroundVideo" class="hero-background-video" muted autoplay playsinline preload="auto" poster="assets/media/dragon-poster.jpg">
-        <source src="assets/media/dragon-hero-loop.mp4" type="video/mp4">
-      </video>
-      <div class="hero-video-vignette" aria-hidden="true"></div>
-      <div class="hero-lockup" data-parallax="0.04">
+      <div class="hero-lockup" data-parallax="0.08">
         <p class="system-label">Immersive Media Portfolio</p>
-        <h1 class="hero-title">
-          Build media <em>systems</em>
+        <h1 class="hero-word" id="heroParticleTitle" aria-label="NING">
+          <canvas id="heroParticleTitleCanvas" class="hero-particle-canvas" aria-hidden="true"></canvas>
+          <span>N</span><span>I</span><span>N</span><span>G</span>
         </h1>
-        <p class="hero-line">AI content growth, visual storytelling, trading research and interactive product proofs.</p>
-        <div class="hero-actions">
-          <a class="hero-action liquid-glass magnetic" href="mailto:anglina0514@gmail.com">ContactMe</a>
-          <a class="hero-action liquid-glass magnetic" href="#works">View Works</a>
-        </div>
+        <p class="hero-line">Build media systems that move attention</p>
       </div>
       <div class="hero-caption" aria-hidden="true">
         <span>AI</span>
