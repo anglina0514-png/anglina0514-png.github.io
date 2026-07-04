@@ -115,10 +115,54 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     strength: 0
   };
   const materialPresets = {
-    ice: { base: 0xe6faff, primary: 0x88dfff, secondary: 0xf7fbff, glow: 0x58a8ff },
-    white: { base: 0xffffff, primary: 0xffffff, secondary: 0xc8d7ff, glow: 0xf7fbff },
-    violet: { base: 0xd6c8ff, primary: 0x8f6dff, secondary: 0xf1d9ff, glow: 0x7a5cff },
-    carbon: { base: 0x7a9eff, primary: 0x35518e, secondary: 0x75f4ff, glow: 0x28437c }
+    ice: {
+      base: 0xdffbff,
+      primary: 0x7ce5ff,
+      secondary: 0xf7fbff,
+      glow: 0x42baff,
+      edge: 0xd8fbff,
+      ghostA: 0x00eaff,
+      ghostB: 0xf8fbff,
+      opacity: 0.5,
+      roughness: 0.045,
+      transmission: 0.98
+    },
+    white: {
+      base: 0xffffff,
+      primary: 0xffffff,
+      secondary: 0xd8e4ff,
+      glow: 0xffffff,
+      edge: 0xffffff,
+      ghostA: 0xeef6ff,
+      ghostB: 0xffffff,
+      opacity: 0.34,
+      roughness: 0.018,
+      transmission: 1
+    },
+    violet: {
+      base: 0xae7bff,
+      primary: 0x8759ff,
+      secondary: 0xff8cf8,
+      glow: 0x7a4dff,
+      edge: 0xe6ceff,
+      ghostA: 0xff48f7,
+      ghostB: 0x69eaff,
+      opacity: 0.56,
+      roughness: 0.068,
+      transmission: 0.9
+    },
+    carbon: {
+      base: 0x233968,
+      primary: 0x1a2a55,
+      secondary: 0x75f4ff,
+      glow: 0x1d3b7a,
+      edge: 0x89f2ff,
+      ghostA: 0x1a2d62,
+      ghostB: 0x00e8ff,
+      opacity: 0.68,
+      roughness: 0.14,
+      transmission: 0.58
+    }
   };
   let materialPreset = "ice";
   let glitchUntil = 0;
@@ -175,11 +219,16 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     const detailMix = Math.min(1, stageDepth * 1.25);
     const preset = materialPresets[materialPreset];
     const accentMix = Math.max(worksDepth * accent.strength, productDepth * 0.18);
-    const glassColor = new THREE.Color(preset.base).lerp(accent.primary, accentMix * 0.5);
-    const lineColor = new THREE.Color(0xffffff).lerp(accent.secondary, accentMix * 0.68);
+    const glassColor = new THREE.Color(preset.base).lerp(accent.primary, accentMix * 0.38);
+    const lineColor = new THREE.Color(preset.edge).lerp(accent.secondary, accentMix * 0.68);
     const wallColor = new THREE.Color(preset.primary).lerp(accent.primary, accentMix * 0.72);
     glassMaterial.color.copy(glassColor);
+    glassMaterial.transmission = preset.transmission;
+    glassMaterial.attenuationColor = new THREE.Color(preset.secondary);
+    glassMaterial.attenuationDistance = materialPreset === "carbon" ? 1.7 : 3.6;
     edgeMaterial.color.copy(lineColor);
+    spectralMaterialCyan.color.copy(new THREE.Color(preset.ghostA).lerp(accent.secondary, accentMix * 0.32));
+    spectralMaterialMagenta.color.copy(new THREE.Color(preset.ghostB).lerp(accent.primary, accentMix * 0.26));
     blue.color.copy(new THREE.Color(preset.glow).lerp(accent.primary, accentMix));
     rim.color.copy(new THREE.Color(preset.secondary).lerp(accent.secondary, accentMix * 0.9));
     glint.color.copy(new THREE.Color(0xffffff).lerp(accent.secondary, accentMix * 0.35));
@@ -212,7 +261,10 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       line.position.x = (index ? -1 : 1) * (glitchActive ? 0.2 : 0.072);
       line.position.y = (index ? 1 : -1) * (glitchActive ? 0.04 : 0.015);
       line.children.forEach((child) => {
-        if (child.material) child.material.opacity = (glitchActive ? 0.34 : 0.13) * intro;
+        if (child.material) {
+          const ghostBase = materialPreset === "white" ? 0.06 : materialPreset === "carbon" ? 0.18 : 0.13;
+          child.material.opacity = (glitchActive ? 0.34 : ghostBase) * intro;
+        }
       });
     });
 
@@ -235,11 +287,12 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       panel.material.opacity = (0.1 + stageDepth * 0.2 + Math.sin(drift * 0.34 + index) * 0.016) * (1 - finalDepth * 0.5);
     });
 
-    glassMaterial.opacity = Math.max(0.18, 0.5 - worksDepth * 0.08 - aboutFade * 0.14 + productDepth * 0.06 + (glitchActive ? 0.1 : 0)) * intro;
-    glassMaterial.roughness = 0.055 + worksDepth * 0.08 + productDepth * 0.06;
+    glassMaterial.opacity = Math.max(0.18, preset.opacity - worksDepth * 0.08 - aboutFade * 0.14 + productDepth * 0.06 + (glitchActive ? 0.1 : 0)) * intro;
+    glassMaterial.roughness = preset.roughness + worksDepth * 0.08 + productDepth * 0.06;
     edgeMaterial.opacity = Math.max(0.24, 0.78 - worksDepth * 0.2 - aboutFade * 0.3);
     caustics.children.forEach((stripe, index) => {
       stripe.position.y = Math.sin(drift * 0.8 + index * 1.8) * 0.18 + (index - 1.5) * 0.46;
+      stripe.material.color.copy(new THREE.Color(index % 2 ? preset.secondary : preset.edge).lerp(accent.secondary, accentMix * 0.46));
       stripe.material.opacity = (detailMix * (0.1 + Math.sin(drift * 1.2 + index) * 0.024)) * intro;
     });
     fractureLines.material.opacity = (detailMix * 0.09 + (glitchActive ? 0.12 : 0)) * intro;
