@@ -119,10 +119,10 @@ const worksCounter = document.getElementById("worksCounter");
 const worksCurrentTitle = document.getElementById("worksCurrentTitle");
 const workHitbox = document.getElementById("workHitbox");
 const materialPresets = {
-  ice: { label: "Ice Blue", accent: "#88dfff", accentAlt: "#f7fbff" },
-  white: { label: "White Glass", accent: "#ffffff", accentAlt: "#c8d7ff" },
-  violet: { label: "Violet", accent: "#8f6dff", accentAlt: "#f1d9ff" },
-  carbon: { label: "Carbon Blue", accent: "#35518e", accentAlt: "#75f4ff" }
+  ice: { label: "冰蓝玻璃", accent: "#88dfff", accentAlt: "#f7fbff" },
+  white: { label: "白色玻璃", accent: "#ffffff", accentAlt: "#c8d7ff" },
+  violet: { label: "紫色折射", accent: "#8f6dff", accentAlt: "#f1d9ff" },
+  carbon: { label: "深色玻璃", accent: "#35518e", accentAlt: "#75f4ff" }
 };
 let activeMaterial = "ice";
 
@@ -140,6 +140,7 @@ const carousel = createWorksCarousel({
 const modal = document.getElementById("caseModal");
 const modalContent = document.getElementById("modalContent");
 const navLinks = [...document.querySelectorAll(".nav-link")];
+const railItems = [...document.querySelectorAll("[data-rail-section]")];
 const parallaxItems = [...document.querySelectorAll("[data-parallax]")];
 const productCaseButtons = [...document.querySelectorAll("[data-open-case]")];
 const heroParticles = initHeroParticleTitle({
@@ -239,6 +240,9 @@ function updateScrollState() {
     const id = link.getAttribute("href")?.replace("#", "");
     link.classList.toggle("is-active", id === active);
   });
+  railItems.forEach((item) => {
+    item.classList.toggle("is-active", item.dataset.railSection === active);
+  });
 }
 
 function updateWorkFocus(card, index, total) {
@@ -317,6 +321,7 @@ function initNavigation() {
       event.preventDefault();
       target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
       transitionEngine.run({
+        source: link,
         beforeSwap: () => prismScene.triggerGlitch?.(0.5),
         afterSwap: requestScrollUpdate
       });

@@ -42,12 +42,47 @@
   </header>
 
   <aside class="section-rail" aria-hidden="true">
-    <span>顶部</span>
-    <span>作品</span>
-    <span>关于</span>
-    <span>视觉</span>
-    <span>服务</span>
-    <span>产品</span>
+    <span data-rail-section="hero">顶部</span>
+    <span data-rail-section="works">作品</span>
+    <span data-rail-section="about">关于</span>
+    <span data-rail-section="about">视觉</span>
+    <span data-rail-section="products">服务</span>
+    <span data-rail-section="products">产品</span>
+  </aside>
+
+  <aside class="stage-hud" aria-label="NING WebGL 技术参数面板">
+    <div class="hud-block hud-quaternion">
+      <p>NING 标志 Quaternion</p>
+      <dl>
+        <div><dt>x</dt><dd data-hud="qx">0.000</dd></div>
+        <div><dt>y</dt><dd data-hud="qy">0.000</dd></div>
+        <div><dt>z</dt><dd data-hud="qz">0.000</dd></div>
+        <div><dt>w</dt><dd data-hud="qw">1.000</dd></div>
+      </dl>
+    </div>
+    <div class="hud-orbit hud-quaternion-orbit">
+      <span class="hud-axis hud-axis-x"></span>
+      <span class="hud-axis hud-axis-y"></span>
+      <span class="hud-axis hud-axis-z"></span>
+      <i data-hud-orb></i>
+      <b>N</b>
+    </div>
+    <div class="hud-block hud-material">
+      <p>玻璃材质</p>
+      <dl>
+        <div><dt>粗糙度</dt><dd data-hud="roughness">0.10</dd></div>
+        <div><dt>噪点</dt><dd data-hud="noise">9.0</dd></div>
+        <div><dt>折射率</dt><dd>1.68</dd></div>
+        <div><dt>颜色</dt><dd data-hud="material">冰蓝玻璃</dd></div>
+      </dl>
+      <div class="material-palette" aria-label="玻璃材质选择">
+        <button class="material-swatch" type="button" data-material="ice" aria-label="冰蓝玻璃"></button>
+        <button class="material-swatch" type="button" data-material="white" aria-label="白色玻璃"></button>
+        <button class="material-swatch" type="button" data-material="violet" aria-label="紫色玻璃"></button>
+        <button class="material-swatch" type="button" data-material="carbon" aria-label="深色玻璃"></button>
+      </div>
+    </div>
+    <button class="hud-reset" id="resetStage" type="button">重置舞台</button>
   </aside>
 
   <main class="stage-flow">
@@ -103,8 +138,8 @@
     <section class="works-section stage-section" id="works" data-section="works">
       <div class="works-sticky">
         <div class="works-title">
-          <p class="system-label">Works</p>
-          <h2>Eight screens moving through one space</h2>
+          <p class="system-label">作品</p>
+          <h2>八个画面在同一空间中切换</h2>
         </div>
         <div class="work-track" id="workCarousel" aria-label="精选作品滚动轨道">
           <article class="work-card" data-case="dragon" data-accent="#b78a46" data-accent-alt="#384bff">
@@ -212,18 +247,17 @@
           <span id="worksCounter">01 / 08</span>
           <strong id="worksCurrentTitle">龙影之后</strong>
         </div>
-        <p class="works-hint">Click any screen to expand</p>
+        <p class="works-hint">打开当前作品</p>
       </div>
     </section>
 
     <section class="about-section stage-section" id="about" data-section="about">
       <div class="about-grid">
         <div class="about-statement">
-          <p class="system-label">Mission</p>
+          <p class="system-label">使命</p>
           <h2>
-            Make media<br>
-            behave like<br>
-            a system.
+            <span>把内容、视觉和产品</span>
+            <span>组织成可运行的系统</span>
           </h2>
           <p>
             我把内容增长、AI 视觉、交易研究、3D 场景和互动产品放进同一条制作链路。
@@ -239,13 +273,13 @@
       </div>
       <div class="vision-strip">
         <article>
-          <p class="system-label">Vision</p>
-          <h3>Attention is designed.</h3>
+          <p class="system-label">视觉</p>
+          <h3>注意力可以被设计</h3>
           <span>从叙事、镜头、数据到交互，把注意力变成可复用的方法。</span>
         </article>
         <article>
-          <p class="system-label">Service</p>
-          <h3>Ship proofs, not claims.</h3>
+          <p class="system-label">服务</p>
+          <h3>交付证据，不只交付描述</h3>
           <span>每个项目都留下视频、原型、页面或流程证据。</span>
         </article>
       </div>
@@ -294,7 +328,7 @@
       </div>
       <div class="resume-entry" id="resume">
         <a class="resume-link magnetic" href="新媒体运营经历-许智宁.pdf" download>
-          Download Resume
+          下载简历
           <span>新媒体运营经历-许智宁.pdf</span>
         </a>
       </div>
@@ -302,8 +336,8 @@
 
     <section class="products-section stage-section" id="products" data-section="products">
       <div class="products-copy">
-        <p class="system-label">Products</p>
-        <h2>Prototype platforms that can be opened now.</h2>
+        <p class="system-label">产品</p>
+        <h2>现在就能打开的原型平台</h2>
       </div>
       <div class="product-showcase" aria-label="产品入口">
         <a class="product-panel magnetic" href="https://zhitou-xuetang-d4g4cw845a2883397-1448213860.tcloudbaseapp.com/?v=auth-fix-20260702#home">
@@ -333,9 +367,9 @@
         <span class="outro-corner outro-corner-d"></span>
       </div>
       <div class="final-copy">
-        <p class="system-label">ContactMe</p>
+        <p class="system-label">联系</p>
         <h2>NING</h2>
-        <a class="final-contact magnetic" href="mailto:anglina0514@gmail.com">ContactMe</a>
+        <a class="final-contact magnetic" href="mailto:anglina0514@gmail.com">联系我</a>
         <p class="copyright">© 2026 许智宁</p>
       </div>
     </section>

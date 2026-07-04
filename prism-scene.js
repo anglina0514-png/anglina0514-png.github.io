@@ -249,12 +249,12 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, 0.18 - scroll.page * 0.54 + newsDepth * 0.08, 0.04);
     camera.position.z = THREE.MathUtils.lerp(camera.position.z, (width < 720 ? 15.2 : 9.6) - intro * 1.28 - stageDepth * 1.85 + finalDepth * 1.08, 0.035);
 
-    markRoot.rotation.y = (1 - intro) * -1.18 + drift * 0.038 + pointer.x * 0.1 + glitch + worksDepth * 0.44 - productDepth * 0.42;
-    markRoot.rotation.x = (1 - intro) * 0.34 + Math.sin(drift * 0.28) * 0.018 - pointer.y * 0.052 + newsDepth * 0.04;
+    markRoot.rotation.y = (1 - intro) * -1.18 + drift * 0.038 + pointer.x * 0.1 + glitch + worksDepth * 0.44 - productDepth * 0.42 + aboutFade * -0.18;
+    markRoot.rotation.x = (1 - intro) * 0.34 + Math.sin(drift * 0.28) * 0.018 - pointer.y * 0.052 + newsDepth * 0.04 + aboutFade * 0.08;
     markRoot.rotation.z = glitch * 0.7 + finalDepth * 0.1;
     markRoot.position.x = -0.12 * (1 - stageDepth) + productDepth * -0.42 + finalDepth * 0.28;
     markRoot.position.y = -0.04 + intro * 0.1 - scroll.page * 0.54 + Math.sin(drift * 0.58) * 0.022 + productDepth * 0.38;
-    markRoot.scale.setScalar((0.52 + intro * 0.3) * (1.01 + worksDepth * 0.02 - aboutFade * 0.16 + finalDepth * 0.08));
+    markRoot.scale.setScalar((0.52 + intro * 0.3) * (1.01 + worksDepth * 0.02 - aboutFade * 0.1 + finalDepth * 0.08));
     markRoot.visible = finalDepth < 0.94;
 
     spectralRoot.rotation.copy(markRoot.rotation);
@@ -290,13 +290,13 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       panel.material.opacity = (0.1 + stageDepth * 0.2 + Math.sin(drift * 0.34 + index) * 0.016) * (1 - finalDepth * 0.5);
     });
 
-    glassMaterial.opacity = Math.max(0.26, preset.opacity + 0.08 - worksDepth * 0.06 - aboutFade * 0.12 + productDepth * 0.06 + (glitchActive ? 0.1 : 0)) * intro;
+    glassMaterial.opacity = Math.max(0.18, preset.opacity + 0.08 - worksDepth * 0.06 - aboutFade * 0.34 + productDepth * 0.06 + (glitchActive ? 0.1 : 0)) * intro;
     glassMaterial.roughness = Math.max(0.018, preset.roughness - 0.012 + worksDepth * 0.08 + productDepth * 0.06);
-    edgeMaterial.opacity = Math.max(0.34, 0.94 - worksDepth * 0.18 - aboutFade * 0.26);
+    edgeMaterial.opacity = Math.max(0.34, 0.94 - worksDepth * 0.18 + aboutFade * 0.18);
     caustics.children.forEach((stripe, index) => {
       stripe.position.y = stripe.userData.baseY + Math.sin(drift * 0.8 + index * 1.8) * 0.08;
       stripe.material.color.copy(new THREE.Color(index % 2 ? preset.secondary : preset.edge).lerp(accent.secondary, accentMix * 0.46));
-      stripe.material.opacity = ((stripe.userData.baseOpacity || 0.14) + detailMix * 0.08 + Math.sin(drift * 1.2 + index) * 0.018) * intro;
+      stripe.material.opacity = ((stripe.userData.baseOpacity || 0.14) + detailMix * 0.08 + Math.sin(drift * 1.2 + index) * 0.018) * intro * (1 - aboutFade * 0.62);
     });
     fractureLines.material.opacity = (detailMix * 0.09 + (glitchActive ? 0.12 : 0)) * intro;
     surfaceBlocks.children.forEach((block, index) => {
