@@ -12,11 +12,11 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.08;
+  renderer.toneMappingExposure = 1.24;
   renderer.setClearColor(0x000000, 0);
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x010105, 0.018);
+  scene.fog = new THREE.FogExp2(0x010105, 0.014);
 
   const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 140);
   camera.position.set(0, 0.22, 9.6);
@@ -30,16 +30,16 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   root.add(gridRoot, markRoot, spectralRoot, shardRoot);
 
   const glassMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xb5ecff,
+    color: 0xe6faff,
     metalness: 0,
-    roughness: 0.025,
-    transmission: 0.96,
-    thickness: 3.8,
-    ior: 1.78,
+    roughness: 0.08,
+    transmission: 0.98,
+    thickness: 5.4,
+    ior: 1.92,
     transparent: true,
-    opacity: 0.8,
+    opacity: 0.46,
     clearcoat: 1,
-    clearcoatRoughness: 0.02,
+    clearcoatRoughness: 0.01,
     reflectivity: 1,
     side: THREE.DoubleSide,
     depthWrite: false
@@ -71,7 +71,9 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
 
   const tunnelLines = makeTunnelLines();
   const darkPanels = makeDarkPanels();
-  gridRoot.add(tunnelLines, darkPanels);
+  const crossMarkers = makeCrossMarkers();
+  const bgGlyphs = makeBackgroundGlyphs();
+  gridRoot.add(tunnelLines, darkPanels, crossMarkers, bgGlyphs);
 
   const logoNoise = makeLogoNoise();
   shardRoot.add(logoNoise);
@@ -95,13 +97,15 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   const stars = makeStars();
   scene.add(stars);
 
-  const key = new THREE.DirectionalLight(0xffffff, 3.8);
+  const key = new THREE.DirectionalLight(0xffffff, 4.9);
   key.position.set(2.8, 4.8, 5.2);
-  const blue = new THREE.PointLight(0x406dff, 9.4, 25);
+  const blue = new THREE.PointLight(0x58a8ff, 10.8, 28);
   blue.position.set(-3, 0.8, 3.4);
-  const rim = new THREE.PointLight(0xf3fbff, 5.8, 21);
+  const rim = new THREE.PointLight(0xffffff, 7.4, 22);
   rim.position.set(3.4, -1.2, 2.6);
-  scene.add(key, blue, rim, new THREE.HemisphereLight(0xffffff, 0x060712, 1.25));
+  const glint = new THREE.PointLight(0xffffff, 8.2, 12);
+  glint.position.set(0.4, 0.1, 3.2);
+  scene.add(key, blue, rim, glint, new THREE.HemisphereLight(0xffffff, 0x060712, 1.45));
 
   const pointer = { x: 0, y: 0 };
   const scroll = { page: 0, hero: 0, news: 0, works: 0, about: 0, products: 0, final: 0 };
@@ -110,6 +114,13 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     secondary: new THREE.Color(0x92e9ff),
     strength: 0
   };
+  const materialPresets = {
+    ice: { base: 0xe6faff, primary: 0x88dfff, secondary: 0xf7fbff, glow: 0x58a8ff },
+    white: { base: 0xffffff, primary: 0xffffff, secondary: 0xc8d7ff, glow: 0xf7fbff },
+    violet: { base: 0xd6c8ff, primary: 0x8f6dff, secondary: 0xf1d9ff, glow: 0x7a5cff },
+    carbon: { base: 0x7a9eff, primary: 0x35518e, secondary: 0x75f4ff, glow: 0x28437c }
+  };
+  let materialPreset = "ice";
   let glitchUntil = 0;
   let width = 1;
   let height = 1;
@@ -140,6 +151,10 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     accent.strength = Math.min(1, Math.max(0, strength));
   }
 
+  function setMaterialPreset(id = "ice") {
+    materialPreset = materialPresets[id] ? id : "ice";
+  }
+
   function triggerGlitch(intensity = 1) {
     glitchUntil = performance.now() + 520 * intensity;
   }
@@ -157,37 +172,43 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     const productDepth = smoothstep(0.08, 0.86, scroll.products);
     const finalDepth = smoothstep(0.12, 0.88, scroll.final);
     const stageDepth = Math.max(worksDepth, productDepth * 0.78, newsDepth * 0.46);
-    const accentMix = worksDepth * accent.strength;
-    const glassColor = new THREE.Color(0xc7f4ff).lerp(accent.primary, accentMix * 0.58);
+    const preset = materialPresets[materialPreset];
+    const accentMix = Math.max(worksDepth * accent.strength, productDepth * 0.18);
+    const glassColor = new THREE.Color(preset.base).lerp(accent.primary, accentMix * 0.5);
     const lineColor = new THREE.Color(0xffffff).lerp(accent.secondary, accentMix * 0.68);
-    const wallColor = new THREE.Color(0xffffff).lerp(accent.primary, accentMix * 0.72);
+    const wallColor = new THREE.Color(preset.primary).lerp(accent.primary, accentMix * 0.72);
     glassMaterial.color.copy(glassColor);
     edgeMaterial.color.copy(lineColor);
-    blue.color.copy(new THREE.Color(0x4558ff).lerp(accent.primary, accentMix));
-    rim.color.copy(new THREE.Color(0xe8f4ff).lerp(accent.secondary, accentMix * 0.9));
+    blue.color.copy(new THREE.Color(preset.glow).lerp(accent.primary, accentMix));
+    rim.color.copy(new THREE.Color(preset.secondary).lerp(accent.secondary, accentMix * 0.9));
+    glint.color.copy(new THREE.Color(0xffffff).lerp(accent.secondary, accentMix * 0.35));
     curveWall.material.color.copy(wallColor);
     tunnelLines.material.color.copy(new THREE.Color(0x9aa8ff).lerp(accent.secondary, accentMix));
+    crossMarkers.material.color.copy(new THREE.Color(0xffffff).lerp(accent.secondary, accentMix * 0.25));
+    bgGlyphs.children.forEach((glyph, index) => {
+      glyph.material.color.copy(new THREE.Color(index % 2 ? preset.secondary : preset.primary).lerp(accent.primary, accentMix * 0.42));
+    });
     stars.material.color.copy(new THREE.Color(0xffffff).lerp(accent.secondary, accentMix * 0.38));
 
     root.rotation.y = THREE.MathUtils.lerp(root.rotation.y, pointer.x * 0.09 - worksDepth * 0.28 + productDepth * 0.18, 0.05);
     root.rotation.x = THREE.MathUtils.lerp(root.rotation.x, -pointer.y * 0.05, 0.05);
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, pointer.x * 0.34 + productDepth * 0.55 - finalDepth * 0.28, 0.04);
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, 0.18 - scroll.page * 0.54 + newsDepth * 0.08, 0.04);
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, (width < 720 ? 12.5 : 9.6) - intro * 1.96 - stageDepth * 1.75 + finalDepth * 1.08, 0.035);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, (width < 720 ? 12.5 : 9.2) - intro * 1.54 - stageDepth * 1.85 + finalDepth * 1.08, 0.035);
 
-    markRoot.rotation.y = (1 - intro) * -1.36 + drift * 0.055 + pointer.x * 0.14 + glitch + worksDepth * 0.52 - productDepth * 0.42;
-    markRoot.rotation.x = (1 - intro) * 0.42 + Math.sin(drift * 0.28) * 0.025 - pointer.y * 0.065 + newsDepth * 0.06;
+    markRoot.rotation.y = (1 - intro) * -1.18 + drift * 0.038 + pointer.x * 0.1 + glitch + worksDepth * 0.44 - productDepth * 0.42;
+    markRoot.rotation.x = (1 - intro) * 0.34 + Math.sin(drift * 0.28) * 0.018 - pointer.y * 0.052 + newsDepth * 0.04;
     markRoot.rotation.z = glitch * 0.7 + finalDepth * 0.1;
     markRoot.position.x = productDepth * -0.42 + finalDepth * 0.28;
     markRoot.position.y = -0.04 + intro * 0.1 - scroll.page * 0.54 + Math.sin(drift * 0.58) * 0.022 + productDepth * 0.38;
-    markRoot.scale.setScalar((0.34 + intro * 0.34) * (1.02 + worksDepth * 0.02 - aboutFade * 0.16 + finalDepth * 0.08));
+    markRoot.scale.setScalar((0.46 + intro * 0.34) * (1.02 + worksDepth * 0.02 - aboutFade * 0.16 + finalDepth * 0.08));
     markRoot.visible = finalDepth < 0.94;
 
     spectralRoot.rotation.copy(markRoot.rotation);
     spectralRoot.position.copy(markRoot.position);
     spectralRoot.scale.copy(markRoot.scale);
     spectralRoot.children.forEach((line, index) => {
-      line.position.x = (index ? -1 : 1) * (glitchActive ? 0.18 : 0.055);
+      line.position.x = (index ? -1 : 1) * (glitchActive ? 0.2 : 0.072);
       line.position.y = (index ? 1 : -1) * (glitchActive ? 0.04 : 0.015);
       line.children.forEach((child) => {
         if (child.material) child.material.opacity = (glitchActive ? 0.34 : 0.13) * intro;
@@ -198,27 +219,31 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     shardRoot.position.copy(markRoot.position);
     shardRoot.scale.copy(markRoot.scale);
     logoNoise.rotation.z = -drift * 0.04 + glitch * 2;
-    logoNoise.material.opacity = (0.2 + newsDepth * 0.14 + worksDepth * 0.14 + (glitchActive ? 0.2 : 0)) * intro;
+    logoNoise.material.opacity = (0.32 + newsDepth * 0.08 + worksDepth * 0.12 + (glitchActive ? 0.2 : 0)) * intro;
 
     gridRoot.rotation.y = drift * 0.016 + pointer.x * 0.035 - worksDepth * 0.54 + productDepth * 0.28;
     gridRoot.position.z = -stageDepth * 2.9;
     gridRoot.position.y = -scroll.page * 1.38 + productDepth * 0.4;
-    curveWall.material.opacity = 0.24 + (stageDepth * 0.18) - finalDepth * 0.08;
-    tunnelLines.material.opacity = 0.065 + stageDepth * 0.13 - finalDepth * 0.04;
+    curveWall.material.opacity = 0.42 + (stageDepth * 0.22) - finalDepth * 0.1;
+    tunnelLines.material.opacity = 0.12 + stageDepth * 0.16 - finalDepth * 0.04;
+    crossMarkers.material.opacity = 0.18 + stageDepth * 0.12 - finalDepth * 0.08;
+    bgGlyphs.children.forEach((glyph, index) => {
+      glyph.material.opacity = (0.08 + index * 0.012 + stageDepth * 0.04) * (1 - finalDepth * 0.55);
+    });
     darkPanels.children.forEach((panel, index) => {
-      panel.material.opacity = (0.1 + stageDepth * 0.18 + Math.sin(drift * 0.34 + index) * 0.018) * (1 - finalDepth * 0.5);
+      panel.material.opacity = (0.18 + stageDepth * 0.22 + Math.sin(drift * 0.34 + index) * 0.022) * (1 - finalDepth * 0.5);
     });
 
-    glassMaterial.opacity = Math.max(0.14, 0.84 - worksDepth * 0.22 - aboutFade * 0.2 + productDepth * 0.08 + (glitchActive ? 0.1 : 0)) * intro;
-    glassMaterial.roughness = 0.018 + worksDepth * 0.13 + productDepth * 0.08;
-    edgeMaterial.opacity = Math.max(0.18, 0.94 - worksDepth * 0.28 - aboutFade * 0.38);
+    glassMaterial.opacity = Math.max(0.18, 0.5 - worksDepth * 0.08 - aboutFade * 0.14 + productDepth * 0.06 + (glitchActive ? 0.1 : 0)) * intro;
+    glassMaterial.roughness = 0.055 + worksDepth * 0.08 + productDepth * 0.06;
+    edgeMaterial.opacity = Math.max(0.24, 0.78 - worksDepth * 0.2 - aboutFade * 0.3);
     caustics.children.forEach((stripe, index) => {
       stripe.position.y = Math.sin(drift * 0.8 + index * 1.8) * 0.18 + (index - 1.5) * 0.46;
-      stripe.material.opacity = (0.16 + Math.sin(drift * 1.2 + index) * 0.05) * intro;
+      stripe.material.opacity = (0.28 + Math.sin(drift * 1.2 + index) * 0.08) * intro;
     });
-    fractureLines.material.opacity = (0.22 + newsDepth * 0.08 + (glitchActive ? 0.2 : 0)) * intro;
+    fractureLines.material.opacity = (0.32 + newsDepth * 0.06 + (glitchActive ? 0.2 : 0)) * intro;
     surfaceBlocks.children.forEach((block, index) => {
-      block.material.opacity = (0.08 + Math.sin(drift * 0.9 + index * 0.7) * 0.035) * intro;
+      block.material.opacity = (0.13 + Math.sin(drift * 0.9 + index * 0.7) * 0.045) * intro;
       block.position.z = 0.62 + Math.sin(drift * 0.6 + index) * 0.018;
     });
     rings.forEach((ring, index) => {
@@ -241,6 +266,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     setScroll,
     setPointer,
     setAccent,
+    setMaterialPreset,
     triggerGlitch,
     destroy() {
       running = false;
@@ -381,6 +407,78 @@ function makeDarkPanels() {
   return group;
 }
 
+function makeCrossMarkers() {
+  const points = [];
+  const radius = 10.3;
+  const arc = Math.PI * 1.04;
+  const columns = 11;
+  const rows = 7;
+  const size = 0.065;
+  for (let yIndex = 0; yIndex < rows; yIndex += 1) {
+    const y = -3.4 + yIndex * 1.12;
+    for (let xIndex = 0; xIndex < columns; xIndex += 1) {
+      const angle = -arc / 2 + (arc / (columns - 1)) * xIndex;
+      const x = Math.sin(angle) * radius;
+      const z = Math.cos(angle) * radius - radius - 3.25;
+      points.push(x - size, y, z, x + size, y, z);
+      points.push(x, y - size, z, x, y + size, z);
+    }
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(points, 3));
+  const material = new THREE.LineBasicMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.18,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+  return new THREE.LineSegments(geometry, material);
+}
+
+function makeBackgroundGlyphs() {
+  const group = new THREE.Group();
+  const materialA = new THREE.LineBasicMaterial({
+    color: 0x7fa6ff,
+    transparent: true,
+    opacity: 0.08,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+  const materialB = new THREE.LineBasicMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.06,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+  const specs = [
+    { x: -4.8, y: 1.6, z: -7.9, s: 1.2, r: -0.02, material: materialA },
+    { x: 3.8, y: 0.8, z: -8.6, s: 1.0, r: 0.04, material: materialB },
+    { x: -1.6, y: -2.1, z: -9.8, s: 1.45, r: 0.01, material: materialA },
+    { x: 5.5, y: -2.8, z: -11.2, s: 1.24, r: -0.06, material: materialB }
+  ];
+  specs.forEach((spec) => {
+    const glyph = makeLineGlyphN(spec.material.clone());
+    glyph.position.set(spec.x, spec.y, spec.z);
+    glyph.rotation.z = spec.r;
+    glyph.scale.setScalar(spec.s);
+    group.add(glyph);
+  });
+  return group;
+}
+
+function makeLineGlyphN(material) {
+  const points = [
+    -0.85, -1.1, 0, -0.85, 1.1, 0,
+    -0.85, 1.1, 0, 0.85, -1.1, 0,
+    0.85, -1.1, 0, 0.85, 1.1, 0
+  ];
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(points, 3));
+  return new THREE.LineSegments(geometry, material);
+}
+
 function seededRandom(seed) {
   let state = seed >>> 0;
   return () => {
@@ -391,12 +489,12 @@ function seededRandom(seed) {
 
 function makeCurvedWall() {
   const points = [];
-  const radius = 10.5;
-  const rows = 15;
-  const cols = 34;
-  const arc = Math.PI * 0.92;
+  const radius = 10.8;
+  const rows = 22;
+  const cols = 58;
+  const arc = Math.PI * 1.08;
   for (let r = 0; r <= rows; r += 1) {
-    const y = -4.2 + r * 0.58;
+    const y = -4.8 + r * 0.46;
     for (let c = 0; c < cols; c += 1) {
       const a1 = -arc / 2 + (arc / cols) * c;
       const a2 = -arc / 2 + (arc / cols) * (c + 1);
@@ -407,8 +505,8 @@ function makeCurvedWall() {
   for (let c = 0; c <= cols; c += 1) {
     const a = -arc / 2 + (arc / cols) * c;
     for (let r = 0; r < rows; r += 1) {
-      const y1 = -4.2 + r * 0.58;
-      const y2 = -4.2 + (r + 1) * 0.58;
+      const y1 = -4.8 + r * 0.46;
+      const y2 = -4.8 + (r + 1) * 0.46;
       points.push(Math.sin(a) * radius, y1, Math.cos(a) * radius - radius - 3);
       points.push(Math.sin(a) * radius, y2, Math.cos(a) * radius - radius - 3);
     }
@@ -441,14 +539,15 @@ function makeTunnelLines() {
 
 function makeLogoNoise() {
   const vertices = [];
+  const random = seededRandom(717);
   for (let i = 0; i < 520; i += 1) {
     const row = i % 4;
-    const angle = Math.random() * Math.PI * 2;
-    const radius = 0.55 + Math.random() * (row === 0 ? 1.8 : 2.35);
+    const angle = random() * Math.PI * 2;
+    const radius = 0.55 + random() * (row === 0 ? 1.8 : 2.35);
     vertices.push(
       Math.cos(angle) * radius,
-      Math.sin(angle) * radius * 0.82 + (Math.random() - 0.5) * 0.45,
-      (Math.random() - 0.5) * 0.34
+      Math.sin(angle) * radius * 0.82 + (random() - 0.5) * 0.45,
+      (random() - 0.5) * 0.34
     );
   }
   const geometry = new THREE.BufferGeometry();
@@ -465,8 +564,9 @@ function makeLogoNoise() {
 
 function makeStars() {
   const vertices = [];
+  const random = seededRandom(1149);
   for (let i = 0; i < 220; i += 1) {
-    vertices.push((Math.random() - 0.5) * 28, (Math.random() - 0.5) * 14, -Math.random() * 18 - 4);
+    vertices.push((random() - 0.5) * 28, (random() - 0.5) * 14, -random() * 18 - 4);
   }
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
@@ -488,6 +588,8 @@ function createNoopScene() {
   return {
     setScroll() {},
     setPointer() {},
+    setAccent() {},
+    setMaterialPreset() {},
     triggerGlitch() {},
     destroy() {}
   };

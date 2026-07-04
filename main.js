@@ -118,6 +118,13 @@ const transitionEngine = createTransitionEngine({
 const worksCounter = document.getElementById("worksCounter");
 const worksCurrentTitle = document.getElementById("worksCurrentTitle");
 const workHitbox = document.getElementById("workHitbox");
+const materialPresets = {
+  ice: { label: "Ice Blue", accent: "#88dfff", accentAlt: "#f7fbff" },
+  white: { label: "White Glass", accent: "#ffffff", accentAlt: "#c8d7ff" },
+  violet: { label: "Violet", accent: "#8f6dff", accentAlt: "#f1d9ff" },
+  carbon: { label: "Carbon Blue", accent: "#35518e", accentAlt: "#75f4ff" }
+};
+let activeMaterial = "ice";
 
 let latestScroll = -1;
 let ticking = false;
@@ -152,6 +159,7 @@ initParallax();
 initModal();
 initProductButtons();
 initWorkHitbox();
+initMaterialControls();
 initAutoplayVideos();
 updateScrollState();
 
@@ -259,6 +267,28 @@ function applyWorkAccent(card, intensity = 1) {
   prismScene.setAccent?.(accent, accentAlt, amount);
 }
 
+function initMaterialControls() {
+  const swatches = [...document.querySelectorAll("[data-material]")];
+  if (!swatches.length) return;
+  swatches.forEach((button) => {
+    button.addEventListener("click", () => setMaterialPreset(button.dataset.material || "ice"));
+  });
+  setMaterialPreset(activeMaterial);
+}
+
+function setMaterialPreset(id = "ice") {
+  const preset = materialPresets[id] || materialPresets.ice;
+  activeMaterial = materialPresets[id] ? id : "ice";
+  document.documentElement.style.setProperty("--material-accent", preset.accent);
+  document.documentElement.style.setProperty("--material-accent-alt", preset.accentAlt);
+  setHudText("material", preset.label);
+  document.querySelectorAll("[data-material]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.material === activeMaterial);
+  });
+  prismScene.setMaterialPreset?.(activeMaterial);
+  prismScene.triggerGlitch?.(0.38);
+}
+
 function sectionProgress(section) {
   if (!section) return 0;
   const rect = section.getBoundingClientRect();
@@ -293,6 +323,7 @@ function initNavigation() {
     });
   });
   document.getElementById("resetStage")?.addEventListener("click", () => {
+    setMaterialPreset("ice");
     window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
     transitionEngine.run({
       beforeSwap: () => prismScene.triggerGlitch?.(0.65),
@@ -481,8 +512,8 @@ function updateHud(progress) {
   setHudValue("qy", qy, 3);
   setHudValue("qz", qz, 3);
   setHudValue("qw", qw, 3);
-  setHudValue("roughness", 0.03 + progress.works * 0.18 + progress.about * 0.08, 2);
-  setHudValue("noise", 1 + progress.news * 1.6 + progress.works * 2.4 + progress.products * 1.1, 2);
+  setHudValue("roughness", 0.1 + progress.works * 0.08 + progress.products * 0.04, 2);
+  setHudValue("noise", 9 + progress.news * 0.6 + progress.works * 1.8 + progress.products * 0.9, 1);
   updateHudPointer();
 }
 
@@ -497,6 +528,12 @@ function setHudValue(key, value, digits) {
   const node = hudNumbers[key];
   if (!node) return;
   node.textContent = Number(value).toFixed(digits);
+}
+
+function setHudText(key, value) {
+  const node = hudNumbers[key];
+  if (!node) return;
+  node.textContent = value;
 }
 
 function initHeroParticleTitle({ wrap, canvas, text, reducedMotion }) {
@@ -678,6 +715,7 @@ function initOutroCanvas({ canvas, reducedMotion }) {
   let width = 1;
   let height = 1;
   let progress = 0;
+  let noiseSeed = 0;
   let raf = 0;
 
   function resize() {
@@ -692,22 +730,41 @@ function initOutroCanvas({ canvas, reducedMotion }) {
     ctx.clearRect(0, 0, width, height);
     const t = time * 0.001;
     const alpha = Math.min(1, Math.max(0, progress * 1.4));
+    const fontSize = Math.max(110, width * 0.24);
+    const scanShift = (t * 54) % 42;
     ctx.globalAlpha = alpha;
-    ctx.fillStyle = "rgba(255,255,255,0.05)";
-    for (let y = 0; y < height; y += 18) {
-      ctx.fillRect(0, y + Math.sin(t + y * 0.01) * 6, width, 1);
+    ctx.fillStyle = "rgba(255,255,255,0.045)";
+    for (let y = -42; y < height + 42; y += 18) {
+      ctx.fillRect(0, y + scanShift + Math.sin(t + y * 0.01) * 6, width, 1);
     }
-    ctx.font = `900 ${Math.max(90, width * 0.19)}px Arial, sans-serif`;
+
+    ctx.save();
+    ctx.globalAlpha = alpha * 0.18;
+    ctx.fillStyle = "#fff";
+    for (let i = 0; i < 800; i += 1) {
+      noiseSeed = (noiseSeed * 1664525 + 1013904223) >>> 0;
+      const x = (noiseSeed / 4294967296) * width;
+      noiseSeed = (noiseSeed * 1664525 + 1013904223) >>> 0;
+      const y = (noiseSeed / 4294967296) * height;
+      ctx.fillRect(x, y, 1.1, 1.1);
+    }
+    ctx.restore();
+
+    ctx.font = `900 ${fontSize}px Arial, sans-serif`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     const shift = Math.sin(t * 0.7) * width * 0.012;
     ctx.globalCompositeOperation = "lighter";
-    ctx.fillStyle = "rgba(96,220,255,0.18)";
-    ctx.fillText("NING", width / 2 + shift, height / 2);
-    ctx.fillStyle = "rgba(255,78,238,0.14)";
-    ctx.fillText("NING", width / 2 - shift, height / 2 + 2);
-    ctx.fillStyle = "rgba(255,255,255,0.28)";
+    ctx.fillStyle = "rgba(96,220,255,0.24)";
+    ctx.fillText("NING", width / 2 + shift + 9, height / 2 - 4);
+    ctx.fillStyle = "rgba(255,78,238,0.2)";
+    ctx.fillText("NING", width / 2 - shift - 8, height / 2 + 7);
+    ctx.fillStyle = "rgba(255,255,255,0.34)";
     ctx.fillText("NING", width / 2, height / 2);
+    ctx.globalAlpha = alpha * 0.22;
+    ctx.strokeStyle = "rgba(255,255,255,0.9)";
+    ctx.lineWidth = Math.max(1, width * 0.001);
+    ctx.strokeText("CONTACTME", width / 2, height / 2 + fontSize * 0.38);
     ctx.globalCompositeOperation = "source-over";
     raf = requestAnimationFrame(draw);
   }
