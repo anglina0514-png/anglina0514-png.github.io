@@ -30,7 +30,7 @@
       <span>NING</span>
     </a>
     <nav class="site-nav">
-      <a class="nav-link magnetic" href="#internship">Internship</a>
+      <a class="nav-link magnetic" href="#news">News</a>
       <a class="nav-link magnetic" href="#works">Works</a>
       <a class="nav-link magnetic" href="#about">About</a>
       <a class="nav-link magnetic" href="#products">Products</a>
@@ -43,9 +43,10 @@
 
   <aside class="section-rail" aria-hidden="true">
     <span>TOP</span>
-    <span>INTERNSHIP</span>
     <span>WORKS</span>
     <span>ABOUT</span>
+    <span>VISION</span>
+    <span>SERVICE</span>
     <span>PRODUCTS</span>
   </aside>
 
@@ -87,7 +88,7 @@
         </h1>
         <p class="hero-line">Build media systems that move attention</p>
       </div>
-      <div class="hero-caption">
+      <div class="hero-caption" aria-hidden="true">
         <span>AI</span>
         <span>Content Growth</span>
         <span>Trading</span>
@@ -96,34 +97,34 @@
         <span>Interactive Product</span>
         <span>Visual Storytelling</span>
       </div>
-      <div class="hero-news" aria-label="实习项目经历">
-        <p>Internship</p>
-        <span>Experience</span>
-        <a href="#internship">国海证券传媒行研实习</a>
+      <div class="hero-news" aria-label="最新动态">
+        <p>News</p>
+        <time datetime="2026-07-04">2026 07.04</time>
+        <a href="#news">NING WebGL stage rebuild</a>
       </div>
       <div class="scroll-cue" aria-hidden="true">scroll to explore -></div>
     </section>
 
-    <section class="news-section internship-section stage-section" id="internship" data-section="internship">
+    <section class="news-section stage-section" id="news" data-section="news">
       <div class="section-copy">
-        <p class="system-label">Internship</p>
-        <h2>Project Experience</h2>
+        <p class="system-label">News</p>
+        <h2>Recent signals from the system</h2>
       </div>
-      <div class="news-list internship-list" aria-label="实习项目经历">
+      <div class="news-list" aria-label="最新动态">
         <article>
-          <span class="experience-tag">MEDIA RESEARCH</span>
-          <h3>国海证券传媒行研实习</h3>
-          <p>围绕传媒赛道完成标的库搭建、资料整理、SPSS 数据清洗与行业逻辑梳理，把零散信息整理成可跟踪的研究材料。</p>
+          <time datetime="2026-07-04">2026.07.04</time>
+          <h3>NING WebGL 舞台重构</h3>
+          <p>Fixed stage rebuild with glass N, curved grid wall and Alche-style scroll states.</p>
         </article>
         <article>
-          <span class="experience-tag">CONTENT OPERATION</span>
-          <h3>千万级自媒体矩阵项目</h3>
-          <p>从选题、脚本、账号矩阵运营到直播间复盘，把内容表现、用户反馈和流量数据转化为下一轮可执行的增长策略。</p>
+          <time datetime="2026-07-03">2026.07.03</time>
+          <h3>马克思主义宣传视频</h3>
+          <p>Theory visual film added to Works.</p>
         </article>
         <article>
-          <span class="experience-tag">FINANCE CONTENT</span>
-          <h3>财商新星内容运营</h3>
-          <p>参与财经内容生产与小红书运营，结合赛事热点和平台推荐机制完成笔记发布、数据观察与内容优化。</p>
+          <time datetime="2026-07-02">2026.07.02</time>
+          <h3>知投学堂与视觉游戏可在线体验</h3>
+          <p>Product prototype and H5 interactive risk game are now connected.</p>
         </article>
       </div>
     </section>
@@ -303,6 +304,23 @@
           <p>AI Q&A / CloudBase / Learning Flow / Product Strategy</p>
         </article>
       </div>
+      <div class="experience-strip" aria-label="实习项目经历">
+        <article>
+          <span>MEDIA RESEARCH</span>
+          <h3>国海证券传媒行研实习</h3>
+          <p>围绕传媒赛道完成标的库搭建、资料整理、SPSS 数据清洗与行业逻辑梳理，把零散信息整理成可跟踪的研究材料。</p>
+        </article>
+        <article>
+          <span>CONTENT OPERATION</span>
+          <h3>千万级自媒体矩阵项目</h3>
+          <p>从选题、脚本、账号矩阵运营到直播间复盘，把内容表现、用户反馈和流量数据转化为下一轮可执行的增长策略。</p>
+        </article>
+        <article>
+          <span>FINANCE CONTENT</span>
+          <h3>财商新星内容运营</h3>
+          <p>参与财经内容生产与小红书运营，结合赛事热点和平台推荐机制完成笔记发布、数据观察与内容优化。</p>
+        </article>
+      </div>
       <div class="resume-entry" id="resume">
         <a class="resume-link magnetic" href="新媒体运营经历-许智宁.pdf" download>
           Download Resume
@@ -336,10 +354,19 @@
     </section>
 
     <section class="final-section stage-section" id="final" data-section="final">
-      <p class="system-label">ContactMe</p>
-      <h2>NING</h2>
-      <a class="final-contact magnetic" href="mailto:anglina0514@gmail.com">ContactMe</a>
-      <p class="copyright">© 2026 许智宁</p>
+      <div class="outro-screen" aria-hidden="true">
+        <canvas id="outroCanvas" class="outro-canvas"></canvas>
+        <span class="outro-corner outro-corner-a"></span>
+        <span class="outro-corner outro-corner-b"></span>
+        <span class="outro-corner outro-corner-c"></span>
+        <span class="outro-corner outro-corner-d"></span>
+      </div>
+      <div class="final-copy">
+        <p class="system-label">ContactMe</p>
+        <h2>NING</h2>
+        <a class="final-contact magnetic" href="mailto:anglina0514@gmail.com">ContactMe</a>
+        <p class="copyright">© 2026 许智宁</p>
+      </div>
     </section>
   </main>
 

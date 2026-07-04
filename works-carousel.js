@@ -29,18 +29,17 @@ export function createWorksCarousel({ root, onOpen, onFocus }) {
       const direction = Math.sign(offset || 0);
       const depthStep = Math.min(abs, 4);
       const stair = Math.max(-2, Math.min(2, Math.round(offset)));
+      const frontX = mobile ? 0 : -70;
       const x = mobile
-        ? offset * width * 0.38
-        : offset >= 0
-          ? 110 + offset * width * 0.28
-          : -120 + offset * width * 0.18;
-      const y = mobile ? depthStep * 10 : depthStep * 30 - Math.max(0, offset) * 10;
-      const z = -depthStep * (mobile ? 115 : 170) - Math.max(0, offset) * 46;
-      const rotateY = mobile ? -offset * 10 : offset >= 0 ? -18 - depthStep * 11 : 13 + depthStep * 5;
-      const rotateX = mobile ? Math.min(7, abs * 1.6) : Math.max(-3, 4 - depthStep * 1.8);
-      const scale = Math.max(mobile ? 0.64 : 0.46, 1.05 - depthStep * (mobile ? 0.13 : 0.17));
-      const opacity = abs > (mobile ? 2.7 : 4.4) ? 0 : Math.max(0.16, 1 - abs * 0.2);
-      const blur = abs > 1.45 ? Math.min(5.2, abs * 0.82) : 0;
+        ? offset * width * 0.42
+        : frontX + (offset >= 0 ? offset * width * 0.36 : offset * width * 0.24);
+      const y = mobile ? -24 + depthStep * 14 : -58 + depthStep * 26 - Math.max(0, offset) * 16;
+      const z = -depthStep * (mobile ? 125 : 230) - Math.max(0, offset) * 78;
+      const rotateY = mobile ? -offset * 9 : offset >= 0 ? -22 - depthStep * 10 : 16 + depthStep * 5;
+      const rotateX = mobile ? Math.min(6, abs * 1.4) : Math.max(-2, 3 - depthStep * 1.4);
+      const scale = Math.max(mobile ? 0.62 : 0.4, 1.12 - depthStep * (mobile ? 0.13 : 0.18));
+      const opacity = abs > (mobile ? 2.8 : 4.2) ? 0 : Math.max(0.1, 1 - abs * 0.23);
+      const blur = abs > 1.35 ? Math.min(6.5, abs * 1.05) : 0;
 
       card.style.transform = `
         translate3d(calc(-50% + ${x}px), calc(-50% + ${y}px), ${z}px)

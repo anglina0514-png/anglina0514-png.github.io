@@ -100,7 +100,7 @@ const cases = {
   }
 };
 
-const stageSections = ["hero", "internship", "works", "about", "products", "final"];
+const stageSections = ["hero", "news", "works", "about", "products", "final"];
 const hudNumbers = [...document.querySelectorAll("[data-hud]")].reduce((map, node) => {
   map[node.dataset.hud] = node;
   return map;
@@ -141,6 +141,10 @@ const heroParticles = initHeroParticleTitle({
   text: "NING",
   reducedMotion
 });
+const outroCanvas = initOutroCanvas({
+  canvas: document.getElementById("outroCanvas"),
+  reducedMotion
+});
 
 initNavigation();
 initMagneticHover();
@@ -179,34 +183,34 @@ function updateScrollState() {
   const works = document.getElementById("works");
   const about = document.getElementById("about");
   const hero = document.getElementById("hero");
-  const internship = document.getElementById("internship");
+  const news = document.getElementById("news");
   const products = document.getElementById("products");
   const finalSection = document.getElementById("final");
 
   const worksProgress = sectionProgress(works);
   const aboutProgress = sectionProgress(about);
   const heroProgress = sectionProgress(hero);
-  const internshipProgress = sectionProgress(internship);
+  const newsProgress = sectionProgress(news);
   const productsProgress = sectionProgress(products);
   const finalProgress = sectionProgress(finalSection);
 
   document.documentElement.style.setProperty("--hero-progress", heroProgress.toFixed(4));
-  document.documentElement.style.setProperty("--news-progress", internshipProgress.toFixed(4));
-  document.documentElement.style.setProperty("--internship-progress", internshipProgress.toFixed(4));
+  document.documentElement.style.setProperty("--news-progress", newsProgress.toFixed(4));
   document.documentElement.style.setProperty("--works-progress", worksProgress.toFixed(4));
   document.documentElement.style.setProperty("--about-progress", aboutProgress.toFixed(4));
   document.documentElement.style.setProperty("--products-progress", productsProgress.toFixed(4));
+  document.documentElement.style.setProperty("--final-progress", finalProgress.toFixed(4));
   prismScene.setScroll?.({
     page: pageProgress,
     hero: heroProgress,
-    news: internshipProgress,
-    internship: internshipProgress,
+    news: newsProgress,
     works: worksProgress,
     about: aboutProgress,
     products: productsProgress,
     final: finalProgress
   });
   carousel.setProgress?.(worksProgress);
+  outroCanvas.setProgress?.(finalProgress);
   if (activeWorkCard) {
     const intensity = worksProgress > 0 && worksProgress < 1 ? smoothstep(0.06, 0.24, worksProgress) * (1 - smoothstep(0.9, 1, worksProgress)) : 0;
     applyWorkAccent(activeWorkCard, intensity);
@@ -214,8 +218,7 @@ function updateScrollState() {
   updateHud({
     page: pageProgress,
     hero: heroProgress,
-    news: internshipProgress,
-    internship: internshipProgress,
+    news: newsProgress,
     works: worksProgress,
     about: aboutProgress,
     products: productsProgress,
@@ -469,7 +472,7 @@ function renderMedia(media) {
 
 function updateHud(progress) {
   const page = progress.page;
-  const stageBias = progress.works * 0.42 + progress.products * 0.28 + progress.news * 0.14;
+  const stageBias = progress.works * 0.42 + progress.products * 0.28 + progress.news * 0.09;
   const qx = pointerState.y * -0.18 + progress.about * 0.11;
   const qy = pointerState.x * 0.22 + stageBias;
   const qz = Math.sin(page * Math.PI * 1.7) * 0.12;
@@ -664,6 +667,62 @@ function initHeroParticleTitle({ wrap, canvas, text, reducedMotion }) {
     },
     destroy() {
       cancelAnimationFrame(animationFrame);
+    }
+  };
+}
+
+function initOutroCanvas({ canvas, reducedMotion }) {
+  if (!canvas || reducedMotion) return {};
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return {};
+  let width = 1;
+  let height = 1;
+  let progress = 0;
+  let raf = 0;
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    width = Math.max(1, Math.floor(rect.width * Math.min(window.devicePixelRatio || 1, 1.5)));
+    height = Math.max(1, Math.floor(rect.height * Math.min(window.devicePixelRatio || 1, 1.5)));
+    canvas.width = width;
+    canvas.height = height;
+  }
+
+  function draw(time) {
+    ctx.clearRect(0, 0, width, height);
+    const t = time * 0.001;
+    const alpha = Math.min(1, Math.max(0, progress * 1.4));
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = "rgba(255,255,255,0.05)";
+    for (let y = 0; y < height; y += 18) {
+      ctx.fillRect(0, y + Math.sin(t + y * 0.01) * 6, width, 1);
+    }
+    ctx.font = `900 ${Math.max(90, width * 0.19)}px Arial, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    const shift = Math.sin(t * 0.7) * width * 0.012;
+    ctx.globalCompositeOperation = "lighter";
+    ctx.fillStyle = "rgba(96,220,255,0.18)";
+    ctx.fillText("NING", width / 2 + shift, height / 2);
+    ctx.fillStyle = "rgba(255,78,238,0.14)";
+    ctx.fillText("NING", width / 2 - shift, height / 2 + 2);
+    ctx.fillStyle = "rgba(255,255,255,0.28)";
+    ctx.fillText("NING", width / 2, height / 2);
+    ctx.globalCompositeOperation = "source-over";
+    raf = requestAnimationFrame(draw);
+  }
+
+  window.addEventListener("resize", resize);
+  resize();
+  raf = requestAnimationFrame(draw);
+
+  return {
+    setProgress(value) {
+      progress = clamp(value, 0, 1);
+    },
+    destroy() {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", resize);
     }
   };
 }
