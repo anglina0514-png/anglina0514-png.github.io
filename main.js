@@ -1,3 +1,4 @@
+import { initPrismScene } from "./prism-scene.js";
 import { createTransitionEngine } from "./transition-engine.js";
 import { createWorksCarousel } from "./works-carousel.js";
 
@@ -106,7 +107,10 @@ const hudNumbers = [...document.querySelectorAll("[data-hud]")].reduce((map, nod
 }, {});
 const hudOrb = document.querySelector("[data-hud-orb]");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const prismScene = createNoopStageScene();
+const prismScene = initPrismScene({
+  canvas: document.getElementById("prismCanvas"),
+  reducedMotion
+});
 const transitionEngine = createTransitionEngine({
   overlay: document.getElementById("transitionOverlay"),
   prismScene
@@ -518,17 +522,6 @@ function updateHudPointer() {
   const x = pointerState.x * 46;
   const y = pointerState.y * 46;
   hudOrb.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-}
-
-function createNoopStageScene() {
-  return {
-    setScroll() {},
-    setAccent() {},
-    setMaterialPreset() {},
-    triggerGlitch() {},
-    setPointer() {},
-    dispose() {}
-  };
 }
 
 function setHudValue(key, value, digits) {

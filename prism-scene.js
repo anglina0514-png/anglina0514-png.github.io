@@ -29,15 +29,18 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   scene.add(root);
   root.add(gridRoot, markRoot, spectralRoot, shardRoot);
 
+  const frostTexture = makeFrostTexture();
   const glassMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xe6faff,
+    color: 0xf3fbff,
     metalness: 0,
-    roughness: 0.08,
+    roughness: 0.035,
     transmission: 0.98,
-    thickness: 5.4,
-    ior: 1.92,
+    thickness: 6.2,
+    ior: 1.84,
     transparent: true,
-    opacity: 0.46,
+    opacity: 0.58,
+    alphaMap: frostTexture,
+    roughnessMap: frostTexture,
     clearcoat: 1,
     clearcoatRoughness: 0.01,
     reflectivity: 1,
@@ -176,7 +179,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     height = window.innerHeight;
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
-    camera.position.z = width < 720 ? 12.5 : 9.6;
+    camera.position.z = width < 720 ? 15.2 : 9.9;
     camera.updateProjectionMatrix();
   }
 
@@ -244,14 +247,14 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     root.rotation.x = THREE.MathUtils.lerp(root.rotation.x, -pointer.y * 0.05, 0.05);
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, pointer.x * 0.34 + productDepth * 0.55 - finalDepth * 0.28, 0.04);
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, 0.18 - scroll.page * 0.54 + newsDepth * 0.08, 0.04);
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, (width < 720 ? 12.5 : 9.2) - intro * 1.54 - stageDepth * 1.85 + finalDepth * 1.08, 0.035);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, (width < 720 ? 15.2 : 9.6) - intro * 1.28 - stageDepth * 1.85 + finalDepth * 1.08, 0.035);
 
     markRoot.rotation.y = (1 - intro) * -1.18 + drift * 0.038 + pointer.x * 0.1 + glitch + worksDepth * 0.44 - productDepth * 0.42;
     markRoot.rotation.x = (1 - intro) * 0.34 + Math.sin(drift * 0.28) * 0.018 - pointer.y * 0.052 + newsDepth * 0.04;
     markRoot.rotation.z = glitch * 0.7 + finalDepth * 0.1;
     markRoot.position.x = -0.12 * (1 - stageDepth) + productDepth * -0.42 + finalDepth * 0.28;
     markRoot.position.y = -0.04 + intro * 0.1 - scroll.page * 0.54 + Math.sin(drift * 0.58) * 0.022 + productDepth * 0.38;
-    markRoot.scale.setScalar((0.43 + intro * 0.31) * (1.01 + worksDepth * 0.02 - aboutFade * 0.16 + finalDepth * 0.08));
+    markRoot.scale.setScalar((0.52 + intro * 0.3) * (1.01 + worksDepth * 0.02 - aboutFade * 0.16 + finalDepth * 0.08));
     markRoot.visible = finalDepth < 0.94;
 
     spectralRoot.rotation.copy(markRoot.rotation);
@@ -271,8 +274,8 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     shardRoot.rotation.copy(markRoot.rotation);
     shardRoot.position.copy(markRoot.position);
     shardRoot.scale.copy(markRoot.scale);
-    logoNoise.rotation.z = -drift * 0.04 + glitch * 2;
-    logoNoise.material.opacity = (detailMix * 0.11 + (glitchActive ? 0.12 : 0)) * intro;
+    logoNoise.rotation.z = -drift * 0.035 + glitch * 2;
+    logoNoise.material.opacity = (0.18 + detailMix * 0.14 + (glitchActive ? 0.16 : 0)) * intro;
 
     gridRoot.rotation.y = drift * 0.016 + pointer.x * 0.035 - worksDepth * 0.54 + productDepth * 0.28;
     gridRoot.position.z = -stageDepth * 2.9;
@@ -287,13 +290,13 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       panel.material.opacity = (0.1 + stageDepth * 0.2 + Math.sin(drift * 0.34 + index) * 0.016) * (1 - finalDepth * 0.5);
     });
 
-    glassMaterial.opacity = Math.max(0.18, preset.opacity - worksDepth * 0.08 - aboutFade * 0.14 + productDepth * 0.06 + (glitchActive ? 0.1 : 0)) * intro;
-    glassMaterial.roughness = preset.roughness + worksDepth * 0.08 + productDepth * 0.06;
-    edgeMaterial.opacity = Math.max(0.24, 0.78 - worksDepth * 0.2 - aboutFade * 0.3);
+    glassMaterial.opacity = Math.max(0.26, preset.opacity + 0.08 - worksDepth * 0.06 - aboutFade * 0.12 + productDepth * 0.06 + (glitchActive ? 0.1 : 0)) * intro;
+    glassMaterial.roughness = Math.max(0.018, preset.roughness - 0.012 + worksDepth * 0.08 + productDepth * 0.06);
+    edgeMaterial.opacity = Math.max(0.34, 0.94 - worksDepth * 0.18 - aboutFade * 0.26);
     caustics.children.forEach((stripe, index) => {
-      stripe.position.y = Math.sin(drift * 0.8 + index * 1.8) * 0.18 + (index - 1.5) * 0.46;
+      stripe.position.y = stripe.userData.baseY + Math.sin(drift * 0.8 + index * 1.8) * 0.08;
       stripe.material.color.copy(new THREE.Color(index % 2 ? preset.secondary : preset.edge).lerp(accent.secondary, accentMix * 0.46));
-      stripe.material.opacity = (detailMix * (0.1 + Math.sin(drift * 1.2 + index) * 0.024)) * intro;
+      stripe.material.opacity = ((stripe.userData.baseOpacity || 0.14) + detailMix * 0.08 + Math.sin(drift * 1.2 + index) * 0.018) * intro;
     });
     fractureLines.material.opacity = (detailMix * 0.09 + (glitchActive ? 0.12 : 0)) * intro;
     surfaceBlocks.children.forEach((block, index) => {
@@ -334,9 +337,9 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
 function makeGlassN(material, edgeMaterial) {
   const group = new THREE.Group();
   const barSpecs = [
-    { x: -1.32, y: 0, length: 4.08, width: 0.68, rotation: 0 },
-    { x: 1.32, y: 0, length: 4.08, width: 0.68, rotation: 0 },
-    { x: 0, y: 0, length: 4.82, width: 0.72, rotation: -0.63 }
+    { x: -1.34, y: 0, length: 4.34, width: 0.72, rotation: 0 },
+    { x: 1.34, y: 0, length: 4.34, width: 0.72, rotation: 0 },
+    { x: 0, y: 0, length: 5.15, width: 0.76, rotation: -0.62 }
   ];
   barSpecs.forEach((spec) => {
     const mesh = makeBar(spec.x, spec.y, spec.length, spec.width, spec.rotation, material);
@@ -350,7 +353,24 @@ function makeGlassN(material, edgeMaterial) {
 }
 
 function makeBar(x, y, length, width, rotation, material) {
-  const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, length, 1.08, 1, 1, 1), material);
+  const shape = new THREE.Shape();
+  const halfWidth = width / 2;
+  const halfLength = length / 2;
+  shape.moveTo(-halfWidth, -halfLength);
+  shape.lineTo(halfWidth, -halfLength);
+  shape.lineTo(halfWidth, halfLength);
+  shape.lineTo(-halfWidth, halfLength);
+  shape.lineTo(-halfWidth, -halfLength);
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth: 1.18,
+    bevelEnabled: true,
+    bevelThickness: 0.15,
+    bevelSize: 0.14,
+    bevelSegments: 4,
+    curveSegments: 1
+  });
+  geometry.translate(0, 0, -0.59);
+  const mesh = new THREE.Mesh(geometry, material);
   mesh.position.set(x, y, 0.12);
   mesh.rotation.z = rotation;
   return mesh;
@@ -358,32 +378,43 @@ function makeBar(x, y, length, width, rotation, material) {
 
 function makeCausticStripes() {
   const group = new THREE.Group();
-  const colors = [0xffffff, 0x84f2ff, 0x6e7bff, 0xff54f1];
-  for (let i = 0; i < 4; i += 1) {
+  const colors = [0xffffff, 0xffffff, 0x84f2ff, 0x6e7bff, 0xff54f1, 0xffffff, 0x05060b];
+  const specs = [
+    { w: 5.55, h: 0.42, y: 0.15, x: 0.02, r: -0.08, opacity: 0.34 },
+    { w: 5.15, h: 0.22, y: 0.38, x: -0.1, r: -0.12, opacity: 0.24 },
+    { w: 4.65, h: 0.08, y: -0.12, x: 0.18, r: -0.04, opacity: 0.18 },
+    { w: 3.9, h: 0.1, y: -0.46, x: -0.25, r: -0.1, opacity: 0.16 },
+    { w: 3.65, h: 0.07, y: 0.72, x: 0.16, r: -0.15, opacity: 0.16 },
+    { w: 4.8, h: 0.16, y: -0.82, x: 0.05, r: -0.08, opacity: 0.12 },
+    { w: 2.6, h: 0.2, y: 0.0, x: 0.8, r: -0.04, opacity: 0.14 }
+  ];
+  specs.forEach((spec, i) => {
     const mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(4.4 - i * 0.38, 0.13),
+      new THREE.PlaneGeometry(spec.w, spec.h),
       new THREE.MeshBasicMaterial({
         color: colors[i],
         transparent: true,
-        opacity: 0.2,
-        blending: THREE.AdditiveBlending,
+        opacity: spec.opacity,
+        blending: i === specs.length - 1 ? THREE.NormalBlending : THREE.AdditiveBlending,
         depthWrite: false
       })
     );
-    mesh.position.set((i - 1.5) * 0.16, (i - 1.5) * 0.46, 0.56 + i * 0.01);
-    mesh.rotation.z = -0.1 + i * 0.025;
+    mesh.position.set(spec.x, spec.y, 0.7 + i * 0.012);
+    mesh.rotation.z = spec.r;
+    mesh.userData.baseY = spec.y;
+    mesh.userData.baseOpacity = spec.opacity;
     group.add(mesh);
-  }
+  });
   return group;
 }
 
 function makeFractureLines() {
   const points = [];
   const random = seededRandom(27);
-  for (let i = 0; i < 58; i += 1) {
-    const side = random() > 0.52 ? 1 : -1;
-    const x = side * (0.42 + random() * 1.15);
-    const y = -1.72 + random() * 3.44;
+  for (let i = 0; i < 88; i += 1) {
+    const point = sampleNPoint(random);
+    const x = point.x + (random() - 0.5) * 0.18;
+    const y = point.y + (random() - 0.5) * 0.18;
     const length = 0.24 + random() * 0.82;
     const angle = -0.86 + random() * 1.72;
     points.push(
@@ -395,9 +426,10 @@ function makeFractureLines() {
       0.64
     );
   }
-  for (let i = 0; i < 30; i += 1) {
-    const y = -1.58 + random() * 3.16;
-    const x = -0.58 + random() * 1.16;
+  for (let i = 0; i < 36; i += 1) {
+    const point = sampleNPoint(random, 2);
+    const x = point.x + (random() - 0.5) * 0.28;
+    const y = point.y + (random() - 0.5) * 0.28;
     points.push(x, y, 0.65, x + 0.58 + random() * 0.6, y - 0.4 + random() * 0.8, 0.65);
   }
   const geometry = new THREE.BufferGeometry();
@@ -416,7 +448,7 @@ function makeSurfaceBlocks() {
   const group = new THREE.Group();
   const random = seededRandom(91);
   const colors = [0xdfeaff, 0x76f3ff, 0x8d87ff, 0xffffff, 0x03040a, 0x11131e];
-  for (let i = 0; i < 36; i += 1) {
+  for (let i = 0; i < 62; i += 1) {
     const width = 0.18 + random() * 0.62;
     const height = 0.06 + random() * 0.3;
     const isDark = i % 6 > 3;
@@ -430,8 +462,9 @@ function makeSurfaceBlocks() {
     });
     const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, height), material);
     const column = i % 3;
-    mesh.position.x = column === 0 ? -1.28 + (random() - 0.5) * 0.32 : column === 1 ? (random() - 0.5) * 0.96 : 1.28 + (random() - 0.5) * 0.32;
-    mesh.position.y = -1.65 + random() * 3.3;
+    const point = sampleNPoint(random, column);
+    mesh.position.x = point.x + (random() - 0.5) * 0.22;
+    mesh.position.y = point.y + (random() - 0.5) * 0.24;
     mesh.position.z = 0.62;
     mesh.rotation.z = column === 1 ? -0.62 + (random() - 0.5) * 0.28 : (random() - 0.5) * 0.3;
     group.add(mesh);
@@ -594,13 +627,11 @@ function makeTunnelLines() {
 function makeLogoNoise() {
   const vertices = [];
   const random = seededRandom(717);
-  for (let i = 0; i < 520; i += 1) {
-    const row = i % 4;
-    const angle = random() * Math.PI * 2;
-    const radius = 0.55 + random() * (row === 0 ? 1.8 : 2.35);
+  for (let i = 0; i < 980; i += 1) {
+    const point = sampleNPoint(random);
     vertices.push(
-      Math.cos(angle) * radius,
-      Math.sin(angle) * radius * 0.82 + (random() - 0.5) * 0.45,
+      point.x + (random() - 0.5) * 0.32,
+      point.y + (random() - 0.5) * 0.32,
       (random() - 0.5) * 0.34
     );
   }
@@ -614,6 +645,61 @@ function makeLogoNoise() {
     blending: THREE.AdditiveBlending
   });
   return new THREE.Points(geometry, material);
+}
+
+function sampleNPoint(random, preferredBar) {
+  const bar = preferredBar ?? Math.floor(random() * 3);
+  const width = bar === 1 ? 0.76 : 0.72;
+  const length = bar === 1 ? 5.15 : 4.34;
+  const localX = (random() - 0.5) * width;
+  const localY = (random() - 0.5) * length;
+  if (bar === 0) return { x: -1.34 + localX, y: localY };
+  if (bar === 2) return { x: 1.34 + localX, y: localY };
+  const rotation = -0.62;
+  const cos = Math.cos(rotation);
+  const sin = Math.sin(rotation);
+  return {
+    x: localX * cos - localY * sin,
+    y: localX * sin + localY * cos
+  };
+}
+
+function makeFrostTexture() {
+  const size = 256;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  const image = ctx.createImageData(size, size);
+  const random = seededRandom(2407);
+  for (let i = 0; i < image.data.length; i += 4) {
+    const grain = random();
+    const bright = grain > 0.82 ? 255 : grain > 0.6 ? 210 : 155 + grain * 60;
+    image.data[i] = bright;
+    image.data[i + 1] = bright;
+    image.data[i + 2] = bright;
+    image.data[i + 3] = grain > 0.16 ? 230 : 150;
+  }
+  ctx.putImageData(image, 0, 0);
+  ctx.globalAlpha = 0.55;
+  ctx.fillStyle = "#fff";
+  for (let i = 0; i < 46; i += 1) {
+    const x = random() * size;
+    const y = random() * size;
+    const w = 8 + random() * 42;
+    const h = 2 + random() * 9;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((random() - 0.5) * 0.5);
+    ctx.fillRect(-w / 2, -h / 2, w, h);
+    ctx.restore();
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(2.4, 2.4);
+  texture.needsUpdate = true;
+  return texture;
 }
 
 function makeStars() {

@@ -93,17 +93,13 @@ button {
     #000;
 }
 
-.spline-stage {
+#prismCanvas {
   position: absolute;
-  left: 0;
-  top: -118px;
+  inset: 0;
   z-index: 1;
-  width: 100vw;
-  height: calc(100vh + 118px);
-  border: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  transform: scale(1.02);
-  transform-origin: 50% 45%;
 }
 
 .webgl-space::before {
@@ -139,7 +135,7 @@ button {
   left: 50%;
   transform: translateX(-50%);
   width: max-content;
-  z-index: 1;
+  z-index: 0;
   color: rgba(255, 255, 255, 0.32);
   -webkit-text-stroke: 0;
   font-weight: 950;
@@ -150,19 +146,19 @@ button {
   filter:
     drop-shadow(0 0 36px rgba(255, 255, 255, 0.12))
     blur(calc(var(--news-progress) * 1.4px));
-  opacity: calc(0.38 - var(--news-progress) * 0.2 - var(--about-progress) * 0.24);
+  opacity: calc(0.5 - var(--news-progress) * 0.22 - var(--about-progress) * 0.24);
 }
 
 .depth-word-top {
-  left: 39%;
-  top: 52vh;
-  font-size: clamp(116px, 26vw, 460px);
-  transform: translateX(-50%) scaleX(0.94);
+  left: 51%;
+  top: 48vh;
+  font-size: clamp(168px, 34vw, 620px);
+  transform: translateX(-50%) translateY(-50%) scaleX(1.08);
 }
 
 .depth-word-bottom {
-  bottom: 9vh;
-  font-size: clamp(96px, 20vw, 330px);
+  bottom: -3vh;
+  font-size: clamp(112px, 23vw, 420px);
   color: transparent;
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.055);
   opacity: calc(var(--works-progress) * 0.78);

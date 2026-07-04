@@ -9,17 +9,14 @@
   <meta property="og:description" content="以 NING 为核心的固定 WebGL 舞台作品集。">
   <meta property="og:image" content="https://xuzhining.top/assets/media/ue5-poster.jpg">
   <link rel="icon" href="data:,">
+  <link rel="preload" href="vendor/three.module.js" as="script" crossorigin>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="webgl-space" aria-hidden="true">
-    <iframe
-      class="spline-stage"
-      src="https://app.spline.design/ui/d8674bb2-37f2-4d2f-8f84-cdc8bb6855e6?view=preview"
-      title="Ning N Glass Motion"
-      loading="eager"
-      allow="fullscreen"
-    ></iframe>
+    <canvas id="prismCanvas"></canvas>
+    <div class="depth-word depth-word-top">NING</div>
+    <div class="depth-word depth-word-bottom">NING</div>
     <div class="scanline-layer"></div>
   </div>
 
@@ -75,7 +72,7 @@
       <div class="hero-news" aria-label="最新动态">
         <p>最新动态</p>
         <time datetime="2026-07-04">2026 07.04</time>
-        <a href="#news">Spline 玻璃 N 已接入</a>
+        <a href="#news">玻璃 N 主视觉重建</a>
       </div>
     </section>
 
@@ -87,8 +84,8 @@
       <div class="news-list" aria-label="最新动态">
         <article>
           <time datetime="2026-07-04">2026.07.04</time>
-          <h3>Spline 玻璃 N 接入首页</h3>
-          <p>用可嵌入的 Spline 动效替换旧 WebGL 主视觉，让首屏更聚焦在 NING 的玻璃标识。</p>
+          <h3>玻璃 N 主视觉重建</h3>
+          <p>参考 Alche 的玻璃标识质感，重做 NING 首屏的折射、噪点、色散边缘和暗场网格。</p>
         </article>
         <article>
           <time datetime="2026-07-03">2026.07.03</time>
