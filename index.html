@@ -9,14 +9,17 @@
   <meta property="og:description" content="以 NING 为核心的固定 WebGL 舞台作品集。">
   <meta property="og:image" content="https://xuzhining.top/assets/media/ue5-poster.jpg">
   <link rel="icon" href="data:,">
-  <link rel="preload" href="vendor/three.module.js" as="script" crossorigin>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="webgl-space" aria-hidden="true">
-    <canvas id="prismCanvas"></canvas>
-    <div class="depth-word depth-word-top">NING</div>
-    <div class="depth-word depth-word-bottom">WORKS</div>
+    <iframe
+      class="spline-stage"
+      src="https://app.spline.design/ui/d8674bb2-37f2-4d2f-8f84-cdc8bb6855e6?view=preview"
+      title="Ning N Glass Motion"
+      loading="eager"
+      allow="fullscreen"
+    ></iframe>
     <div class="scanline-layer"></div>
   </div>
 
@@ -30,69 +33,35 @@
       <span>NING</span>
     </a>
     <nav class="site-nav">
-      <a class="nav-link magnetic" href="#news">News</a>
-      <a class="nav-link magnetic" href="#works">Works</a>
-      <a class="nav-link magnetic" href="#about">About</a>
-      <a class="nav-link magnetic" href="#products">Products</a>
+      <a class="nav-link magnetic" href="#news">动态</a>
+      <a class="nav-link magnetic" href="#works">作品</a>
+      <a class="nav-link magnetic" href="#about">关于</a>
+      <a class="nav-link magnetic" href="#products">产品</a>
     </nav>
     <div class="utility-nav" aria-label="快捷入口">
-      <a class="magnetic" href="新媒体运营经历-许智宁.pdf" download>Resume</a>
-      <a class="magnetic" href="mailto:anglina0514@gmail.com">Contact</a>
+      <a class="magnetic" href="新媒体运营经历-许智宁.pdf" download>简历</a>
+      <a class="magnetic" href="mailto:anglina0514@gmail.com">联系</a>
     </div>
   </header>
 
   <aside class="section-rail" aria-hidden="true">
-    <span>TOP</span>
-    <span>WORKS</span>
-    <span>ABOUT</span>
-    <span>VISION</span>
-    <span>SERVICE</span>
-    <span>PRODUCTS</span>
-  </aside>
-
-  <aside class="stage-hud" aria-label="WebGL 技术参数面板">
-    <div class="hud-block hud-quaternion">
-      <p>MainLogo Quaternion</p>
-      <dl>
-        <div><dt>x</dt><dd data-hud="qx">0.000</dd></div>
-        <div><dt>y</dt><dd data-hud="qy">0.000</dd></div>
-        <div><dt>z</dt><dd data-hud="qz">0.000</dd></div>
-        <div><dt>w</dt><dd data-hud="qw">1.000</dd></div>
-      </dl>
-    </div>
-    <div class="hud-orbit hud-quaternion-orbit">
-      <span class="hud-axis hud-axis-x"></span>
-      <span class="hud-axis hud-axis-y"></span>
-      <span class="hud-axis hud-axis-z"></span>
-      <i data-hud-orb></i>
-    </div>
-    <div class="hud-block hud-material">
-      <p>MainLogo Material</p>
-      <dl>
-        <div><dt>roughness</dt><dd data-hud="roughness">0.03</dd></div>
-        <div><dt>noiseScale</dt><dd data-hud="noise">1.00</dd></div>
-        <div><dt>ior</dt><dd>1.68</dd></div>
-        <div><dt>color</dt><dd data-hud="material">Ice Blue</dd></div>
-      </dl>
-      <div class="material-palette" aria-label="MainLogo Material color">
-        <button class="material-swatch is-active" type="button" data-material="ice" aria-label="Ice Blue"></button>
-        <button class="material-swatch" type="button" data-material="white" aria-label="White Glass"></button>
-        <button class="material-swatch" type="button" data-material="violet" aria-label="Violet"></button>
-        <button class="material-swatch" type="button" data-material="carbon" aria-label="Carbon Blue"></button>
-      </div>
-    </div>
-    <button class="hud-reset hud-quaternion-reset magnetic" type="button" id="resetStage">Reset Quaternion</button>
+    <span>顶部</span>
+    <span>作品</span>
+    <span>关于</span>
+    <span>视觉</span>
+    <span>服务</span>
+    <span>产品</span>
   </aside>
 
   <main class="stage-flow">
     <section class="hero-section stage-section" id="hero" data-section="hero">
       <div class="hero-lockup" data-parallax="0.08">
-        <p class="system-label">Immersive Media Portfolio</p>
+        <p class="system-label">沉浸式视觉作品集</p>
         <h1 class="hero-word" id="heroParticleTitle" aria-label="NING">
           <canvas id="heroParticleTitleCanvas" class="hero-particle-canvas" aria-hidden="true"></canvas>
           <span>N</span><span>I</span><span>N</span><span>G</span>
         </h1>
-        <p class="hero-line">Build media systems that move attention</p>
+        <p class="hero-line">用 AI 影像、实时场景和互动产品组织注意力</p>
       </div>
       <div class="hero-caption" aria-hidden="true">
         <span>AI</span>
@@ -104,33 +73,32 @@
         <span>Visual Storytelling</span>
       </div>
       <div class="hero-news" aria-label="最新动态">
-        <p>News</p>
+        <p>最新动态</p>
         <time datetime="2026-07-04">2026 07.04</time>
-        <a href="#news">NING WebGL stage rebuild</a>
+        <a href="#news">Spline 玻璃 N 已接入</a>
       </div>
-      <div class="scroll-cue" aria-hidden="true">scroll to explore -></div>
     </section>
 
     <section class="news-section stage-section" id="news" data-section="news">
       <div class="section-copy">
-        <p class="system-label">News</p>
-        <h2>Recent signals from the system</h2>
+        <p class="system-label">动态</p>
+        <h2>最近更新</h2>
       </div>
       <div class="news-list" aria-label="最新动态">
         <article>
           <time datetime="2026-07-04">2026.07.04</time>
-          <h3>NING WebGL 舞台重构</h3>
-          <p>Fixed stage rebuild with glass N, curved grid wall and Alche-style scroll states.</p>
+          <h3>Spline 玻璃 N 接入首页</h3>
+          <p>用可嵌入的 Spline 动效替换旧 WebGL 主视觉，让首屏更聚焦在 NING 的玻璃标识。</p>
         </article>
         <article>
           <time datetime="2026-07-03">2026.07.03</time>
           <h3>马克思主义宣传视频</h3>
-          <p>Theory visual film added to Works.</p>
+          <p>理论视觉短片已接入作品区，支持预览与详情查看。</p>
         </article>
         <article>
           <time datetime="2026-07-02">2026.07.02</time>
           <h3>知投学堂与视觉游戏可在线体验</h3>
-          <p>Product prototype and H5 interactive risk game are now connected.</p>
+          <p>投教产品原型和防网贷互动游戏已接入产品入口，可直接打开体验。</p>
         </article>
       </div>
     </section>
