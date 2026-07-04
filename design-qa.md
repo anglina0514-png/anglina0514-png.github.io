@@ -1,27 +1,32 @@
 # Design QA
 
-Source visual target: `https://alche.studio/`
+Source visual: attached Veldara-style HTML reference in `/Users/ning/.codex/attachments/872aec97-34bd-4383-a435-773fccb6b884/pasted-text.txt`.
 
-Prototype checked: `http://127.0.0.1:8800/`
+Prototype: local static site at `http://127.0.0.1:8794/`.
 
-## Checks
+## Checked Viewports
 
-- Fixed black WebGL stage with curved grid wall, giant depth words, glass N mark, and silver/blue/purple refraction language.
-- First-load entrance animation fades from black into the WebGL stage.
-- Glass N uses 3D thickness, RGB separation, internal fracture lines, surface reflection blocks, and moving light bands.
-- First viewport now keeps the Alche-style hierarchy: giant glass N, faint NING depth word, small lower-left Internship cue, and right-side `scroll to explore ->`.
-- Navigation maps to `Internship / Works / About / Products` with right utility `Resume / Contact`.
-- Right technical panel is visible only on the first/Top viewport and hides after entering later sections.
-- Hero keeps the NING flowing particle word.
-- The former `News / Signals` page is replaced by internship project experience.
-- Works preview videos keep `autoplay muted playsinline loop` and have a JS replay fallback on load, scroll, and first interaction; detail modal videos also start muted autoplay with controls.
-- Works uses 8 project screens in an Alche-style stepped spatial corridor.
-- Works focus updates the visible counter/title and drives blue/purple/silver accent color shifts per project.
-- A transparent front-screen hit area keeps the 3D stair card click reliable while preserving the visual composition.
-- Footer ending is labeled `ContactMe` and includes a minimal mail link plus copyright only.
-- Internship, About, Products, and Footer use NING content without dashboard/contact-CTA blocks.
-- Mobile viewport hides the technical panel, keeps navigation usable, and has no horizontal overflow.
+- Desktop: 1440 x 900
+- Mobile: 390 x 844
 
-## Result
+## Match Notes
 
-final result: passed
+- Fixed full-screen scroll video background is implemented with a local NING video asset.
+- Navigation is simplified to the reference-style transparent top bar.
+- Hero uses Inter, compact subtitle, large centered headline, blue underline emphasis, code-style CTA, and blue primary CTA.
+- Particle overlay is present and subtle.
+- News section is converted into a trigger zone so the bottom fixed cards can carry the visual rhythm.
+- Three fixed cards reveal during scroll with mask-based progressive reveal.
+- Existing 8 Works, modal opening, About experience, Products, and ContactMe are preserved.
+
+## QA Results
+
+- Static JS checks passed for `main.js`, `prism-scene.js`, `transition-engine.js`, and `works-carousel.js`.
+- Desktop has no horizontal overflow.
+- Mobile has no horizontal overflow.
+- Works count remains 8.
+- Preview videos still autoplay muted.
+- Case modal opens successfully.
+- HUD and left rail remain hidden.
+
+Final result: passed

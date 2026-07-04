@@ -20,11 +20,36 @@
     <div class="scanline-layer"></div>
   </div>
 
+  <div id="scroll-video-container" aria-hidden="true">
+    <canvas id="scrollVideoCanvas"></canvas>
+    <video id="scrollVideoFallback" muted playsinline preload="auto" poster="assets/media/dragon-poster.jpg" src="assets/media/dragon-hero-loop.mp4"></video>
+    <div class="scroll-video-overlay"></div>
+  </div>
+
+  <canvas id="particlesCanvas" aria-hidden="true"></canvas>
+
+  <div id="fixed-cards" aria-label="能力摘要">
+    <div class="fixed-card-grid">
+      <article>
+        <h3>AI Film Systems</h3>
+        <p>把脚本、分镜、角色连续性和首尾帧控制组织成可复用的 AI 影像制作流程。</p>
+      </article>
+      <article>
+        <h3>Product Proofs</h3>
+        <p>知投学堂、防网贷视觉游戏和互动原型都保留可打开、可验证的体验入口。</p>
+      </article>
+      <article>
+        <h3>Research Ops</h3>
+        <p>传媒行研、内容增长和数据清洗经验沉淀为可追踪的研究与运营材料。</p>
+      </article>
+    </div>
+  </div>
+
   <div class="transition-overlay" id="transitionOverlay" aria-hidden="true">
     <div class="transition-grid"></div>
   </div>
 
-  <header class="site-header liquid-glass" aria-label="主导航">
+  <header class="site-header" aria-label="主导航">
     <a class="brand-lockup magnetic" href="#hero" aria-label="返回 NING 首页">
       <span class="brand-mark">N</span>
       <span>NING</span>
@@ -86,19 +111,20 @@
 
   <main class="stage-flow">
     <section class="hero-section stage-section" id="hero" data-section="hero">
-      <video id="heroBackgroundVideo" class="hero-background-video" muted autoplay playsinline preload="auto" poster="assets/media/dragon-poster.jpg">
-        <source src="assets/media/dragon-hero-loop.mp4" type="video/mp4">
-      </video>
-      <div class="hero-video-vignette" aria-hidden="true"></div>
       <div class="hero-lockup" data-parallax="0.04">
-        <p class="system-label">Immersive Media Portfolio</p>
+        <p class="system-label">NING Purpose:</p>
         <h1 class="hero-title">
-          Build media <em>systems</em>
+          Build media systems that move
+          <span class="underlined"><span class="line"></span><span>attention</span></span>
+          on the web.
         </h1>
         <p class="hero-line">AI content growth, visual storytelling, trading research and interactive product proofs.</p>
         <div class="hero-actions">
-          <a class="hero-action liquid-glass magnetic" href="mailto:anglina0514@gmail.com">ContactMe</a>
-          <a class="hero-action liquid-glass magnetic" href="#works">View Works</a>
+          <div class="code-box" aria-hidden="true">
+            <span class="prompt">&gt;</span>
+            <code>open ning --works</code>
+          </div>
+          <a class="hero-action magnetic" href="#works">View Works <span>-></span></a>
         </div>
       </div>
       <div class="hero-caption" aria-hidden="true">
