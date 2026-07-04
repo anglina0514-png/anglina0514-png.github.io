@@ -100,7 +100,7 @@ const cases = {
   }
 };
 
-const stageSections = ["hero", "news", "works", "about", "products", "final"];
+const stageSections = ["hero", "internship", "works", "about", "products", "final"];
 const hudNumbers = [...document.querySelectorAll("[data-hud]")].reduce((map, node) => {
   map[node.dataset.hud] = node;
   return map;
@@ -148,6 +148,7 @@ initParallax();
 initModal();
 initProductButtons();
 initWorkHitbox();
+initAutoplayVideos();
 updateScrollState();
 
 window.addEventListener("scroll", requestScrollUpdate, { passive: true });
@@ -178,26 +179,28 @@ function updateScrollState() {
   const works = document.getElementById("works");
   const about = document.getElementById("about");
   const hero = document.getElementById("hero");
-  const news = document.getElementById("news");
+  const internship = document.getElementById("internship");
   const products = document.getElementById("products");
   const finalSection = document.getElementById("final");
 
   const worksProgress = sectionProgress(works);
   const aboutProgress = sectionProgress(about);
   const heroProgress = sectionProgress(hero);
-  const newsProgress = sectionProgress(news);
+  const internshipProgress = sectionProgress(internship);
   const productsProgress = sectionProgress(products);
   const finalProgress = sectionProgress(finalSection);
 
   document.documentElement.style.setProperty("--hero-progress", heroProgress.toFixed(4));
-  document.documentElement.style.setProperty("--news-progress", newsProgress.toFixed(4));
+  document.documentElement.style.setProperty("--news-progress", internshipProgress.toFixed(4));
+  document.documentElement.style.setProperty("--internship-progress", internshipProgress.toFixed(4));
   document.documentElement.style.setProperty("--works-progress", worksProgress.toFixed(4));
   document.documentElement.style.setProperty("--about-progress", aboutProgress.toFixed(4));
   document.documentElement.style.setProperty("--products-progress", productsProgress.toFixed(4));
   prismScene.setScroll?.({
     page: pageProgress,
     hero: heroProgress,
-    news: newsProgress,
+    news: internshipProgress,
+    internship: internshipProgress,
     works: worksProgress,
     about: aboutProgress,
     products: productsProgress,
@@ -211,7 +214,8 @@ function updateScrollState() {
   updateHud({
     page: pageProgress,
     hero: heroProgress,
-    news: newsProgress,
+    news: internshipProgress,
+    internship: internshipProgress,
     works: worksProgress,
     about: aboutProgress,
     products: productsProgress,
@@ -338,6 +342,36 @@ function initWorkHitbox() {
   });
 }
 
+function initAutoplayVideos() {
+  const previewVideos = [...document.querySelectorAll(".work-card video[autoplay]")];
+  if (!previewVideos.length) return;
+
+  const playAll = () => {
+    previewVideos.forEach(tryPlayVideo);
+  };
+
+  previewVideos.forEach((video) => {
+    video.addEventListener("loadeddata", () => tryPlayVideo(video), { once: true });
+    video.addEventListener("canplay", () => tryPlayVideo(video), { once: true });
+    tryPlayVideo(video);
+  });
+
+  ["pointerdown", "touchstart", "scroll"].forEach((eventName) => {
+    window.addEventListener(eventName, playAll, { passive: true });
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) playAll();
+  });
+}
+
+function tryPlayVideo(video) {
+  video.muted = true;
+  video.defaultMuted = true;
+  video.playsInline = true;
+  const playPromise = video.play();
+  if (playPromise?.catch) playPromise.catch(() => {});
+}
+
 function initModal() {
   document.querySelectorAll("[data-close-modal]").forEach((node) => {
     node.addEventListener("click", closeModal);
@@ -355,6 +389,7 @@ function openCase(id) {
   modal.classList.add("is-open");
   modal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
+  modalContent.querySelectorAll("video[autoplay]").forEach(tryPlayVideo);
 }
 
 function closeModal() {
@@ -412,7 +447,7 @@ function renderMedia(media) {
   if (media.type === "video") {
     return `
       <div class="modal-media">
-        <video controls playsinline preload="metadata" poster="${media.poster || ""}">
+        <video controls autoplay muted playsinline preload="auto" poster="${media.poster || ""}">
           <source src="${media.src}" type="video/mp4">
         </video>
       </div>
