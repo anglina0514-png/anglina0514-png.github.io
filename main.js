@@ -161,6 +161,7 @@ initProductButtons();
 initWorkHitbox();
 initMaterialControls();
 initAutoplayVideos();
+initHeroBackgroundVideo();
 updateScrollState();
 
 window.addEventListener("scroll", requestScrollUpdate, { passive: true });
@@ -404,6 +405,58 @@ function tryPlayVideo(video) {
   video.playsInline = true;
   const playPromise = video.play();
   if (playPromise?.catch) playPromise.catch(() => {});
+}
+
+function initHeroBackgroundVideo() {
+  const video = document.getElementById("heroBackgroundVideo");
+  if (!video) return;
+
+  let fadeFrame = 0;
+  let fadingOut = false;
+
+  const fadeTo = (target, duration = 620) => {
+    cancelAnimationFrame(fadeFrame);
+    const from = Number.parseFloat(video.style.opacity || getComputedStyle(video).opacity || "0");
+    const start = performance.now();
+
+    const tick = (now) => {
+      const progress = clamp((now - start) / duration, 0, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      video.style.opacity = (from + (target - from) * eased).toFixed(3);
+      if (progress < 1) fadeFrame = requestAnimationFrame(tick);
+    };
+
+    fadeFrame = requestAnimationFrame(tick);
+  };
+
+  const playFromStart = () => {
+    fadingOut = false;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    const promise = video.play();
+    if (promise?.catch) promise.catch(() => {});
+    fadeTo(1, 720);
+  };
+
+  video.addEventListener("canplay", playFromStart, { once: true });
+  video.addEventListener("timeupdate", () => {
+    if (!video.duration || fadingOut) return;
+    if (video.duration - video.currentTime <= 0.8) {
+      fadingOut = true;
+      fadeTo(0, 520);
+    }
+  });
+  video.addEventListener("ended", () => {
+    video.currentTime = 0;
+    window.setTimeout(playFromStart, 120);
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && video.paused) playFromStart();
+  });
+
+  tryPlayVideo(video);
+  if (video.readyState >= 3) playFromStart();
 }
 
 function initModal() {
