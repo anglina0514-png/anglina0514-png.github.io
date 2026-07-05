@@ -253,8 +253,8 @@ function updateScrollState() {
   const finalSection = document.getElementById("final");
 
   const worksProgress = sectionProgress(works);
-  const worksCardsVisible = smoothstep(0.12, 0.24, worksProgress);
-  const worksCarouselProgress = clamp((worksProgress - 0.18) / 0.82, 0, 1);
+  const worksCardsVisible = 0.58 + smoothstep(0.04, 0.18, worksProgress) * 0.42;
+  const worksCarouselProgress = clamp((worksProgress - 0.1) / 0.9, 0, 1);
   const aboutProgress = sectionProgress(about);
   const heroProgress = sectionProgress(hero);
   const newsProgress = sectionProgress(news);
@@ -266,7 +266,7 @@ function updateScrollState() {
   document.documentElement.style.setProperty("--works-progress", worksProgress.toFixed(4));
   document.documentElement.style.setProperty("--works-cards-visible", worksCardsVisible.toFixed(4));
   document.documentElement.style.setProperty("--works-carousel-progress", worksCarouselProgress.toFixed(4));
-  document.body.classList.toggle("works-cards-ready", worksCardsVisible > 0.45);
+  document.body.classList.toggle("works-cards-ready", worksCardsVisible > 0.5);
   document.documentElement.style.setProperty("--about-progress", aboutProgress.toFixed(4));
   document.documentElement.style.setProperty("--products-progress", productsProgress.toFixed(4));
   document.documentElement.style.setProperty("--final-progress", finalProgress.toFixed(4));
