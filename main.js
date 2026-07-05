@@ -275,10 +275,10 @@ function applyWorkAccent(card, intensity = 1) {
   document.documentElement.style.setProperty("--work-accent", accent);
   document.documentElement.style.setProperty("--work-accent-alt", accentAlt);
   document.documentElement.style.setProperty("--work-accent-strength", amount.toFixed(3));
-  document.documentElement.style.setProperty("--work-accent-soft", `${Math.round(amount * 24)}%`);
-  document.documentElement.style.setProperty("--work-accent-mid", `${Math.round(amount * 38)}%`);
-  document.documentElement.style.setProperty("--work-accent-strong", `${Math.round(amount * 54)}%`);
-  document.documentElement.style.setProperty("--work-accent-max", `${Math.round(amount * 72)}%`);
+  document.documentElement.style.setProperty("--work-accent-soft", `${Math.round(amount * 34)}%`);
+  document.documentElement.style.setProperty("--work-accent-mid", `${Math.round(amount * 52)}%`);
+  document.documentElement.style.setProperty("--work-accent-strong", `${Math.round(amount * 72)}%`);
+  document.documentElement.style.setProperty("--work-accent-max", `${Math.round(amount * 86)}%`);
   prismScene.setAccent?.(accent, accentAlt, amount);
 }
 
@@ -303,12 +303,12 @@ function initAmbientStage() {
     const t = time * 0.001;
     const accentHue = hueFromHex(activeAccent.primary);
     const sectionHue = baseHues[activeStageSection] ?? 214;
-    const workBlend = activeStageSection === "works" ? activeAccent.strength : activeStageSection === "products" ? 0.28 : 0;
+    const workBlend = activeStageSection === "works" ? Math.min(0.92, activeAccent.strength * 1.18) : activeStageSection === "products" ? 0.28 : 0;
     const drift = Math.sin(t * 0.18) * 18 + Math.sin(t * 0.07 + 1.4) * 10;
     const hue = normalizeHue(lerp(sectionHue + drift, accentHue + Math.sin(t * 0.22) * 8, workBlend));
     const strength = activeStageSection === "about"
       ? 0.12 + Math.sin(t * 0.2) * 0.02
-      : 0.24 + activeAccent.strength * 0.38 + Math.max(0, Math.sin(t * 0.16)) * 0.08;
+      : 0.24 + activeAccent.strength * 0.5 + Math.max(0, Math.sin(t * 0.16)) * 0.08;
     document.documentElement.style.setProperty("--ambient-hue", hue.toFixed(1));
     document.documentElement.style.setProperty("--ambient-shift", Math.sin(t * 0.13).toFixed(3));
     document.documentElement.style.setProperty("--ambient-strength", clamp(strength, 0.08, 0.72).toFixed(3));
