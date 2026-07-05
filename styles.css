@@ -13,6 +13,8 @@
   --hero-progress: 0;
   --news-progress: 0;
   --works-progress: 0;
+  --works-cards-visible: 0;
+  --works-carousel-progress: 0;
   --about-progress: 0;
   --products-progress: 0;
   --work-accent: #6078ff;
@@ -919,16 +921,22 @@ body:not([data-active-section="hero"]) .hero-news {
   position: absolute;
   z-index: 3;
   left: clamp(24px, 7vw, 126px);
-  top: clamp(108px, 16vh, 168px);
-  max-width: 360px;
+  top: clamp(138px, 20vh, 220px);
+  max-width: min(640px, 70vw);
   pointer-events: none;
-  opacity: max(0, calc(1 - var(--works-progress) * 4.2));
+  opacity: max(0, calc(1 - var(--works-cards-visible) * 0.72));
+  transform:
+    translate3d(0, calc((1 - var(--works-cards-visible)) * 14vh), 0)
+    scale(calc(1 + (1 - var(--works-cards-visible)) * 0.18));
+  transform-origin: left center;
+  filter: drop-shadow(0 18px 44px rgba(0, 0, 0, 0.42));
+  transition: filter 180ms ease;
 }
 
 .works-title h2 {
   margin: 0;
-  font-size: clamp(26px, 3vw, 46px);
-  line-height: 0.98;
+  font-size: clamp(34px, 6.4vw, 112px);
+  line-height: 0.88;
   letter-spacing: 0;
 }
 
@@ -936,7 +944,9 @@ body:not([data-active-section="hero"]) .hero-news {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
-  transform: translateZ(0);
+  transform: translate3d(0, calc((1 - var(--works-cards-visible)) * 10vh), 0);
+  opacity: var(--works-cards-visible);
+  transition: opacity 220ms ease, transform 220ms ease;
 }
 
 .work-hitbox {
@@ -951,6 +961,12 @@ body:not([data-active-section="hero"]) .hero-news {
   border: 0;
   background: transparent;
   cursor: pointer;
+  opacity: var(--works-cards-visible);
+  pointer-events: none;
+}
+
+body.works-cards-ready .work-hitbox {
+  pointer-events: auto;
 }
 
 .work-hitbox:focus-visible {
@@ -1113,7 +1129,7 @@ body:not([data-active-section="hero"]) .hero-news {
   color: rgba(255, 255, 255, 0.7);
   font-family: var(--font-mono);
   font-size: 15px;
-  opacity: min(1, calc(var(--works-progress) * 3.2));
+  opacity: var(--works-cards-visible);
 }
 
 .works-hint::after {

@@ -253,6 +253,8 @@ function updateScrollState() {
   const finalSection = document.getElementById("final");
 
   const worksProgress = sectionProgress(works);
+  const worksCardsVisible = smoothstep(0.12, 0.24, worksProgress);
+  const worksCarouselProgress = clamp((worksProgress - 0.18) / 0.82, 0, 1);
   const aboutProgress = sectionProgress(about);
   const heroProgress = sectionProgress(hero);
   const newsProgress = sectionProgress(news);
@@ -262,6 +264,9 @@ function updateScrollState() {
   document.documentElement.style.setProperty("--hero-progress", heroProgress.toFixed(4));
   document.documentElement.style.setProperty("--news-progress", newsProgress.toFixed(4));
   document.documentElement.style.setProperty("--works-progress", worksProgress.toFixed(4));
+  document.documentElement.style.setProperty("--works-cards-visible", worksCardsVisible.toFixed(4));
+  document.documentElement.style.setProperty("--works-carousel-progress", worksCarouselProgress.toFixed(4));
+  document.body.classList.toggle("works-cards-ready", worksCardsVisible > 0.45);
   document.documentElement.style.setProperty("--about-progress", aboutProgress.toFixed(4));
   document.documentElement.style.setProperty("--products-progress", productsProgress.toFixed(4));
   document.documentElement.style.setProperty("--final-progress", finalProgress.toFixed(4));
@@ -274,10 +279,10 @@ function updateScrollState() {
     products: productsProgress,
     final: finalProgress
   });
-  carousel.setProgress?.(worksProgress);
+  carousel.setProgress?.(worksCarouselProgress);
   outroCanvas.setProgress?.(finalProgress);
   if (activeWorkCard) {
-    const intensity = worksProgress > 0 && worksProgress < 1 ? smoothstep(0.06, 0.24, worksProgress) * (1 - smoothstep(0.9, 1, worksProgress)) : 0;
+    const intensity = worksCardsVisible * (1 - smoothstep(0.9, 1, worksProgress));
     applyWorkAccent(activeWorkCard, intensity);
   }
   updateHud({
