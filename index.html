@@ -137,10 +137,6 @@
 
     <section class="works-section stage-section" id="works" data-section="works">
       <div class="works-sticky">
-        <div class="works-title">
-          <p class="system-label">作品</p>
-          <h2>作品介绍</h2>
-        </div>
         <div class="works-ghost-strip" aria-hidden="true">
           <span>NING</span>
           <span>NING</span>
@@ -156,6 +152,10 @@
           <span>N</span>
         </div>
         <div class="work-track" id="workCarousel" aria-label="精选作品滚动轨道">
+          <div class="works-title">
+            <p class="system-label">作品</p>
+            <h2>作品介绍</h2>
+          </div>
           <article class="work-card" data-case="dragon" data-accent="#b78a46" data-accent-alt="#384bff">
             <div class="work-media">
               <video autoplay muted playsinline loop preload="metadata" poster="assets/media/dragon-poster.jpg">
@@ -266,17 +266,45 @@
     </section>
 
     <section class="about-section stage-section" id="about" data-section="about">
-      <div class="vision-strip">
-        <article data-scroll-reveal>
-          <p class="system-label">技能</p>
-          <h3>AI 影像与内容运营</h3>
-          <span>Sora / Midjourney / Prompt / Keyframe / AI Film / 短视频脚本 / 账号矩阵 / 直播复盘</span>
-        </article>
-        <article data-scroll-reveal>
-          <p class="system-label">技能</p>
-          <h3>UE5 / Blender / Web 互动</h3>
-          <span>Unreal Engine 场景 / Blender 建模 / WebGL 舞台 / H5 游戏流程 / CloudBase 产品原型</span>
-        </article>
+      <div class="skill-marquee" aria-label="技能循环展示">
+        <p class="system-label">技能</p>
+        <div class="skill-marquee-row skill-marquee-row-a">
+          <span class="skill-pill skill-ai">Sora</span>
+          <span class="skill-pill skill-ai">Midjourney</span>
+          <span class="skill-pill skill-ai">Prompt</span>
+          <span class="skill-pill skill-ai">Keyframe</span>
+          <span class="skill-pill skill-ai">AI Film</span>
+          <span class="skill-pill skill-content">短视频脚本</span>
+          <span class="skill-pill skill-content">账号矩阵</span>
+          <span class="skill-pill skill-content">直播复盘</span>
+        </div>
+        <div class="skill-marquee-row skill-marquee-row-b">
+          <span class="skill-pill skill-ue">Unreal Engine 场景</span>
+          <span class="skill-pill skill-ue">Blender 建模</span>
+          <span class="skill-pill skill-web">WebGL 舞台</span>
+          <span class="skill-pill skill-web">H5 游戏流程</span>
+          <span class="skill-pill skill-web">CloudBase 产品原型</span>
+          <span class="skill-pill skill-research">SPSS 数据清洗</span>
+          <span class="skill-pill skill-research">传媒行研</span>
+        </div>
+        <div class="skill-marquee-row skill-marquee-row-c">
+          <span class="skill-pill skill-content">内容选题</span>
+          <span class="skill-pill skill-content">脚本策划</span>
+          <span class="skill-pill skill-content">小红书运营</span>
+          <span class="skill-pill skill-content">直播间复盘</span>
+          <span class="skill-pill skill-ai">AI 影像生成</span>
+          <span class="skill-pill skill-ue">实时场景</span>
+          <span class="skill-pill skill-web">互动原型</span>
+        </div>
+        <div class="skill-marquee-row skill-marquee-row-d">
+          <span class="skill-pill skill-research">交易复盘</span>
+          <span class="skill-pill skill-research">标的库搭建</span>
+          <span class="skill-pill skill-research">Research</span>
+          <span class="skill-pill skill-ue">Cinematic Camera</span>
+          <span class="skill-pill skill-ai">AI Commercial</span>
+          <span class="skill-pill skill-web">Learning Flow</span>
+          <span class="skill-pill skill-web">Product Strategy</span>
+        </div>
       </div>
       <div class="capability-matrix" aria-label="能力矩阵">
         <article>
@@ -349,12 +377,6 @@
           <span>03 / VISUAL SYSTEM</span>
           <h3>AI + UE Visual</h3>
           <p>从 AI 镜头、UE5 场景到 Blender 建模，接入角色特效、布料动画和山地运动镜头。</p>
-          <div class="product-work-list" aria-label="AI 与 UE 作品">
-            <span>山地运动镜头</span>
-            <span>岩地环境镜头</span>
-            <span>冰蓝角色特效</span>
-            <span>角色 PV 展示</span>
-          </div>
         </button>
       </div>
     </section>

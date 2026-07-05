@@ -194,6 +194,7 @@ const railItems = [...document.querySelectorAll("[data-rail-section]")];
 const parallaxItems = [...document.querySelectorAll("[data-parallax]")];
 const productCaseButtons = [...document.querySelectorAll("[data-open-case]")];
 const scrollRevealItems = [...document.querySelectorAll("[data-scroll-reveal]")];
+initSkillMarquee();
 const textEffects = initReactBitsTextEffects();
 const heroParticles = initHeroParticleTitle({
   wrap: document.getElementById("heroParticleTitle"),
@@ -309,6 +310,18 @@ function updateScrollState() {
   });
   railItems.forEach((item) => {
     item.classList.toggle("is-active", item.dataset.railSection === active);
+  });
+}
+
+function initSkillMarquee() {
+  document.querySelectorAll(".skill-marquee-row").forEach((row) => {
+    if (row.dataset.marqueeReady === "true") return;
+    row.dataset.marqueeReady = "true";
+    [...row.children].forEach((node) => {
+      const clone = node.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      row.append(clone);
+    });
   });
 }
 
@@ -553,7 +566,7 @@ function initReactBitsTextEffects() {
   }
 
   function markShiny(root) {
-    root.querySelectorAll(".hero-word, .section-copy h2, .works-title h2, .products-copy h2, .final-copy h2, .news-list h3, .work-meta h3, .vision-strip h3, .capability-matrix h3, .experience-strip h3, .product-panel h3, .modal-hero h2")
+    root.querySelectorAll(".hero-word, .section-copy h2, .works-title h2, .products-copy h2, .final-copy h2, .news-list h3, .work-meta h3, .capability-matrix h3, .experience-strip h3, .product-panel h3, .modal-hero h2")
       .forEach((node) => {
         node.classList.add("rb-shiny");
         if (node.classList.contains("hero-word")) {
@@ -563,7 +576,7 @@ function initReactBitsTextEffects() {
   }
 
   function markVelocity(root) {
-    root.querySelectorAll(".vision-strip article span:not(.rb-velocity-ready), .capability-matrix article p:not(.rb-velocity-ready), .product-work-list span:not(.rb-velocity-ready)")
+    root.querySelectorAll(".capability-matrix article p:not(.rb-velocity-ready)")
       .forEach((node, index) => {
         const text = node.textContent.trim();
         if (!text) return;
