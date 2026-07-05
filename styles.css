@@ -1271,6 +1271,78 @@ body:not([data-active-section="hero"]) .hero-news {
   color: rgba(0, 0, 0, 0.56);
 }
 
+.rb-shiny {
+  color: inherit;
+  background-image:
+    linear-gradient(
+      108deg,
+      currentColor 0%,
+      currentColor 32%,
+      rgba(255, 255, 255, 0.98) 47%,
+      color-mix(in srgb, var(--material-accent) 72%, #fff) 52%,
+      currentColor 68%,
+      currentColor 100%
+    );
+  background-size: 240% auto;
+  background-position: 150% center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rbShinyText 3.2s linear infinite;
+}
+
+.hero-word.rb-shiny {
+  color: rgba(255, 255, 255, 0.92);
+  -webkit-text-fill-color: inherit;
+}
+
+.hero-word.rb-shiny > span.rb-shiny {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.rb-scroll-velocity {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+.rb-velocity-track {
+  display: inline-flex;
+  width: max-content;
+  min-width: 220%;
+  will-change: transform;
+  animation: rbScrollVelocity var(--rb-scroll-duration, 16s) linear infinite;
+}
+
+.rb-velocity-track span {
+  display: inline-block;
+  flex: 0 0 auto;
+}
+
+.rb-text-type {
+  min-height: 1lh;
+}
+
+.rb-type-cursor {
+  display: inline-block;
+  width: 0.55em;
+  margin-left: 0.08em;
+  color: currentColor;
+  animation: rbCursorBlink 620ms steps(2, end) infinite;
+}
+
+.rb-type-cursor::before {
+  content: "_";
+}
+
+.rb-shuffle {
+  display: inline-block;
+  will-change: contents;
+}
+
 .capability-matrix {
   position: relative;
   z-index: 2;
@@ -1932,6 +2004,21 @@ body:not([data-active-section="hero"]) .hero-news {
   18% { opacity: 0.9; filter: saturate(1.45) contrast(1.16); }
   54% { opacity: 0.42; filter: saturate(1.18) contrast(1.08); }
   100% { opacity: 0; filter: saturate(1) contrast(1); }
+}
+
+@keyframes rbShinyText {
+  0% { background-position: 150% center; }
+  100% { background-position: -70% center; }
+}
+
+@keyframes rbScrollVelocity {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(var(--rb-scroll-direction, 1) * -50%)); }
+}
+
+@keyframes rbCursorBlink {
+  0%, 48% { opacity: 1; }
+  49%, 100% { opacity: 0; }
 }
 
 @keyframes stageWipe {

@@ -194,6 +194,7 @@ const railItems = [...document.querySelectorAll("[data-rail-section]")];
 const parallaxItems = [...document.querySelectorAll("[data-parallax]")];
 const productCaseButtons = [...document.querySelectorAll("[data-open-case]")];
 const scrollRevealItems = [...document.querySelectorAll("[data-scroll-reveal]")];
+const textEffects = initReactBitsTextEffects();
 const heroParticles = initHeroParticleTitle({
   wrap: document.getElementById("heroParticleTitle"),
   canvas: document.getElementById("heroParticleTitleCanvas"),
@@ -235,6 +236,7 @@ function requestScrollUpdate() {
 
 function updateScrollState() {
   const y = window.scrollY;
+  textEffects.updateVelocity(y);
   updateScrollReveal();
   if (Math.abs(y - latestScroll) < 0.5) return;
   latestScroll = y;
@@ -521,6 +523,167 @@ function tryPlayVideo(video) {
   if (playPromise?.catch) playPromise.catch(() => {});
 }
 
+function initReactBitsTextEffects() {
+  const shuffleChars = "NINGAI视觉产品0123456789";
+  let lastY = window.scrollY;
+  let lastTime = performance.now();
+  let smoothedVelocity = 0;
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const node = entry.target;
+      node.classList.add("rb-is-visible");
+      if (node.classList.contains("rb-text-type")) typeTextNode(node);
+      if (node.classList.contains("rb-shuffle")) shuffleTextNode(node);
+      revealObserver.unobserve(node);
+    });
+  }, { threshold: 0.18, rootMargin: "0px 0px -8% 0px" });
+
+  function apply(root = document) {
+    markShiny(root);
+    markVelocity(root);
+    markTextType(root);
+    markShuffle(root);
+  }
+
+  function markShiny(root) {
+    root.querySelectorAll(".hero-word, .section-copy h2, .works-title h2, .products-copy h2, .final-copy h2, .news-list h3, .work-meta h3, .vision-strip h3, .capability-matrix h3, .experience-strip h3, .product-panel h3, .modal-hero h2")
+      .forEach((node) => {
+        node.classList.add("rb-shiny");
+        if (node.classList.contains("hero-word")) {
+          node.querySelectorAll(":scope > span").forEach((span) => span.classList.add("rb-shiny"));
+        }
+      });
+  }
+
+  function markVelocity(root) {
+    root.querySelectorAll(".vision-strip article span:not(.rb-velocity-ready), .capability-matrix article p:not(.rb-velocity-ready), .product-work-list span:not(.rb-velocity-ready)")
+      .forEach((node, index) => {
+        const text = node.textContent.trim();
+        if (!text) return;
+        node.classList.add("rb-scroll-velocity", "rb-velocity-ready");
+        node.setAttribute("aria-label", text);
+        node.style.setProperty("--rb-velocity-index", String(index % 2));
+        const copies = Array.from({ length: 4 }, () => `<span>${escapeHtml(text)}&nbsp;&nbsp;/&nbsp;&nbsp;</span>`).join("");
+        node.innerHTML = `<span class="rb-velocity-track" aria-hidden="true">${copies}</span>`;
+      });
+  }
+
+  function markTextType(root) {
+    root.querySelectorAll(".hero-line, .hero-news a, .news-list article p, .work-meta p, .works-hint, .experience-strip article p, .product-panel p, .resume-link span, .final-contact, .copyright, .modal-hero p, .modal-breakdown p")
+      .forEach((node) => {
+        if (node.dataset.rbTextReady === "true") return;
+        const text = node.textContent.trim();
+        if (!text) return;
+        node.dataset.rbText = text;
+        node.dataset.rbTextReady = "true";
+        node.classList.add("rb-text-type");
+        if (reducedMotion) {
+          node.classList.add("rb-is-visible");
+          return;
+        }
+        revealObserver.observe(node);
+      });
+  }
+
+  function markShuffle(root) {
+    root.querySelectorAll(".system-label, .news-list time, .work-meta span, .hero-caption span, .product-panel > span, .experience-strip article > span, .nav-link, .utility-nav a, .modal-tags span, .modal-breakdown span")
+      .forEach((node) => {
+        if (node.dataset.rbShuffleReady === "true") return;
+        const text = node.textContent.trim();
+        if (!text) return;
+        node.dataset.rbShuffle = text;
+        node.dataset.rbShuffleReady = "true";
+        node.classList.add("rb-shuffle");
+        node.addEventListener("mouseenter", () => shuffleTextNode(node));
+        if (reducedMotion) {
+          node.classList.add("rb-is-visible");
+          return;
+        }
+        revealObserver.observe(node);
+      });
+  }
+
+  function typeTextNode(node) {
+    if (node.dataset.rbTyped === "true" || reducedMotion) return;
+    node.dataset.rbTyped = "true";
+    const text = node.dataset.rbText || "";
+    const cursor = document.createElement("span");
+    cursor.className = "rb-type-cursor";
+    cursor.setAttribute("aria-hidden", "true");
+    node.textContent = "";
+    node.append(cursor);
+    let index = 0;
+    const chunk = Math.max(1, Math.ceil(text.length / 56));
+    const tick = () => {
+      index = Math.min(text.length, index + chunk);
+      node.firstChild ? node.firstChild.textContent = text.slice(0, index) : node.prepend(text.slice(0, index));
+      if (index < text.length) {
+        window.setTimeout(tick, 18 + Math.random() * 22);
+      } else {
+        window.setTimeout(() => cursor.remove(), 520);
+      }
+    };
+    node.prepend(document.createTextNode(""));
+    tick();
+  }
+
+  function shuffleTextNode(node) {
+    if (node.dataset.rbShuffling === "true" || reducedMotion) return;
+    const original = node.dataset.rbShuffle || node.textContent.trim();
+    if (!original) return;
+    node.dataset.rbShuffling = "true";
+    let frame = 0;
+    const total = 14;
+    const step = () => {
+      const locked = Math.floor((frame / total) * original.length);
+      node.textContent = original
+        .split("")
+        .map((char, index) => {
+          if (char.trim() === "" || index < locked) return char;
+          return shuffleChars[Math.floor(Math.random() * shuffleChars.length)];
+        })
+        .join("");
+      frame += 1;
+      if (frame <= total) {
+        window.setTimeout(step, 28);
+      } else {
+        node.textContent = original;
+        node.dataset.rbShuffling = "false";
+      }
+    };
+    step();
+  }
+
+  function updateVelocity(y) {
+    const now = performance.now();
+    const dt = Math.max(16, now - lastTime);
+    const raw = (y - lastY) / dt;
+    smoothedVelocity += (raw - smoothedVelocity) * 0.16;
+    const speed = Math.min(2.4, Math.abs(smoothedVelocity) * 9);
+    const direction = smoothedVelocity < -0.02 ? -1 : 1;
+    const duration = Math.max(7.5, 20 - speed * 4.6);
+    document.documentElement.style.setProperty("--rb-scroll-direction", String(direction));
+    document.documentElement.style.setProperty("--rb-scroll-duration", `${duration.toFixed(2)}s`);
+    lastY = y;
+    lastTime = now;
+  }
+
+  function escapeHtml(value) {
+    return value
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  apply();
+  updateVelocity(window.scrollY);
+
+  return { apply, updateVelocity };
+}
+
 function initModal() {
   document.querySelectorAll("[data-close-modal]").forEach((node) => {
     node.addEventListener("click", closeModal);
@@ -534,6 +697,7 @@ function openCase(id) {
   const item = cases[id];
   if (!item || !modal || !modalContent) return;
   modalContent.innerHTML = renderCase(item);
+  textEffects.apply(modalContent);
   modal.classList.add("is-open");
   modal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
