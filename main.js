@@ -436,25 +436,14 @@ function initNavigation() {
       const target = id ? document.getElementById(id) : null;
       if (!target) return;
       event.preventDefault();
-      transitionEngine.run({
-        source: link,
-        beforeSwap: () => {
-          prismScene.triggerGlitch?.(0.5);
-          target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
-        },
-        afterSwap: requestScrollUpdate
-      });
+      target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+      requestScrollUpdate();
     });
   });
   document.getElementById("resetStage")?.addEventListener("click", () => {
     setMaterialPreset("ice");
-    transitionEngine.run({
-      beforeSwap: () => {
-        prismScene.triggerGlitch?.(0.65);
-        window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
-      },
-      afterSwap: requestScrollUpdate
-    });
+    window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
+    requestScrollUpdate();
   });
 }
 
@@ -544,7 +533,6 @@ function initModal() {
 function openCase(id) {
   const item = cases[id];
   if (!item || !modal || !modalContent) return;
-  prismScene.triggerGlitch?.(1);
   modalContent.innerHTML = renderCase(item);
   modal.classList.add("is-open");
   modal.setAttribute("aria-hidden", "false");
