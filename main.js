@@ -1,4 +1,5 @@
 import { initPrismScene } from "./prism-scene.js";
+import { initSplashCursor } from "./splash-cursor.js";
 import { createTransitionEngine } from "./transition-engine.js";
 import { createWorksCarousel } from "./works-carousel.js";
 
@@ -111,6 +112,21 @@ const prismScene = initPrismScene({
   canvas: document.getElementById("prismCanvas"),
   reducedMotion
 });
+const splashCursor = initSplashCursor({
+  canvas: document.getElementById("splashCursorCanvas"),
+  reducedMotion,
+  config: {
+    SIM_RESOLUTION: 128,
+    DYE_RESOLUTION: 1440,
+    DENSITY_DISSIPATION: 3.5,
+    VELOCITY_DISSIPATION: 2,
+    PRESSURE: 0.1,
+    CURL: 3,
+    SPLAT_RADIUS: 0.2,
+    SPLAT_FORCE: 6000,
+    COLOR_UPDATE_SPEED: 10
+  }
+});
 const transitionEngine = createTransitionEngine({
   overlay: document.getElementById("transitionOverlay"),
   prismScene
@@ -173,6 +189,7 @@ window.addEventListener("resize", requestScrollUpdate);
 document.addEventListener("pointerdown", (event) => {
   transitionEngine.pulse(event.clientX, event.clientY);
   heroParticles.burst?.(event.clientX, event.clientY);
+  splashCursor.splat?.(event.clientX, event.clientY, 1.25);
 });
 
 function requestScrollUpdate() {
