@@ -224,15 +224,15 @@ body.is-section-shifting .webgl-space {
 }
 
 .depth-word-top {
-  left: 51%;
-  top: 48vh;
-  font-size: clamp(168px, 34vw, 620px);
-  transform: translateX(-50%) translateY(-50%) scaleX(1.08);
+  left: 39%;
+  top: 52vh;
+  font-size: clamp(116px, 26vw, 460px);
+  transform: translateX(-50%) scaleX(0.94);
 }
 
 .depth-word-bottom {
-  bottom: -3vh;
-  font-size: clamp(112px, 23vw, 420px);
+  bottom: 9vh;
+  font-size: clamp(96px, 20vw, 330px);
   color: transparent;
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.055);
   opacity: calc(var(--works-progress) * 0.78);
@@ -1190,8 +1190,8 @@ body:not([data-active-section="hero"]) .hero-news {
 }
 
 .about-section {
-  min-height: 260vh;
-  padding: 0 clamp(24px, 8vw, 140px) 14vh;
+  min-height: 190vh;
+  padding: 18vh clamp(24px, 8vw, 140px) 14vh;
   overflow: hidden;
   color: #0b0e10;
 }
@@ -1223,79 +1223,11 @@ body:not([data-active-section="hero"]) .hero-news {
   pointer-events: none;
 }
 
-.about-grid {
-  position: relative;
-  z-index: 2;
-  min-height: 100vh;
-  padding-top: 18vh;
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(280px, 0.74fr);
-  gap: clamp(38px, 8vw, 132px);
-  align-items: start;
-}
-
-.about-statement h2 {
-  margin: clamp(80px, 14vh, 150px) 0 0;
-  max-width: 940px;
-  font-size: clamp(26px, 3.6vw, 54px);
-  line-height: 1.45;
-  font-weight: 950;
-  letter-spacing: 0;
-}
-
-.about-statement h2 span {
-  display: table;
-  margin: 8px 0;
-  padding: 0 8px 2px;
-  color: #fff;
-  background: #000;
-}
-
-.about-statement p:not(.system-label),
 .vision-strip span,
 .product-panel p {
   color: rgba(255, 255, 255, 0.62);
   font-family: var(--font-mono);
   line-height: 1.75;
-}
-
-.about-statement p:not(.system-label) {
-  max-width: 710px;
-  margin: clamp(26px, 4vw, 52px) 0 0;
-  color: rgba(0, 0, 0, 0.52);
-  font-size: clamp(13px, 1.3vw, 17px);
-}
-
-.stat-stack {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  margin-top: clamp(16px, 5vw, 80px);
-  border: 1px solid var(--line);
-  background: var(--line);
-}
-
-.stat-card {
-  min-height: 154px;
-  padding: 24px;
-  display: grid;
-  align-content: center;
-  background: rgba(255, 255, 255, 0.38);
-  backdrop-filter: blur(10px);
-  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
-}
-
-.stat-card strong {
-  display: block;
-  font-size: clamp(34px, 4.6vw, 68px);
-  line-height: 0.9;
-}
-
-.stat-card span {
-  margin-top: 14px;
-  color: rgba(0, 0, 0, 0.54);
-  font-family: var(--font-mono);
-  font-size: 12px;
 }
 
 .vision-strip {
@@ -1304,7 +1236,7 @@ body:not([data-active-section="hero"]) .hero-news {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
-  margin-top: 8vh;
+  margin-top: 0;
   border: 1px solid rgba(0, 0, 0, 0.14);
   background: rgba(0, 0, 0, 0.14);
 }
@@ -1637,13 +1569,15 @@ body:not([data-active-section="hero"]) .hero-news {
   position: relative;
   z-index: 2;
   display: grid;
+  gap: clamp(18px, 3vw, 30px);
   place-items: center;
+  text-align: center;
+  padding-inline: 24px;
 }
 
 .final-section .system-label {
-  position: absolute;
-  top: -24vh;
-  left: clamp(-40vw, -32vw, -260px);
+  position: static;
+  margin: 0;
 }
 
 .final-section h2 {
@@ -1659,9 +1593,8 @@ body:not([data-active-section="hero"]) .hero-news {
 }
 
 .final-contact {
-  position: absolute;
-  right: clamp(-36vw, -28vw, -220px);
-  bottom: clamp(-22vh, -15vh, -96px);
+  position: static;
+  z-index: 3;
   padding: 12px 18px;
   border: 1px solid rgba(255, 255, 255, 0.24);
   border-radius: 999px;
@@ -1680,9 +1613,7 @@ body:not([data-active-section="hero"]) .hero-news {
 }
 
 .copyright {
-  position: absolute;
-  left: clamp(24px, 8vw, 140px);
-  bottom: 36px;
+  position: static;
   margin: 0;
   color: rgba(255, 255, 255, 0.7);
   font-family: var(--font-mono);
@@ -2091,7 +2022,6 @@ body:not([data-active-section="hero"]) .hero-news {
   }
 
   .news-section,
-  .about-grid,
   .product-showcase {
     grid-template-columns: 1fr;
   }
@@ -2179,7 +2109,6 @@ body:not([data-active-section="hero"]) .hero-news {
     padding-block: 120px 90px;
   }
 
-  .stat-stack,
   .vision-strip,
   .capability-matrix,
   .experience-strip {
@@ -2199,11 +2128,6 @@ body:not([data-active-section="hero"]) .hero-news {
   .product-panel,
   .product-panel:first-child {
     min-height: 280px;
-  }
-
-  .final-contact {
-    right: 22px;
-    bottom: 92px;
   }
 
   .modal-panel {

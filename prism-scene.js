@@ -29,39 +29,35 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   scene.add(root);
   root.add(gridRoot, markRoot, spectralRoot, shardRoot);
 
-  const frostTexture = makeFrostTexture();
   const reflectionTexture = makeReflectionTexture();
   scene.environment = reflectionTexture;
   const glassMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xf3fbff,
+    color: 0xe6faff,
     metalness: 0,
-    roughness: 0.024,
+    roughness: 0.08,
     transmission: 0.98,
-    thickness: 2.2,
-    ior: 1.84,
+    thickness: 5.4,
+    ior: 1.92,
     transparent: true,
-    opacity: 0.22,
-    alphaMap: frostTexture,
-    roughnessMap: frostTexture,
-    metalnessMap: frostTexture,
+    opacity: 0.46,
     envMap: reflectionTexture,
-    envMapIntensity: 2.45,
+    envMapIntensity: 2.1,
     clearcoat: 1,
-    clearcoatRoughness: 0.006,
+    clearcoatRoughness: 0.01,
     reflectivity: 1,
     side: THREE.DoubleSide,
     depthWrite: false
   });
-  glassMaterial.iridescence = 0.34;
-  glassMaterial.iridescenceIOR = 1.72;
+  glassMaterial.iridescence = 0.22;
+  glassMaterial.iridescenceIOR = 1.64;
 
   const edgeMaterial = new THREE.LineBasicMaterial({
     color: 0xffffff,
     transparent: true,
-    opacity: 0.04
+    opacity: 0.58
   });
 
-  const nLogo = makeGlassN(glassMaterial, edgeMaterial, { filmOpacity: 1 });
+  const nLogo = makeGlassN(glassMaterial, edgeMaterial);
   markRoot.add(nLogo);
 
   const spectralMaterialCyan = glassMaterial.clone();
@@ -70,8 +66,8 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   const spectralMaterialMagenta = glassMaterial.clone();
   spectralMaterialMagenta.color = new THREE.Color(0xff36f1);
   spectralMaterialMagenta.opacity = 0.14;
-  const cyanGhost = makeGlassN(spectralMaterialCyan, new THREE.LineBasicMaterial({ color: 0x00eaff, transparent: true, opacity: 0.035 }), { filmOpacity: 0.055 });
-  const magentaGhost = makeGlassN(spectralMaterialMagenta, new THREE.LineBasicMaterial({ color: 0xff3df0, transparent: true, opacity: 0.03 }), { filmOpacity: 0.045 });
+  const cyanGhost = makeGlassN(spectralMaterialCyan, new THREE.LineBasicMaterial({ color: 0x00eaff, transparent: true, opacity: 0.25 }));
+  const magentaGhost = makeGlassN(spectralMaterialMagenta, new THREE.LineBasicMaterial({ color: 0xff3df0, transparent: true, opacity: 0.2 }));
   cyanGhost.position.x = 0.075;
   magentaGhost.position.x = -0.075;
   spectralRoot.add(cyanGhost, magentaGhost);
@@ -133,7 +129,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       edge: 0xd8fbff,
       ghostA: 0x00eaff,
       ghostB: 0xf8fbff,
-      opacity: 0.19,
+      opacity: 0.5,
       roughness: 0.045,
       transmission: 0.98
     },
@@ -145,7 +141,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       edge: 0xffffff,
       ghostA: 0xeef6ff,
       ghostB: 0xffffff,
-      opacity: 0.16,
+      opacity: 0.34,
       roughness: 0.018,
       transmission: 1
     },
@@ -157,7 +153,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       edge: 0xe6ceff,
       ghostA: 0xff48f7,
       ghostB: 0x69eaff,
-      opacity: 0.18,
+      opacity: 0.56,
       roughness: 0.068,
       transmission: 0.9
     },
@@ -169,7 +165,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       edge: 0x89f2ff,
       ghostA: 0x1a2d62,
       ghostB: 0x00e8ff,
-      opacity: 0.18,
+      opacity: 0.68,
       roughness: 0.14,
       transmission: 0.58
     }
@@ -186,7 +182,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     height = window.innerHeight;
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
-    camera.position.z = width < 720 ? 15.2 : 9.9;
+    camera.position.z = width < 720 ? 12.5 : 9.6;
     camera.updateProjectionMatrix();
   }
 
@@ -236,8 +232,8 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     glassMaterial.transmission = preset.transmission;
     glassMaterial.attenuationColor = new THREE.Color(preset.secondary);
     glassMaterial.attenuationDistance = materialPreset === "carbon" ? 1.7 : 3.6;
-    glassMaterial.envMapIntensity = 2.1 + Math.sin(drift * 0.42) * 0.22 + detailMix * 0.44 + accentMix * 0.52;
-    glassMaterial.iridescence = 0.28 + detailMix * 0.18 + (glitchActive ? 0.2 : 0);
+    glassMaterial.envMapIntensity = 1.95 + Math.sin(drift * 0.42) * 0.18 + detailMix * 0.38 + accentMix * 0.48;
+    glassMaterial.iridescence = 0.18 + detailMix * 0.12 + (glitchActive ? 0.14 : 0);
     edgeMaterial.color.copy(lineColor);
     spectralMaterialCyan.color.copy(new THREE.Color(preset.ghostA).lerp(accent.secondary, accentMix * 0.32));
     spectralMaterialMagenta.color.copy(new THREE.Color(preset.ghostB).lerp(accent.primary, accentMix * 0.26));
@@ -256,15 +252,15 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     root.rotation.x = THREE.MathUtils.lerp(root.rotation.x, -pointer.y * 0.05, 0.05);
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, pointer.x * 0.34 + productDepth * 0.55 - finalDepth * 0.28, 0.04);
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, 0.18 - scroll.page * 0.54 + newsDepth * 0.08, 0.04);
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, (width < 720 ? 15.2 : 9.6) - intro * 1.28 - stageDepth * 1.85 + finalDepth * 1.08, 0.035);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, (width < 720 ? 12.5 : 9.2) - intro * 1.54 - stageDepth * 1.85 + finalDepth * 1.08, 0.035);
 
-    markRoot.rotation.y = (1 - intro) * -1.18 + drift * 0.038 + pointer.x * 0.1 + glitch + worksDepth * 0.44 - productDepth * 0.42 + aboutFade * -0.18;
-    markRoot.rotation.x = (1 - intro) * 0.34 + Math.sin(drift * 0.28) * 0.018 - pointer.y * 0.052 + newsDepth * 0.04 + aboutFade * 0.08;
+    markRoot.rotation.y = (1 - intro) * -1.18 + drift * 0.038 + pointer.x * 0.1 + glitch + worksDepth * 0.44 - productDepth * 0.42;
+    markRoot.rotation.x = (1 - intro) * 0.34 + Math.sin(drift * 0.28) * 0.018 - pointer.y * 0.052 + newsDepth * 0.04;
     markRoot.rotation.z = glitch * 0.7 + finalDepth * 0.1;
     markRoot.position.x = -0.12 * (1 - stageDepth) + productDepth * -0.42 + finalDepth * 0.28;
     markRoot.position.y = -0.04 + intro * 0.1 - scroll.page * 0.54 + Math.sin(drift * 0.58) * 0.022 + productDepth * 0.38;
-    const viewportScale = width < 720 ? 0.74 : 1;
-    markRoot.scale.setScalar((0.62 + intro * 0.34) * (1.01 + worksDepth * 0.02 - aboutFade * 0.1 + finalDepth * 0.08) * viewportScale);
+    const viewportScale = width < 720 ? 0.92 : 1;
+    markRoot.scale.setScalar((0.43 + intro * 0.31) * (1.01 + worksDepth * 0.02 - aboutFade * 0.16 + finalDepth * 0.08) * viewportScale);
     markRoot.visible = finalDepth < 0.94;
 
     spectralRoot.rotation.copy(markRoot.rotation);
@@ -275,8 +271,8 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       line.position.y = (index ? 1 : -1) * (glitchActive ? 0.04 : 0.015);
       line.children.forEach((child) => {
         if (child.material) {
-          const ghostBase = materialPreset === "white" ? 0.025 : materialPreset === "carbon" ? 0.07 : 0.045;
-          child.material.opacity = (glitchActive ? 0.16 : ghostBase) * intro;
+          const ghostBase = materialPreset === "white" ? 0.06 : materialPreset === "carbon" ? 0.18 : 0.13;
+          child.material.opacity = (glitchActive ? 0.34 : ghostBase) * intro;
         }
       });
     });
@@ -284,8 +280,8 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     shardRoot.rotation.copy(markRoot.rotation);
     shardRoot.position.copy(markRoot.position);
     shardRoot.scale.copy(markRoot.scale);
-    logoNoise.rotation.z = -drift * 0.035 + glitch * 2;
-    logoNoise.material.opacity = (0.012 + detailMix * 0.012 + (glitchActive ? 0.02 : 0)) * intro;
+    logoNoise.rotation.z = -drift * 0.04 + glitch * 2;
+    logoNoise.material.opacity = (detailMix * 0.11 + (glitchActive ? 0.12 : 0)) * intro;
 
     gridRoot.rotation.y = drift * 0.016 + pointer.x * 0.035 - worksDepth * 0.54 + productDepth * 0.28;
     gridRoot.position.z = -stageDepth * 2.9;
@@ -307,9 +303,9 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       panel.material.opacity = (0.1 + stageDepth * 0.2 + Math.sin(drift * 0.34 + index) * 0.016) * (1 - finalDepth * 0.5);
     });
 
-    glassMaterial.opacity = Math.max(0.012, preset.opacity - 0.07 - worksDepth * 0.048 - aboutFade * 0.05 + productDepth * 0.01 + (glitchActive ? 0.022 : 0)) * intro;
-    glassMaterial.roughness = Math.max(0.014, preset.roughness - 0.018 + worksDepth * 0.075 + productDepth * 0.05 + Math.sin(drift * 0.36) * 0.006);
-    edgeMaterial.opacity = Math.max(0.006, 0.014 - worksDepth * 0.006 + aboutFade * 0.018 + (glitchActive ? 0.018 : 0));
+    glassMaterial.opacity = Math.max(0.18, preset.opacity - worksDepth * 0.08 - aboutFade * 0.14 + productDepth * 0.06 + (glitchActive ? 0.1 : 0)) * intro;
+    glassMaterial.roughness = preset.roughness + worksDepth * 0.08 + productDepth * 0.06;
+    edgeMaterial.opacity = Math.max(0.24, 0.78 - worksDepth * 0.2 - aboutFade * 0.3);
     caustics.children.forEach((stripe, index) => {
       stripe.position.y = stripe.userData.baseY + Math.sin(drift * 0.8 + index * 1.8) * 0.08;
       stripe.material.color.copy(new THREE.Color(index % 2 ? preset.secondary : preset.edge).lerp(accent.secondary, accentMix * 0.46));
@@ -352,17 +348,29 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   };
 }
 
-function makeGlassN(material, edgeMaterial, options = {}) {
+function makeGlassN(material, edgeMaterial) {
   const group = new THREE.Group();
-  const geometry = makeNGeometry();
-  const mesh = new THREE.Mesh(geometry, material);
-  const film = makeLetterGlassFilm(options.filmOpacity ?? 1);
-  const rimMaterial = edgeMaterial.clone();
-  rimMaterial.opacity = 0.009;
-  const rimLine = makeNContourLines(rimMaterial, 1);
-  group.add(mesh, film, rimLine);
+  const barSpecs = [
+    { x: -1.32, y: 0, length: 4.08, width: 0.68, rotation: 0 },
+    { x: 1.32, y: 0, length: 4.08, width: 0.68, rotation: 0 },
+    { x: 0, y: 0, length: 4.82, width: 0.72, rotation: -0.63 }
+  ];
+  barSpecs.forEach((spec) => {
+    const mesh = makeBar(spec.x, spec.y, spec.length, spec.width, spec.rotation, material);
+    const edge = new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry, 18), edgeMaterial);
+    edge.position.copy(mesh.position);
+    edge.rotation.copy(mesh.rotation);
+    group.add(mesh, edge);
+  });
   group.rotation.z = 0.01;
   return group;
+}
+
+function makeBar(x, y, length, width, rotation, material) {
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, length, 1.08, 1, 1, 1), material);
+  mesh.position.set(x, y, 0.12);
+  mesh.rotation.z = rotation;
+  return mesh;
 }
 
 function makeNGeometry() {
