@@ -193,6 +193,7 @@ const navLinks = [...document.querySelectorAll(".nav-link")];
 const railItems = [...document.querySelectorAll("[data-rail-section]")];
 const parallaxItems = [...document.querySelectorAll("[data-parallax]")];
 const productCaseButtons = [...document.querySelectorAll("[data-open-case]")];
+const scrollRevealItems = [...document.querySelectorAll("[data-scroll-reveal]")];
 const heroParticles = initHeroParticleTitle({
   wrap: document.getElementById("heroParticleTitle"),
   canvas: document.getElementById("heroParticleTitleCanvas"),
@@ -234,6 +235,7 @@ function requestScrollUpdate() {
 
 function updateScrollState() {
   const y = window.scrollY;
+  updateScrollReveal();
   if (Math.abs(y - latestScroll) < 0.5) return;
   latestScroll = y;
 
@@ -300,6 +302,26 @@ function updateScrollState() {
   });
   railItems.forEach((item) => {
     item.classList.toggle("is-active", item.dataset.railSection === active);
+  });
+}
+
+function updateScrollReveal() {
+  if (!scrollRevealItems.length) return;
+  if (reducedMotion) {
+    scrollRevealItems.forEach((item) => item.style.setProperty("--scroll-reveal-progress", "1"));
+    return;
+  }
+
+  const viewportHeight = Math.max(1, window.innerHeight);
+  const revealStart = viewportHeight * 0.92;
+  const revealEnd = viewportHeight * 0.38;
+  const revealRange = Math.max(1, revealStart - revealEnd);
+
+  scrollRevealItems.forEach((item) => {
+    const rect = item.getBoundingClientRect();
+    const raw = (revealStart - rect.top) / revealRange;
+    const progress = smoothstep(0, 1, clamp(raw, 0, 1));
+    item.style.setProperty("--scroll-reveal-progress", progress.toFixed(4));
   });
 }
 

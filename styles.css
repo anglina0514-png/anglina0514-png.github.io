@@ -1240,6 +1240,22 @@ body:not([data-active-section="hero"]) .hero-news {
   backdrop-filter: blur(8px);
 }
 
+.vision-strip article[data-scroll-reveal] {
+  --scroll-reveal-progress: 0;
+  --scroll-reveal-blur: calc((1 - var(--scroll-reveal-progress)) * 4px);
+  --scroll-reveal-rotation: calc((1 - var(--scroll-reveal-progress)) * 3deg);
+  opacity: calc(0.1 + var(--scroll-reveal-progress) * 0.9);
+  filter: blur(var(--scroll-reveal-blur));
+  transform: translateY(calc((1 - var(--scroll-reveal-progress)) * 42px)) rotate(var(--scroll-reveal-rotation));
+  transform-origin: 50% 72%;
+  will-change: opacity, filter, transform;
+}
+
+.vision-strip article[data-scroll-reveal] > * {
+  transform: translateY(calc((1 - var(--scroll-reveal-progress)) * 20px));
+  transition: transform 120ms linear;
+}
+
 .vision-strip h3 {
   margin: 0 0 20px;
   display: table;
