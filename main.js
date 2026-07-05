@@ -77,7 +77,7 @@ const cases = {
       "assets/media/ue-motion-poster.jpg",
       "assets/media/ue-environment-poster.jpg",
       "assets/media/ue-character-poster.jpg",
-      "assets/media/ue-cloth-poster.jpg"
+      "assets/media/ue-role-pv-poster.jpg"
     ],
     videos: [
       {
@@ -99,10 +99,10 @@ const cases = {
         poster: "assets/media/ue-character-poster.jpg"
       },
       {
-        title: "布料动画展示",
-        meta: "Cloth motion preview",
-        src: "assets/media/ue-cloth-preview.mp4",
-        poster: "assets/media/ue-cloth-poster.jpg"
+        title: "角色 PV 展示",
+        meta: "Final character PV showcase",
+        src: "assets/media/ue-role-pv-preview.mp4",
+        poster: "assets/media/ue-role-pv-poster.jpg"
       }
     ]
   },
