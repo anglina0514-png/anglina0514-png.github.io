@@ -66,14 +66,45 @@ const cases = {
   },
   ue5: {
     label: "UE5 Visual",
-    title: "UE5 视觉实验",
-    lead: "用 Unreal Engine 建立大场景镜头和科幻运动视觉，展示实时引擎画面、镜头氛围和空间调度能力。",
+    title: "AI + UE Visual",
+    lead: "把 AI 镜头、Unreal Engine 场景、角色特效和布料动画放进同一个视觉系统，展示可播放的实时引擎作品。",
     media: { type: "video", src: "assets/media/ue5-full.mp4", poster: "assets/media/ue5-poster.jpg" },
-    points: ["Unreal Engine", "Cinematic shot", "3D space"],
-    role: "UE5 Scene / Camera / Cinematic",
-    method: "Realtime spatial composition",
-    result: "Next-gen visual proof",
-    gallery: ["assets/media/ue5-poster.jpg"]
+    points: ["Unreal Engine", "Blender", "AI Visual", "Motion"],
+    role: "UE5 Scene / Camera / Character FX / Motion Preview",
+    method: "Realtime scene + character effect + cloth and landscape motion",
+    result: "AI + UE visual work collection",
+    gallery: [
+      "assets/media/ue-motion-poster.jpg",
+      "assets/media/ue-environment-poster.jpg",
+      "assets/media/ue-character-poster.jpg",
+      "assets/media/ue-cloth-poster.jpg"
+    ],
+    videos: [
+      {
+        title: "山地运动镜头",
+        meta: "AI / UE landscape motion",
+        src: "assets/media/ue-motion-preview.mp4",
+        poster: "assets/media/ue-motion-poster.jpg"
+      },
+      {
+        title: "岩地环境镜头",
+        meta: "Realtime environment camera",
+        src: "assets/media/ue-environment-preview.mp4",
+        poster: "assets/media/ue-environment-poster.jpg"
+      },
+      {
+        title: "冰蓝角色特效",
+        meta: "Character FX showcase",
+        src: "assets/media/ue-character-preview.mp4",
+        poster: "assets/media/ue-character-poster.jpg"
+      },
+      {
+        title: "布料动画展示",
+        meta: "Cloth motion preview",
+        src: "assets/media/ue-cloth-preview.mp4",
+        poster: "assets/media/ue-cloth-poster.jpg"
+      }
+    ]
   },
   zhitou: {
     label: "Product Prototype",
@@ -513,6 +544,19 @@ function renderCase(item) {
   const gallery = item.gallery?.length
     ? `<div class="modal-gallery">${item.gallery.map((src) => `<img src="${src}" alt="${item.title} 过程素材" loading="lazy">`).join("")}</div>`
     : "";
+  const videos = item.videos?.length
+    ? `<div class="modal-video-grid">${item.videos.map((video) => `
+        <article>
+          <video controls muted playsinline preload="metadata" poster="${video.poster}">
+            <source src="${video.src}" type="video/mp4">
+          </video>
+          <div>
+            <h3>${video.title}</h3>
+            <p>${video.meta}</p>
+          </div>
+        </article>
+      `).join("")}</div>`
+    : "";
   const actions = item.actions?.length
     ? `<div class="modal-actions">${item.actions.map(([label, href, external]) => `<a class="modal-action magnetic" href="${href}" ${external ? 'target="_blank" rel="noreferrer"' : "download"}>${label}</a>`).join("")}</div>`
     : "";
@@ -526,6 +570,7 @@ function renderCase(item) {
     </div>
     ${renderMedia(item.media)}
     ${breakdown}
+    ${videos}
     ${gallery}
     ${actions}
   `;

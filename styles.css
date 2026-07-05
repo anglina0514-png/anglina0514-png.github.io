@@ -1487,7 +1487,8 @@ body:not([data-active-section="hero"]) .hero-news {
 
 .product-panel > span,
 .product-panel h3,
-.product-panel p {
+.product-panel p,
+.product-work-list {
   position: relative;
   z-index: 2;
 }
@@ -1541,6 +1542,24 @@ body:not([data-active-section="hero"]) .hero-news {
   margin: 0;
   color: color-mix(in srgb, currentColor 64%, transparent);
   font-size: 13px;
+}
+
+.product-work-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 18px;
+  max-width: 520px;
+}
+
+.product-work-list span {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 6px 8px;
+  color: rgba(255, 255, 255, 0.74);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  background: rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(8px);
 }
 
 .final-section {
@@ -1807,11 +1826,43 @@ body:not([data-active-section="hero"]) .hero-news {
   line-height: 1.55;
 }
 
+.modal-video-grid,
 .modal-gallery,
 .modal-actions {
   grid-column: 2;
   display: grid;
   gap: 14px;
+}
+
+.modal-video-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.modal-video-grid article {
+  display: grid;
+  gap: 10px;
+}
+
+.modal-video-grid video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #05050a;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.modal-video-grid h3 {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+.modal-video-grid p {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-family: var(--font-mono);
+  font-size: 11px;
 }
 
 .modal-gallery {
@@ -1842,18 +1893,18 @@ body:not([data-active-section="hero"]) .hero-news {
 
 .transition-overlay.is-active {
   opacity: 1;
-  animation: glitchFlash 720ms steps(5, end) both;
+  animation: stageFade 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .transition-overlay.is-section {
-  animation-duration: 360ms;
+  animation-duration: 640ms;
 }
 
 .transition-overlay.is-section::before,
 .transition-overlay.is-section::after,
 .transition-overlay.is-section .transition-grid::before,
 .transition-overlay.is-section .transition-grid::after {
-  animation-duration: 360ms;
+  animation-duration: 640ms;
 }
 
 .transition-overlay::before,
@@ -1867,29 +1918,31 @@ body:not([data-active-section="hero"]) .hero-news {
 
 .transition-overlay.is-active::before {
   background:
-    linear-gradient(92deg, transparent 0 18%, rgba(255,255,255,0.78) 19%, transparent 21%),
-    linear-gradient(100deg, color-mix(in srgb, var(--stage-chroma) 46%, transparent), transparent 34%, color-mix(in srgb, var(--stage-chroma-alt) 38%, transparent));
-  mix-blend-mode: difference;
-  animation: transitionSlab 720ms steps(4, end) both;
+    linear-gradient(98deg, transparent 0 18%, rgba(255,255,255,0.68) 22%, transparent 26%),
+    linear-gradient(105deg, color-mix(in srgb, var(--stage-chroma) 38%, transparent), transparent 44%, color-mix(in srgb, var(--stage-chroma-alt) 34%, transparent)),
+    radial-gradient(circle at 62% 46%, color-mix(in srgb, var(--work-accent) 32%, transparent), transparent 34%);
+  mix-blend-mode: screen;
+  animation: stageWipe 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .transition-overlay.is-active::after {
   background:
-    repeating-linear-gradient(0deg, rgba(255,255,255,0.36) 0 1px, transparent 1px 5px),
-    repeating-linear-gradient(90deg, transparent 0 92px, color-mix(in srgb, var(--work-accent) 42%, transparent) 94px, transparent 100px);
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.26) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(90deg, transparent 0 118px, color-mix(in srgb, var(--work-accent) 34%, transparent) 120px, transparent 128px);
   mix-blend-mode: screen;
-  animation: transitionNoise 720ms steps(6, end) both;
+  animation: stageScan 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .transition-grid {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(255,255,255,0.16), transparent 22%, rgba(0,0,0,0.28) 48%, transparent 74%, rgba(255,255,255,0.12)),
-    repeating-linear-gradient(90deg, transparent 0 42px, rgba(255,255,255,0.26) 43px, transparent 46px),
-    repeating-linear-gradient(0deg, transparent 0 28px, color-mix(in srgb, var(--stage-chroma) 30%, transparent) 29px, transparent 31px);
-  mix-blend-mode: difference;
-  filter: contrast(1.25) saturate(1.4);
+    linear-gradient(90deg, rgba(255,255,255,0.12), transparent 24%, rgba(0,0,0,0.18) 50%, transparent 76%, rgba(255,255,255,0.08)),
+    repeating-linear-gradient(90deg, transparent 0 58px, rgba(255,255,255,0.22) 59px, transparent 62px),
+    repeating-linear-gradient(0deg, transparent 0 34px, color-mix(in srgb, var(--stage-chroma) 24%, transparent) 35px, transparent 37px);
+  mix-blend-mode: screen;
+  filter: contrast(1.08) saturate(1.2);
+  opacity: 0.78;
 }
 
 .transition-grid::before,
@@ -1898,17 +1951,17 @@ body:not([data-active-section="hero"]) .hero-news {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, transparent 0 28%, rgba(255,255,255,0.44) 29%, transparent 31%),
-    repeating-linear-gradient(0deg, rgba(255,255,255,0.16) 0 1px, transparent 1px 9px);
-  transform: translateX(-16px);
-  animation: scanTear 680ms steps(4, end) both;
+    linear-gradient(90deg, transparent 0 28%, rgba(255,255,255,0.38) 31%, transparent 36%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.12) 0 1px, transparent 1px 10px);
+  transform: translateX(-12vw);
+  animation: stageGridSettle 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .transition-grid::after {
   background:
-    linear-gradient(90deg, transparent 0 58%, color-mix(in srgb, var(--material-accent) 56%, transparent) 59%, transparent 61%);
+    linear-gradient(90deg, transparent 0 56%, color-mix(in srgb, var(--material-accent) 46%, transparent) 60%, transparent 65%);
   mix-blend-mode: screen;
-  animation-delay: 80ms;
+  animation-delay: 90ms;
 }
 
 .fragment {
@@ -1919,7 +1972,7 @@ body:not([data-active-section="hero"]) .hero-news {
   font-family: var(--font-mono);
   line-height: 1;
   mix-blend-mode: difference;
-  animation: fragmentScatter 780ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: fragmentScatter 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .click-pulse {
@@ -1935,40 +1988,38 @@ body:not([data-active-section="hero"]) .hero-news {
   animation: clickPulse 520ms ease-out both;
 }
 
-@keyframes glitchFlash {
-  0% { opacity: 0; transform: translateX(0) scale(1); filter: hue-rotate(0deg); }
-  12% { opacity: 0.95; transform: translateX(-18px) scale(1.015); filter: hue-rotate(70deg); }
-  24% { opacity: 0.55; transform: translateX(12px) scale(1); filter: hue-rotate(-40deg); }
-  42% { opacity: 0.82; transform: translateX(-6px) skewX(-2deg); filter: hue-rotate(110deg); }
-  70% { opacity: 0.36; transform: translateX(4px); filter: hue-rotate(20deg); }
-  100% { opacity: 0; transform: translateX(0) scale(1); filter: hue-rotate(0deg); }
+@keyframes stageFade {
+  0% { opacity: 0; filter: saturate(1) contrast(1); }
+  18% { opacity: 0.9; filter: saturate(1.45) contrast(1.16); }
+  54% { opacity: 0.42; filter: saturate(1.18) contrast(1.08); }
+  100% { opacity: 0; filter: saturate(1) contrast(1); }
 }
 
-@keyframes scanTear {
-  0% { opacity: 0; transform: translateX(-36px) skewX(-5deg); }
-  22% { opacity: 0.86; transform: translateX(26px) skewX(3deg); }
-  58% { opacity: 0.48; transform: translateX(-10px) skewX(-2deg); }
-  100% { opacity: 0; transform: translateX(0) skewX(0); }
+@keyframes stageWipe {
+  0% { opacity: 0; transform: translate3d(-42vw, 0, 0) skewX(-12deg) scaleX(0.8); }
+  24% { opacity: 0.88; transform: translate3d(-6vw, 0, 0) skewX(-7deg) scaleX(1.02); }
+  58% { opacity: 0.5; transform: translate3d(18vw, 0, 0) skewX(-3deg) scaleX(1); }
+  100% { opacity: 0; transform: translate3d(46vw, 0, 0) skewX(0deg) scaleX(1.08); }
 }
 
-@keyframes transitionSlab {
-  0% { opacity: 0; transform: translate3d(-18%, 0, 0) skewX(-12deg); }
-  16% { opacity: 0.9; transform: translate3d(8%, 0, 0) skewX(8deg); }
-  48% { opacity: 0.48; transform: translate3d(-4%, 0, 0) skewX(-4deg); }
-  100% { opacity: 0; transform: translate3d(22%, 0, 0) skewX(0deg); }
+@keyframes stageScan {
+  0% { opacity: 0; transform: translateY(-18px) scaleY(0.98); }
+  20% { opacity: 0.72; transform: translateY(4px) scaleY(1); }
+  64% { opacity: 0.36; transform: translateY(10px) scaleY(1.01); }
+  100% { opacity: 0; transform: translateY(24px) scaleY(1); }
 }
 
-@keyframes transitionNoise {
-  0% { opacity: 0; transform: translateY(-20px); }
-  18% { opacity: 0.8; transform: translateY(12px); }
-  52% { opacity: 0.5; transform: translateY(-6px); }
-  100% { opacity: 0; transform: translateY(20px); }
+@keyframes stageGridSettle {
+  0% { opacity: 0; transform: translateX(-16vw) scaleX(0.94); }
+  26% { opacity: 0.7; transform: translateX(-2vw) scaleX(1.02); }
+  72% { opacity: 0.34; transform: translateX(5vw) scaleX(1); }
+  100% { opacity: 0; transform: translateX(14vw) scaleX(1.04); }
 }
 
 @keyframes fragmentScatter {
   0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(0deg); filter: blur(0); }
-  18% { opacity: 1; }
-  100% { opacity: 0; transform: translate3d(var(--tx), var(--ty), 0) rotate(var(--rot)); filter: blur(8px); }
+  22% { opacity: 0.72; }
+  100% { opacity: 0; transform: translate3d(var(--tx), var(--ty), 0) rotate(var(--rot)); filter: blur(5px); }
 }
 
 @keyframes clickPulse {
@@ -2164,11 +2215,13 @@ body:not([data-active-section="hero"]) .hero-news {
   .modal-hero,
   .modal-media,
   .modal-breakdown,
+  .modal-video-grid,
   .modal-gallery,
   .modal-actions {
     grid-column: auto;
   }
 
+  .modal-video-grid,
   .modal-gallery {
     grid-template-columns: 1fr;
   }

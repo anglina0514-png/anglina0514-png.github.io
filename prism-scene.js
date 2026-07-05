@@ -40,7 +40,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     thickness: 2.2,
     ior: 1.84,
     transparent: true,
-    opacity: 0.18,
+    opacity: 0.22,
     alphaMap: frostTexture,
     roughnessMap: frostTexture,
     metalnessMap: frostTexture,
@@ -58,7 +58,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   const edgeMaterial = new THREE.LineBasicMaterial({
     color: 0xffffff,
     transparent: true,
-    opacity: 0.24
+    opacity: 0.04
   });
 
   const nLogo = makeGlassN(glassMaterial, edgeMaterial, { filmOpacity: 1 });
@@ -70,8 +70,8 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   const spectralMaterialMagenta = glassMaterial.clone();
   spectralMaterialMagenta.color = new THREE.Color(0xff36f1);
   spectralMaterialMagenta.opacity = 0.14;
-  const cyanGhost = makeGlassN(spectralMaterialCyan, new THREE.LineBasicMaterial({ color: 0x00eaff, transparent: true, opacity: 0.25 }), { filmOpacity: 0.18 });
-  const magentaGhost = makeGlassN(spectralMaterialMagenta, new THREE.LineBasicMaterial({ color: 0xff3df0, transparent: true, opacity: 0.2 }), { filmOpacity: 0.16 });
+  const cyanGhost = makeGlassN(spectralMaterialCyan, new THREE.LineBasicMaterial({ color: 0x00eaff, transparent: true, opacity: 0.035 }), { filmOpacity: 0.055 });
+  const magentaGhost = makeGlassN(spectralMaterialMagenta, new THREE.LineBasicMaterial({ color: 0xff3df0, transparent: true, opacity: 0.03 }), { filmOpacity: 0.045 });
   cyanGhost.position.x = 0.075;
   magentaGhost.position.x = -0.075;
   spectralRoot.add(cyanGhost, magentaGhost);
@@ -133,7 +133,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       edge: 0xd8fbff,
       ghostA: 0x00eaff,
       ghostB: 0xf8fbff,
-      opacity: 0.12,
+      opacity: 0.19,
       roughness: 0.045,
       transmission: 0.98
     },
@@ -145,7 +145,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       edge: 0xffffff,
       ghostA: 0xeef6ff,
       ghostB: 0xffffff,
-      opacity: 0.1,
+      opacity: 0.16,
       roughness: 0.018,
       transmission: 1
     },
@@ -157,7 +157,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       edge: 0xe6ceff,
       ghostA: 0xff48f7,
       ghostB: 0x69eaff,
-      opacity: 0.13,
+      opacity: 0.18,
       roughness: 0.068,
       transmission: 0.9
     },
@@ -169,7 +169,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       edge: 0x89f2ff,
       ghostA: 0x1a2d62,
       ghostB: 0x00e8ff,
-      opacity: 0.15,
+      opacity: 0.18,
       roughness: 0.14,
       transmission: 0.58
     }
@@ -275,8 +275,8 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       line.position.y = (index ? 1 : -1) * (glitchActive ? 0.04 : 0.015);
       line.children.forEach((child) => {
         if (child.material) {
-          const ghostBase = materialPreset === "white" ? 0.06 : materialPreset === "carbon" ? 0.18 : 0.13;
-          child.material.opacity = (glitchActive ? 0.34 : ghostBase) * intro;
+          const ghostBase = materialPreset === "white" ? 0.025 : materialPreset === "carbon" ? 0.07 : 0.045;
+          child.material.opacity = (glitchActive ? 0.16 : ghostBase) * intro;
         }
       });
     });
@@ -285,7 +285,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     shardRoot.position.copy(markRoot.position);
     shardRoot.scale.copy(markRoot.scale);
     logoNoise.rotation.z = -drift * 0.035 + glitch * 2;
-    logoNoise.material.opacity = (0.07 + detailMix * 0.05 + (glitchActive ? 0.08 : 0)) * intro;
+    logoNoise.material.opacity = (0.012 + detailMix * 0.012 + (glitchActive ? 0.02 : 0)) * intro;
 
     gridRoot.rotation.y = drift * 0.016 + pointer.x * 0.035 - worksDepth * 0.54 + productDepth * 0.28;
     gridRoot.position.z = -stageDepth * 2.9;
@@ -309,15 +309,16 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
 
     glassMaterial.opacity = Math.max(0.012, preset.opacity - 0.07 - worksDepth * 0.048 - aboutFade * 0.05 + productDepth * 0.01 + (glitchActive ? 0.022 : 0)) * intro;
     glassMaterial.roughness = Math.max(0.014, preset.roughness - 0.018 + worksDepth * 0.075 + productDepth * 0.05 + Math.sin(drift * 0.36) * 0.006);
-    edgeMaterial.opacity = Math.max(0.028, 0.075 - worksDepth * 0.026 + aboutFade * 0.12 + (glitchActive ? 0.08 : 0));
+    edgeMaterial.opacity = Math.max(0.006, 0.014 - worksDepth * 0.006 + aboutFade * 0.018 + (glitchActive ? 0.018 : 0));
     caustics.children.forEach((stripe, index) => {
       stripe.position.y = stripe.userData.baseY + Math.sin(drift * 0.8 + index * 1.8) * 0.08;
       stripe.material.color.copy(new THREE.Color(index % 2 ? preset.secondary : preset.edge).lerp(accent.secondary, accentMix * 0.46));
-      stripe.material.opacity = ((stripe.userData.baseOpacity || 0.08) + detailMix * 0.035 + Math.sin(drift * 1.2 + index) * 0.01) * intro * (1 - aboutFade * 0.62);
+      const baseOpacity = stripe.userData.isDark ? 0 : (stripe.userData.baseOpacity || 0.012);
+      stripe.material.opacity = (baseOpacity + detailMix * 0.006 + Math.sin(drift * 1.2 + index) * 0.002) * intro * (1 - aboutFade * 0.62);
     });
-    fractureLines.material.opacity = (detailMix * 0.008 + (glitchActive ? 0.035 : 0)) * intro;
+    fractureLines.material.opacity = (detailMix * 0.001 + (glitchActive ? 0.004 : 0)) * intro;
     surfaceBlocks.children.forEach((block, index) => {
-      block.material.opacity = (detailMix * (0.014 + Math.sin(drift * 0.9 + index * 0.7) * 0.004)) * intro;
+      block.material.opacity = (detailMix * (0.0018 + Math.sin(drift * 0.9 + index * 0.7) * 0.0008)) * intro;
       block.position.z = 0.62 + Math.sin(drift * 0.6 + index) * 0.018;
     });
     rings.forEach((ring, index) => {
@@ -357,7 +358,7 @@ function makeGlassN(material, edgeMaterial, options = {}) {
   const mesh = new THREE.Mesh(geometry, material);
   const film = makeLetterGlassFilm(options.filmOpacity ?? 1);
   const rimMaterial = edgeMaterial.clone();
-  rimMaterial.opacity = 0.045;
+  rimMaterial.opacity = 0.009;
   const rimLine = makeNContourLines(rimMaterial, 1);
   group.add(mesh, film, rimLine);
   group.rotation.z = 0.01;
@@ -427,16 +428,16 @@ function makeLetterGlassFilm(opacity = 1) {
     return mesh;
   };
   group.add(
-    makeLayer(0xf7fbff, 0.92, 0, 0.34),
-    makeLayer(0xdff4ff, 0.38, 0.012, 0.35, THREE.NormalBlending),
-    makeLayer(0x54eaff, 0.18, 0.038, 0.36),
-    makeLayer(0xff51f3, 0.12, -0.04, 0.37)
+    makeLayer(0xf7fbff, 0.74, 0, 0.34),
+    makeLayer(0xdff4ff, 0.36, 0.012, 0.35, THREE.NormalBlending),
+    makeLayer(0x54eaff, 0.1, 0.03, 0.36),
+    makeLayer(0xff51f3, 0.05, -0.034, 0.37)
   );
   const rimMaterial = new THREE.MeshBasicMaterial({
     map: texture,
     color: 0xffffff,
     transparent: true,
-    opacity: 0.28 * opacity,
+    opacity: 0.18 * opacity,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
     side: THREE.DoubleSide
@@ -462,16 +463,16 @@ function makeLetterFilmTexture() {
   ctx.font = "900 860px Arial Black, Impact, system-ui, sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillStyle = "rgba(230,248,255,.48)";
+  ctx.fillStyle = "rgba(238,250,255,.42)";
   ctx.fillText("N", 0, 0);
   ctx.globalCompositeOperation = "source-in";
   const gradient = ctx.createLinearGradient(-size * 0.42, -size * 0.3, size * 0.46, size * 0.38);
-  gradient.addColorStop(0, "rgba(5,18,34,.12)");
-  gradient.addColorStop(0.2, "rgba(120,210,255,.44)");
-  gradient.addColorStop(0.39, "rgba(255,255,255,.98)");
-  gradient.addColorStop(0.55, "rgba(190,205,255,.54)");
-  gradient.addColorStop(0.78, "rgba(255,255,255,.7)");
-  gradient.addColorStop(1, "rgba(220,242,255,.36)");
+  gradient.addColorStop(0, "rgba(76,150,210,.12)");
+  gradient.addColorStop(0.2, "rgba(150,225,255,.42)");
+  gradient.addColorStop(0.39, "rgba(255,255,255,.72)");
+  gradient.addColorStop(0.55, "rgba(210,224,255,.42)");
+  gradient.addColorStop(0.78, "rgba(255,255,255,.56)");
+  gradient.addColorStop(1, "rgba(230,248,255,.3)");
   ctx.fillStyle = gradient;
   ctx.fillRect(-size / 2, -size / 2, size, size);
 
@@ -484,7 +485,7 @@ function makeLetterFilmTexture() {
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate((random() - 0.5) * 0.36);
-    ctx.fillStyle = i % 4 === 0 ? "rgba(255,255,255,.5)" : "rgba(166,224,255,.16)";
+    ctx.fillStyle = i % 4 === 0 ? "rgba(255,255,255,.18)" : "rgba(180,232,255,.055)";
     ctx.fillRect(-w / 2, -h / 2, w, h);
     ctx.restore();
   }
@@ -492,9 +493,9 @@ function makeLetterFilmTexture() {
   ctx.globalCompositeOperation = "source-atop";
   const shine = ctx.createLinearGradient(-size * 0.45, -size * 0.02, size * 0.46, size * 0.1);
   shine.addColorStop(0, "rgba(255,255,255,0)");
-  shine.addColorStop(0.42, "rgba(255,255,255,.08)");
-  shine.addColorStop(0.5, "rgba(255,255,255,.88)");
-  shine.addColorStop(0.58, "rgba(255,255,255,.08)");
+  shine.addColorStop(0.42, "rgba(255,255,255,.04)");
+  shine.addColorStop(0.5, "rgba(255,255,255,.42)");
+  shine.addColorStop(0.58, "rgba(255,255,255,.04)");
   shine.addColorStop(1, "rgba(255,255,255,0)");
   ctx.fillStyle = shine;
   ctx.fillRect(-size / 2, -size * 0.12, size, size * 0.24);
@@ -502,7 +503,7 @@ function makeLetterFilmTexture() {
   for (let i = 0; i < 6800; i += 1) {
     const x = -size * 0.5 + random() * size;
     const y = -size * 0.5 + random() * size;
-    const alpha = random() > 0.52 ? 0.18 + random() * 0.22 : 0.05;
+    const alpha = random() > 0.52 ? 0.08 + random() * 0.12 : 0.024;
     ctx.fillStyle = `rgba(255,255,255,${alpha})`;
     ctx.fillRect(x, y, 1.2 + random() * 1.4, 1.2 + random() * 1.4);
   }
@@ -518,12 +519,12 @@ function makeCausticStripes() {
   const group = new THREE.Group();
   const colors = [0xffffff, 0xffffff, 0x84f2ff, 0x6e7bff, 0xff54f1, 0xffffff, 0x05060b];
   const specs = [
-    { w: 2.7, h: 0.18, y: 0.12, x: 0.0, r: -0.08, opacity: 0.08 },
-    { w: 2.35, h: 0.1, y: 0.38, x: -0.08, r: -0.12, opacity: 0.06 },
-    { w: 2.1, h: 0.05, y: -0.12, x: 0.16, r: -0.04, opacity: 0.05 },
-    { w: 1.85, h: 0.05, y: -0.46, x: -0.18, r: -0.1, opacity: 0.04 },
-    { w: 1.8, h: 0.04, y: 0.72, x: 0.12, r: -0.15, opacity: 0.035 },
-    { w: 2.2, h: 0.07, y: -0.82, x: 0.04, r: -0.08, opacity: 0.035 },
+    { w: 2.7, h: 0.12, y: 0.12, x: 0.0, r: -0.08, opacity: 0.014 },
+    { w: 2.35, h: 0.06, y: 0.38, x: -0.08, r: -0.12, opacity: 0.01 },
+    { w: 2.1, h: 0.035, y: -0.12, x: 0.16, r: -0.04, opacity: 0.009 },
+    { w: 1.85, h: 0.035, y: -0.46, x: -0.18, r: -0.1, opacity: 0.007 },
+    { w: 1.8, h: 0.025, y: 0.72, x: 0.12, r: -0.15, opacity: 0.006 },
+    { w: 2.2, h: 0.04, y: -0.82, x: 0.04, r: -0.08, opacity: 0.006 },
     { w: 1.4, h: 0.1, y: 0.0, x: 0.68, r: -0.04, opacity: 0 }
   ];
   specs.forEach((spec, i) => {
@@ -541,6 +542,7 @@ function makeCausticStripes() {
     mesh.rotation.z = spec.r;
     mesh.userData.baseY = spec.y;
     mesh.userData.baseOpacity = spec.opacity;
+    mesh.userData.isDark = i === specs.length - 1;
     group.add(mesh);
   });
   return group;
@@ -549,7 +551,7 @@ function makeCausticStripes() {
 function makeFractureLines() {
   const points = [];
   const random = seededRandom(27);
-  for (let i = 0; i < 88; i += 1) {
+  for (let i = 0; i < 38; i += 1) {
     const point = sampleNPoint(random);
     const x = point.x + (random() - 0.5) * 0.18;
     const y = point.y + (random() - 0.5) * 0.18;
@@ -564,7 +566,7 @@ function makeFractureLines() {
       0.64
     );
   }
-  for (let i = 0; i < 36; i += 1) {
+  for (let i = 0; i < 14; i += 1) {
     const point = sampleNPoint(random, 2);
     const x = point.x + (random() - 0.5) * 0.28;
     const y = point.y + (random() - 0.5) * 0.28;
@@ -575,7 +577,7 @@ function makeFractureLines() {
   const material = new THREE.LineBasicMaterial({
     color: 0xf2f7ff,
     transparent: true,
-    opacity: 0.24,
+    opacity: 0.08,
     blending: THREE.AdditiveBlending,
     depthWrite: false
   });
@@ -586,14 +588,14 @@ function makeSurfaceBlocks() {
   const group = new THREE.Group();
   const random = seededRandom(91);
   const colors = [0xdfeaff, 0x76f3ff, 0x8d87ff, 0xffffff, 0x03040a, 0x11131e];
-  for (let i = 0; i < 62; i += 1) {
+  for (let i = 0; i < 26; i += 1) {
     const width = 0.18 + random() * 0.62;
     const height = 0.06 + random() * 0.3;
     const isDark = i % 6 > 3;
     const material = new THREE.MeshBasicMaterial({
       color: colors[i % colors.length],
       transparent: true,
-      opacity: isDark ? 0.16 : 0.1,
+      opacity: isDark ? 0.08 : 0.052,
       blending: isDark ? THREE.NormalBlending : THREE.AdditiveBlending,
       depthWrite: false,
       side: THREE.DoubleSide
