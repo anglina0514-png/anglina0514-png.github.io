@@ -267,6 +267,7 @@ function updateScrollState() {
   document.documentElement.style.setProperty("--works-progress", worksProgress.toFixed(4));
   document.documentElement.style.setProperty("--works-cards-visible", worksCardsVisible.toFixed(4));
   document.documentElement.style.setProperty("--works-carousel-progress", worksCarouselProgress.toFixed(4));
+  document.body.classList.toggle("hero-hud-visible", y < window.innerHeight * 0.62);
   document.body.classList.toggle("works-cards-ready", worksCardsVisible > 0.5);
   document.documentElement.style.setProperty("--about-progress", aboutProgress.toFixed(4));
   document.documentElement.style.setProperty("--products-progress", productsProgress.toFixed(4));
