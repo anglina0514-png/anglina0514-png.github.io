@@ -542,8 +542,6 @@ function initReactBitsTextEffects() {
       if (!entry.isIntersecting) return;
       const node = entry.target;
       node.classList.add("rb-is-visible");
-      if (node.classList.contains("rb-text-type")) typeTextNode(node);
-      if (node.classList.contains("rb-shuffle")) shuffleTextNode(node);
       revealObserver.unobserve(node);
     });
   }, { threshold: 0.18, rootMargin: "0px 0px -8% 0px" });
@@ -551,8 +549,6 @@ function initReactBitsTextEffects() {
   function apply(root = document) {
     markShiny(root);
     markVelocity(root);
-    markTextType(root);
-    markShuffle(root);
   }
 
   function markShiny(root) {

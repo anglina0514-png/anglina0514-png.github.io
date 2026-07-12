@@ -2628,12 +2628,15 @@ body.is-section-shifting .webgl-space {
 .section-rail {
   position: fixed;
   z-index: 30;
+  left: auto;
   top: 50%;
   right: max(18px, 1.8vw);
+  width: auto;
   display: grid;
   gap: 12px;
   transform: translateY(-50%);
   color: var(--stage-muted);
+  writing-mode: vertical-rl;
 }
 
 .section-rail span {
@@ -2685,12 +2688,16 @@ body.hero-hud-visible .stage-hud {
 
 .hud-quaternion {
   left: var(--stage-gutter);
+  right: auto;
   top: 27vh;
+  width: 190px;
 }
 
 .hud-material {
+  left: auto;
   right: var(--stage-gutter);
   top: 27vh;
+  width: 190px;
 }
 
 .hud-orbit {
