@@ -15,7 +15,7 @@ export function createWorksCarousel({ root, onOpen, onFocus }) {
   function layout() {
     width = Math.max(360, root.clientWidth || window.innerWidth);
     const travel = cards.length - 1;
-    const focus = progress * travel;
+    const focus = smoothstep(0, 1, progress) * travel;
     const stairShift = Math.sin(focus * Math.PI * 0.5);
     document.documentElement.style.setProperty("--work-index-progress", focus.toFixed(3));
     document.documentElement.style.setProperty("--work-stair-shift", stairShift.toFixed(3));
@@ -125,4 +125,9 @@ function createNoopCarousel() {
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
+}
+
+function smoothstep(edge0, edge1, value) {
+  const x = clamp((value - edge0) / (edge1 - edge0 || 1), 0, 1);
+  return x * x * (3 - 2 * x);
 }

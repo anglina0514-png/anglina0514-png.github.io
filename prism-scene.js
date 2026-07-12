@@ -114,7 +114,14 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
   scene.add(key, blue, rim, glint, new THREE.HemisphereLight(0xffffff, 0x060712, 1.45));
 
   const pointer = { x: 0, y: 0 };
-  const scroll = { page: 0, hero: 0, news: 0, works: 0, about: 0, products: 0, final: 0 };
+  const scroll = {
+    section: "hero",
+    sectionIndex: 0,
+    localProgress: 0,
+    pageProgress: 0,
+    worksProgress: 0,
+    progress: { hero: 0, works: 0, news: 0, about: 0, products: 0, final: 0 }
+  };
   const accent = {
     primary: new THREE.Color(0x6078ff),
     secondary: new THREE.Color(0x92e9ff),
@@ -171,11 +178,11 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     }
   };
   let materialPreset = "ice";
-  let glitchUntil = 0;
   let width = 1;
   let height = 1;
   let running = true;
   let rafId = 0;
+  const stageVisual = { ...getStageProfile("hero") };
 
   function resize() {
     width = window.innerWidth;
@@ -205,24 +212,25 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     materialPreset = materialPresets[id] ? id : "ice";
   }
 
-  function triggerGlitch(intensity = 1) {
-    glitchUntil = performance.now() + 520 * intensity;
-  }
-
   function render(time) {
     if (!running) return;
     const seconds = time * 0.001;
     const intro = reducedMotion ? 1 : smoothstep(0.1, 2.05, seconds);
-    const glitchActive = time < glitchUntil;
-    const glitch = glitchActive ? Math.sin(time * 0.12) * 0.075 : 0;
     const drift = reducedMotion ? 0 : seconds;
-    const aboutFade = smoothstep(0.08, 0.76, scroll.about);
-    const worksDepth = smoothstep(0.05, 0.86, scroll.works);
-    const newsDepth = smoothstep(0.08, 0.82, scroll.news);
-    const productDepth = smoothstep(0.08, 0.86, scroll.products);
-    const finalDepth = smoothstep(0.12, 0.88, scroll.final);
+    const atStage = (id) => scroll.section === id;
+    const aboutFade = atStage("about")
+      ? smoothstep(0.08, 0.76, scroll.localProgress || 0)
+      : scroll.sectionIndex > 3 ? 1 : 0;
+    const worksDepth = atStage("works") ? smoothstep(0, 1, scroll.worksProgress || 0) : 0;
+    const newsDepth = atStage("news") ? smoothstep(0.08, 0.82, scroll.localProgress || 0) : 0;
+    const productDepth = atStage("products") ? smoothstep(0.08, 0.86, scroll.localProgress || 0) : 0;
+    const finalDepth = atStage("final") ? smoothstep(0.12, 0.88, scroll.localProgress || 0) : 0;
     const stageDepth = Math.max(worksDepth, productDepth * 0.78, newsDepth * 0.46);
     const detailMix = Math.min(1, stageDepth * 1.25);
+    const stageTarget = getStageProfile(scroll.section);
+    Object.keys(stageVisual).forEach((key) => {
+      stageVisual[key] = THREE.MathUtils.lerp(stageVisual[key], stageTarget[key], reducedMotion ? 1 : 0.07);
+    });
     const preset = materialPresets[materialPreset];
     const accentMix = Math.max(worksDepth * accent.strength, productDepth * 0.18);
     const glassColor = new THREE.Color(preset.base).lerp(accent.primary, accentMix * 0.38);
@@ -233,7 +241,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     glassMaterial.attenuationColor = new THREE.Color(preset.secondary);
     glassMaterial.attenuationDistance = materialPreset === "carbon" ? 1.7 : 3.6;
     glassMaterial.envMapIntensity = 1.95 + Math.sin(drift * 0.42) * 0.18 + detailMix * 0.38 + accentMix * 0.48;
-    glassMaterial.iridescence = 0.18 + detailMix * 0.12 + (glitchActive ? 0.14 : 0);
+    glassMaterial.iridescence = 0.18 + detailMix * 0.12;
     edgeMaterial.color.copy(lineColor);
     spectralMaterialCyan.color.copy(new THREE.Color(preset.ghostA).lerp(accent.secondary, accentMix * 0.32));
     spectralMaterialMagenta.color.copy(new THREE.Color(preset.ghostB).lerp(accent.primary, accentMix * 0.26));
@@ -251,28 +259,29 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     root.rotation.y = THREE.MathUtils.lerp(root.rotation.y, pointer.x * 0.09 - worksDepth * 0.28 + productDepth * 0.18, 0.05);
     root.rotation.x = THREE.MathUtils.lerp(root.rotation.x, -pointer.y * 0.05, 0.05);
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, pointer.x * 0.34 + productDepth * 0.55 - finalDepth * 0.28, 0.04);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, 0.18 - scroll.page * 0.54 + newsDepth * 0.08, 0.04);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, 0.18 - scroll.pageProgress * 0.54 + newsDepth * 0.08, 0.04);
     camera.position.z = THREE.MathUtils.lerp(camera.position.z, (width < 720 ? 12.5 : 9.2) - intro * 1.54 - stageDepth * 1.85 + finalDepth * 1.08, 0.035);
 
-    markRoot.rotation.y = (1 - intro) * -1.18 + drift * 0.038 + pointer.x * 0.1 + glitch + worksDepth * 0.44 - productDepth * 0.42;
+    markRoot.rotation.y = (1 - intro) * -1.18 + drift * 0.038 + pointer.x * 0.1 + worksDepth * 0.44 - productDepth * 0.42;
     markRoot.rotation.x = (1 - intro) * 0.34 + Math.sin(drift * 0.28) * 0.018 - pointer.y * 0.052 + newsDepth * 0.04;
-    markRoot.rotation.z = glitch * 0.7 + finalDepth * 0.1;
+    markRoot.rotation.z = finalDepth * 0.1;
     markRoot.position.x = -0.12 * (1 - stageDepth) + productDepth * -0.42 + finalDepth * 0.28;
-    markRoot.position.y = -0.04 + intro * 0.1 - scroll.page * 0.54 + Math.sin(drift * 0.58) * 0.022 + productDepth * 0.38;
+    markRoot.position.y = -0.04 + intro * 0.1 - scroll.pageProgress * 0.54 + Math.sin(drift * 0.58) * 0.022 + productDepth * 0.38;
+    markRoot.position.z = THREE.MathUtils.lerp(markRoot.position.z, stageVisual.logoZ, 0.06);
     const viewportScale = width < 720 ? 0.92 : 1;
-    markRoot.scale.setScalar((0.43 + intro * 0.31) * (1.01 + worksDepth * 0.02 - aboutFade * 0.16 + finalDepth * 0.08) * viewportScale);
-    markRoot.visible = finalDepth < 0.94;
+    markRoot.scale.setScalar((0.43 + intro * 0.31) * stageVisual.logoScale * viewportScale);
+    markRoot.visible = stageVisual.logoOpacity > 0.01;
 
     spectralRoot.rotation.copy(markRoot.rotation);
     spectralRoot.position.copy(markRoot.position);
     spectralRoot.scale.copy(markRoot.scale);
     spectralRoot.children.forEach((line, index) => {
-      line.position.x = (index ? -1 : 1) * (glitchActive ? 0.2 : 0.072);
-      line.position.y = (index ? 1 : -1) * (glitchActive ? 0.04 : 0.015);
+      line.position.x = (index ? -1 : 1) * 0.072;
+      line.position.y = (index ? 1 : -1) * 0.015;
       line.children.forEach((child) => {
         if (child.material) {
           const ghostBase = materialPreset === "white" ? 0.06 : materialPreset === "carbon" ? 0.18 : 0.13;
-          child.material.opacity = (glitchActive ? 0.34 : ghostBase) * intro;
+          child.material.opacity = ghostBase * intro * stageVisual.logoOpacity;
         }
       });
     });
@@ -280,12 +289,12 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     shardRoot.rotation.copy(markRoot.rotation);
     shardRoot.position.copy(markRoot.position);
     shardRoot.scale.copy(markRoot.scale);
-    logoNoise.rotation.z = -drift * 0.04 + glitch * 2;
-    logoNoise.material.opacity = (detailMix * 0.11 + (glitchActive ? 0.12 : 0)) * intro;
+    logoNoise.rotation.z = -drift * 0.04;
+    logoNoise.material.opacity = detailMix * 0.11 * intro * stageVisual.logoOpacity;
 
     gridRoot.rotation.y = drift * 0.016 + pointer.x * 0.035 - worksDepth * 0.54 + productDepth * 0.28;
     gridRoot.position.z = -stageDepth * 2.9;
-    gridRoot.position.y = -scroll.page * 1.38 + productDepth * 0.4;
+    gridRoot.position.y = -scroll.pageProgress * 1.38 + productDepth * 0.4;
     curveWall.material.opacity = 0.24 + (stageDepth * 0.2) - finalDepth * 0.08;
     tunnelLines.material.opacity = 0.018 + stageDepth * 0.075 - finalDepth * 0.03;
     crossMarkers.material.opacity = 0.055 + stageDepth * 0.08 - finalDepth * 0.055;
@@ -294,7 +303,7 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       const base = glyph.userData.basePosition;
       if (base) {
         glyph.position.x = base.x + worksDepth * (index % 2 ? -1.6 : 1.2) + Math.sin(drift * 0.24 + index) * 0.08;
-        glyph.position.y = base.y - scroll.page * 0.26 + worksDepth * (index - 1.5) * 0.18;
+        glyph.position.y = base.y - scroll.pageProgress * 0.26 + worksDepth * (index - 1.5) * 0.18;
         glyph.position.z = base.z + worksDepth * (index % 2 ? 1.0 : -0.55);
       }
       glyph.rotation.z = glyph.userData.baseRotation + drift * (index % 2 ? -0.018 : 0.014) + worksDepth * (index % 2 ? -0.1 : 0.08);
@@ -303,16 +312,16 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       panel.material.opacity = (0.1 + stageDepth * 0.2 + Math.sin(drift * 0.34 + index) * 0.016) * (1 - finalDepth * 0.5);
     });
 
-    glassMaterial.opacity = Math.max(0.18, preset.opacity - worksDepth * 0.08 - aboutFade * 0.14 + productDepth * 0.06 + (glitchActive ? 0.1 : 0)) * intro;
+    glassMaterial.opacity = Math.max(0.02, (preset.opacity - worksDepth * 0.08 - aboutFade * 0.14 + productDepth * 0.06) * stageVisual.logoOpacity) * intro;
     glassMaterial.roughness = preset.roughness + worksDepth * 0.08 + productDepth * 0.06;
-    edgeMaterial.opacity = Math.max(0.24, 0.78 - worksDepth * 0.2 - aboutFade * 0.3);
+    edgeMaterial.opacity = stageVisual.edgeOpacity;
     caustics.children.forEach((stripe, index) => {
       stripe.position.y = stripe.userData.baseY + Math.sin(drift * 0.8 + index * 1.8) * 0.08;
       stripe.material.color.copy(new THREE.Color(index % 2 ? preset.secondary : preset.edge).lerp(accent.secondary, accentMix * 0.46));
       const baseOpacity = stripe.userData.isDark ? 0 : (stripe.userData.baseOpacity || 0.012);
       stripe.material.opacity = (baseOpacity + detailMix * 0.006 + Math.sin(drift * 1.2 + index) * 0.002) * intro * (1 - aboutFade * 0.62);
     });
-    fractureLines.material.opacity = (detailMix * 0.001 + (glitchActive ? 0.004 : 0)) * intro;
+    fractureLines.material.opacity = detailMix * 0.001 * intro * stageVisual.logoOpacity;
     surfaceBlocks.children.forEach((block, index) => {
       block.material.opacity = (detailMix * (0.0018 + Math.sin(drift * 0.9 + index * 0.7) * 0.0008)) * intro;
       block.position.z = 0.62 + Math.sin(drift * 0.6 + index) * 0.018;
@@ -338,7 +347,6 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
     setPointer,
     setAccent,
     setMaterialPreset,
-    triggerGlitch,
     destroy() {
       running = false;
       cancelAnimationFrame(rafId);
@@ -346,6 +354,18 @@ export function initPrismScene({ canvas, reducedMotion = false }) {
       renderer.dispose();
     }
   };
+}
+
+function getStageProfile(section) {
+  const profiles = {
+    hero: { logoZ: 0.2, logoScale: 1, logoOpacity: 1, edgeOpacity: 0.78 },
+    works: { logoZ: -3.2, logoScale: 0.84, logoOpacity: 0.34, edgeOpacity: 0.38 },
+    news: { logoZ: -3.5, logoScale: 0.7, logoOpacity: 0.1, edgeOpacity: 0.72 },
+    about: { logoZ: -4.1, logoScale: 0.7, logoOpacity: 0.16, edgeOpacity: 0.28 },
+    products: { logoZ: -5.2, logoScale: 0.64, logoOpacity: 0.14, edgeOpacity: 0.24 },
+    final: { logoZ: -6.6, logoScale: 0.3, logoOpacity: 0, edgeOpacity: 0.08 }
+  };
+  return profiles[section] || profiles.hero;
 }
 
 function makeGlassN(material, edgeMaterial) {
@@ -943,7 +963,6 @@ function createNoopScene() {
     setPointer() {},
     setAccent() {},
     setMaterialPreset() {},
-    triggerGlitch() {},
     destroy() {}
   };
 }

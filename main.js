@@ -132,7 +132,7 @@ const cases = {
   }
 };
 
-const stageSections = ["hero", "news", "works", "about", "products", "final"];
+const stageSections = ["hero", "works", "news", "about", "products", "final"];
 const hudNumbers = [...document.querySelectorAll("[data-hud]")].reduce((map, node) => {
   map[node.dataset.hud] = node;
   return map;
@@ -158,10 +158,7 @@ const splashCursor = initSplashCursor({
     COLOR_UPDATE_SPEED: 10
   }
 });
-const transitionEngine = createTransitionEngine({
-  overlay: document.getElementById("transitionOverlay"),
-  prismScene
-});
+const transitionEngine = createTransitionEngine();
 const worksCounter = document.getElementById("worksCounter");
 const worksCurrentTitle = document.getElementById("worksCurrentTitle");
 const workHitbox = document.getElementById("workHitbox");
@@ -179,7 +176,7 @@ let pointerState = { x: 0, y: 0 };
 let activeWorkCard = null;
 let activeStageSection = "hero";
 let activeAccent = { primary: "#6078ff", secondary: "#92e9ff", strength: 0 };
-let hasSettledInitialSection = false;
+let currentStageState = null;
 
 const carousel = createWorksCarousel({
   root: document.getElementById("workCarousel"),
@@ -239,78 +236,80 @@ function updateScrollState() {
   const y = window.scrollY;
   textEffects.updateVelocity(y);
   updateScrollReveal();
-  if (Math.abs(y - latestScroll) < 0.5) return;
+  const viewportKey = `${window.innerWidth}x${window.innerHeight}:${document.documentElement.scrollHeight}`;
+  if (Math.abs(y - latestScroll) < 0.5 && updateScrollState.viewportKey === viewportKey) return;
   latestScroll = y;
+  updateScrollState.viewportKey = viewportKey;
+  renderStageState(deriveStageState(y));
+}
 
-  const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-  const pageProgress = clamp(y / maxScroll, 0, 1);
-  document.documentElement.style.setProperty("--page-progress", pageProgress.toFixed(4));
-
-  const works = document.getElementById("works");
-  const about = document.getElementById("about");
-  const hero = document.getElementById("hero");
-  const news = document.getElementById("news");
-  const products = document.getElementById("products");
-  const finalSection = document.getElementById("final");
-
-  const worksProgress = sectionProgress(works);
-  const worksCardsVisible = 0.58 + smoothstep(0.04, 0.18, worksProgress) * 0.42;
-  const worksCarouselProgress = clamp((worksProgress - 0.1) / 0.9, 0, 1);
-  const aboutProgress = sectionProgress(about);
-  const heroProgress = sectionProgress(hero);
-  const newsProgress = sectionProgress(news);
-  const productsProgress = sectionProgress(products);
-  const finalProgress = sectionProgress(finalSection);
-
-  document.documentElement.style.setProperty("--hero-progress", heroProgress.toFixed(4));
-  document.documentElement.style.setProperty("--news-progress", newsProgress.toFixed(4));
-  document.documentElement.style.setProperty("--works-progress", worksProgress.toFixed(4));
-  document.documentElement.style.setProperty("--works-cards-visible", worksCardsVisible.toFixed(4));
-  document.documentElement.style.setProperty("--works-carousel-progress", worksCarouselProgress.toFixed(4));
-  document.body.classList.toggle("hero-hud-visible", y < window.innerHeight * 0.62);
-  document.body.classList.toggle("works-cards-ready", worksCardsVisible > 0.5);
-  document.documentElement.style.setProperty("--about-progress", aboutProgress.toFixed(4));
-  document.documentElement.style.setProperty("--products-progress", productsProgress.toFixed(4));
-  document.documentElement.style.setProperty("--final-progress", finalProgress.toFixed(4));
-  prismScene.setScroll?.({
-    page: pageProgress,
-    hero: heroProgress,
-    news: newsProgress,
-    works: worksProgress,
-    about: aboutProgress,
-    products: productsProgress,
-    final: finalProgress
+export function deriveStageState(scrollY = window.scrollY) {
+  const viewportHeight = Math.max(1, window.innerHeight);
+  const maxScroll = Math.max(1, document.documentElement.scrollHeight - viewportHeight);
+  const sections = stageSections.map((id, sectionIndex) => {
+    const node = document.getElementById(id);
+    return {
+      id,
+      node,
+      sectionIndex,
+      top: node ? scrollY + node.getBoundingClientRect().top : Number.POSITIVE_INFINITY
+    };
   });
-  carousel.setProgress?.(worksCarouselProgress);
-  outroCanvas.setProgress?.(finalProgress);
+  const anchor = scrollY + viewportHeight * 0.42;
+  const mountedSections = sections.filter(({ node }) => node).sort((a, b) => a.top - b.top);
+  const active = mountedSections.reduce((match, candidate) => candidate.top <= anchor ? candidate : match, mountedSections[0] || sections[0]);
+  const progress = Object.fromEntries(sections.map(({ id, node }) => [id, sectionProgress(node)]));
+  const worksNode = sections.find(({ id }) => id === "works")?.node;
+  const worksRect = worksNode?.getBoundingClientRect();
+  const worksVisibility = worksRect
+    ? Math.min(
+        clamp((viewportHeight - worksRect.top) / (viewportHeight * 0.65), 0, 1),
+        clamp(worksRect.bottom / (viewportHeight * 0.65), 0, 1)
+      )
+    : 0;
+  const worksProgress = progress.works || 0;
+
+  return {
+    section: active.id,
+    sectionIndex: active.sectionIndex,
+    localProgress: progress[active.id] || 0,
+    pageProgress: clamp(scrollY / maxScroll, 0, 1),
+    worksProgress,
+    worksVisibility,
+    progress,
+    scrollY
+  };
+}
+
+export function renderStageState(state) {
+  currentStageState = state;
+  activeStageSection = state.section;
+  const rootStyle = document.documentElement.style;
+  rootStyle.setProperty("--page-progress", state.pageProgress.toFixed(4));
+  rootStyle.setProperty("--stage-index", String(state.sectionIndex));
+  rootStyle.setProperty("--stage-local-progress", state.localProgress.toFixed(4));
+  stageSections.forEach((id) => rootStyle.setProperty(`--${id}-progress`, (state.progress[id] || 0).toFixed(4)));
+  rootStyle.setProperty("--works-cards-visible", state.worksVisibility.toFixed(4));
+  rootStyle.setProperty("--works-carousel-progress", state.worksProgress.toFixed(4));
+
+  document.body.dataset.activeSection = state.section;
+  document.body.classList.toggle("hero-hud-visible", state.scrollY < window.innerHeight * 0.62);
+  document.body.classList.toggle("works-cards-ready", state.worksVisibility > 0.01);
+  prismScene.setScroll?.(state);
+  carousel.setProgress?.(state.worksProgress);
+  outroCanvas.setProgress?.(state.progress.final || 0);
   if (activeWorkCard) {
-    const intensity = worksCardsVisible * (1 - smoothstep(0.9, 1, worksProgress));
+    const intensity = state.worksVisibility * (1 - smoothstep(0.94, 1, state.worksProgress));
     applyWorkAccent(activeWorkCard, intensity);
   }
-  updateHud({
-    page: pageProgress,
-    hero: heroProgress,
-    news: newsProgress,
-    works: worksProgress,
-    about: aboutProgress,
-    products: productsProgress,
-    final: finalProgress
-  });
+  updateHud(state);
 
-  const active = pickActiveSection();
-  if (active !== activeStageSection) {
-    const previous = activeStageSection;
-    activeStageSection = active;
-    if (hasSettledInitialSection) transitionEngine.sectionShift?.(active, previous);
-  }
-  hasSettledInitialSection = true;
-  document.body.dataset.activeSection = active;
   navLinks.forEach((link) => {
     const id = link.getAttribute("href")?.replace("#", "");
-    link.classList.toggle("is-active", id === active);
+    link.classList.toggle("is-active", id === state.section);
   });
   railItems.forEach((item) => {
-    item.classList.toggle("is-active", item.dataset.railSection === active);
+    item.classList.toggle("is-active", item.dataset.railSection === state.section);
   });
 }
 
@@ -355,7 +354,7 @@ function updateWorkFocus(card, index, total) {
   if (worksCounter) worksCounter.textContent = `${label} / ${count}`;
   if (worksCurrentTitle) worksCurrentTitle.textContent = title;
   if (workHitbox) workHitbox.setAttribute("aria-label", `打开${title}详情`);
-  applyWorkAccent(card, Number(getComputedStyle(document.documentElement).getPropertyValue("--works-progress")) || 0);
+  applyWorkAccent(card, currentStageState?.worksVisibility || 0);
 }
 
 function applyWorkAccent(card, intensity = 1) {
@@ -428,26 +427,16 @@ function setMaterialPreset(id = "ice") {
     button.classList.toggle("is-active", button.dataset.material === activeMaterial);
   });
   prismScene.setMaterialPreset?.(activeMaterial);
-  prismScene.triggerGlitch?.(0.38);
 }
 
 function sectionProgress(section) {
   if (!section) return 0;
   const rect = section.getBoundingClientRect();
   const travel = rect.height - window.innerHeight;
-  if (travel <= 0) return rect.top <= 0 ? 1 : 0;
-  return clamp(-rect.top / travel, 0, 1);
-}
-
-function pickActiveSection() {
-  let current = "hero";
-  for (const id of stageSections.slice(1)) {
-    const node = document.getElementById(id);
-    if (node && node.getBoundingClientRect().top < window.innerHeight * 0.42) {
-      current = id;
-    }
+  if (travel <= 0) {
+    return clamp((window.innerHeight - rect.top) / (window.innerHeight + rect.height), 0, 1);
   }
-  return current;
+  return clamp(-rect.top / travel, 0, 1);
 }
 
 function initNavigation() {
@@ -812,9 +801,10 @@ function renderMedia(media) {
   `;
 }
 
-function updateHud(progress) {
-  const page = progress.page;
-  const stageBias = progress.works * 0.42 + progress.products * 0.28 + progress.news * 0.09;
+function updateHud(state) {
+  const progress = state.progress;
+  const page = state.pageProgress;
+  const stageBias = state.worksProgress * 0.42 + progress.products * 0.28 + progress.news * 0.09;
   const qx = pointerState.y * -0.18 + progress.about * 0.11;
   const qy = pointerState.x * 0.22 + stageBias;
   const qz = Math.sin(page * Math.PI * 1.7) * 0.12;
@@ -823,8 +813,8 @@ function updateHud(progress) {
   setHudValue("qy", qy, 3);
   setHudValue("qz", qz, 3);
   setHudValue("qw", qw, 3);
-  setHudValue("roughness", 0.1 + progress.works * 0.08 + progress.products * 0.04, 2);
-  setHudValue("noise", 9 + progress.news * 0.6 + progress.works * 1.8 + progress.products * 0.9, 1);
+  setHudValue("roughness", 0.1 + state.worksProgress * 0.08 + progress.products * 0.04, 2);
+  setHudValue("noise", 9 + progress.news * 0.6 + state.worksProgress * 1.8 + progress.products * 0.9, 1);
   updateHudPointer();
 }
 
