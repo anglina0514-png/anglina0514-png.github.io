@@ -21,70 +21,65 @@
     <div class="scanline-layer"></div>
   </div>
 
-  <div class="transition-overlay" id="transitionOverlay" aria-hidden="true">
-    <div class="transition-grid"></div>
-  </div>
-
   <header class="site-header" aria-label="主导航">
     <a class="brand-lockup magnetic" href="#hero" aria-label="返回 NING 首页">
       <span class="brand-mark">N</span>
       <span>NING</span>
     </a>
     <nav class="site-nav">
-      <a class="nav-link magnetic" href="#news">简历</a>
       <a class="nav-link magnetic" href="#works">作品</a>
-      <a class="nav-link magnetic" href="#about">关于</a>
+      <a class="nav-link magnetic" href="#news">简历</a>
+      <a class="nav-link magnetic" href="#about">能力</a>
       <a class="nav-link magnetic" href="#products">产品</a>
     </nav>
     <div class="utility-nav" aria-label="快捷入口">
-      <a class="magnetic" href="新媒体运营经历-许智宁.pdf" download>简历</a>
       <a class="magnetic" href="mailto:anglina0514@gmail.com">联系</a>
     </div>
-  </header>
 
-  <aside class="section-rail" aria-hidden="true">
-    <span data-rail-section="hero">顶部</span>
-    <span data-rail-section="works">作品</span>
-    <span data-rail-section="about">关于</span>
-    <span data-rail-section="about">视觉</span>
-    <span data-rail-section="products">服务</span>
-    <span data-rail-section="products">产品</span>
-  </aside>
+    <aside class="section-rail" aria-hidden="true">
+      <span data-rail-section="hero">顶部</span>
+      <span data-rail-section="works">作品</span>
+      <span data-rail-section="news">简历</span>
+      <span data-rail-section="about">能力</span>
+      <span data-rail-section="products">产品</span>
+      <span data-rail-section="final">联系</span>
+    </aside>
 
-  <aside class="stage-hud" aria-label="NING WebGL 技术参数面板">
-    <div class="hud-block hud-quaternion">
-      <p>NING 标志 Quaternion</p>
-      <dl>
-        <div><dt>x</dt><dd data-hud="qx">0.000</dd></div>
-        <div><dt>y</dt><dd data-hud="qy">0.000</dd></div>
-        <div><dt>z</dt><dd data-hud="qz">0.000</dd></div>
-        <div><dt>w</dt><dd data-hud="qw">1.000</dd></div>
-      </dl>
-    </div>
-    <div class="hud-orbit hud-quaternion-orbit">
-      <span class="hud-axis hud-axis-x"></span>
-      <span class="hud-axis hud-axis-y"></span>
-      <span class="hud-axis hud-axis-z"></span>
-      <i data-hud-orb></i>
-      <b>N</b>
-    </div>
-    <div class="hud-block hud-material">
-      <p>玻璃材质</p>
-      <dl>
-        <div><dt>粗糙度</dt><dd data-hud="roughness">0.10</dd></div>
-        <div><dt>噪点</dt><dd data-hud="noise">9.0</dd></div>
-        <div><dt>折射率</dt><dd>1.68</dd></div>
-        <div><dt>颜色</dt><dd data-hud="material">冰蓝玻璃</dd></div>
-      </dl>
-      <div class="material-palette" aria-label="玻璃材质选择">
-        <button class="material-swatch" type="button" data-material="ice" aria-label="冰蓝玻璃"></button>
-        <button class="material-swatch" type="button" data-material="white" aria-label="白色玻璃"></button>
-        <button class="material-swatch" type="button" data-material="violet" aria-label="紫色玻璃"></button>
-        <button class="material-swatch" type="button" data-material="carbon" aria-label="深色玻璃"></button>
+    <aside class="stage-hud" aria-label="NING WebGL 技术参数面板">
+      <div class="hud-block hud-quaternion">
+        <p>NING 标志 Quaternion</p>
+        <dl>
+          <div><dt>x</dt><dd data-hud="qx">0.000</dd></div>
+          <div><dt>y</dt><dd data-hud="qy">0.000</dd></div>
+          <div><dt>z</dt><dd data-hud="qz">0.000</dd></div>
+          <div><dt>w</dt><dd data-hud="qw">1.000</dd></div>
+        </dl>
       </div>
-    </div>
-    <button class="hud-reset" id="resetStage" type="button">重置舞台</button>
-  </aside>
+      <div class="hud-orbit hud-quaternion-orbit">
+        <span class="hud-axis hud-axis-x"></span>
+        <span class="hud-axis hud-axis-y"></span>
+        <span class="hud-axis hud-axis-z"></span>
+        <i data-hud-orb></i>
+        <b>N</b>
+      </div>
+      <div class="hud-block hud-material">
+        <p>玻璃材质</p>
+        <dl>
+          <div><dt>粗糙度</dt><dd data-hud="roughness">0.10</dd></div>
+          <div><dt>噪点</dt><dd data-hud="noise">9.0</dd></div>
+          <div><dt>折射率</dt><dd>1.68</dd></div>
+          <div><dt>颜色</dt><dd data-hud="material">冰蓝玻璃</dd></div>
+        </dl>
+        <div class="material-palette" aria-label="玻璃材质选择">
+          <button class="material-swatch" type="button" data-material="ice" aria-label="冰蓝玻璃"></button>
+          <button class="material-swatch" type="button" data-material="white" aria-label="白色玻璃"></button>
+          <button class="material-swatch" type="button" data-material="violet" aria-label="紫色玻璃"></button>
+          <button class="material-swatch" type="button" data-material="carbon" aria-label="深色玻璃"></button>
+        </div>
+      </div>
+      <button class="hud-reset" id="resetStage" type="button">重置舞台</button>
+    </aside>
+  </header>
 
   <main class="stage-flow">
     <section class="hero-section stage-section" id="hero" data-section="hero">
@@ -95,68 +90,17 @@
           <span>N</span><span>I</span><span>N</span><span>G</span>
         </h1>
       </div>
-      <div class="hero-caption" aria-hidden="true">
-        <span>AI</span>
-        <span>Content Growth</span>
-        <span>Trading</span>
-        <span>UE5</span>
-        <span>Blender</span>
-        <span>Interactive Product</span>
-        <span>Visual Storytelling</span>
-      </div>
-    </section>
-
-    <section class="news-section stage-section" id="news" data-section="news">
-      <div class="section-copy">
-        <p class="system-label">简历</p>
-        <h2>个人简历</h2>
-      </div>
-      <div class="news-list" aria-label="个人简历">
-        <article>
-          <time>EDUCATION</time>
-          <h3>深圳大学新媒体方向</h3>
-          <p>GPA 3.89，专业排名前 10%。持续把视觉表达、内容增长和产品原型整合到作品集中。</p>
-        </article>
-        <article>
-          <time>EXPERIENCE</time>
-          <h3>国海证券传媒行研实习</h3>
-          <p>参与传媒标的库搭建、行业资料整理、SPSS 数据清洗和研究逻辑梳理。</p>
-        </article>
-        <article>
-          <time>MARKETING INTERN</time>
-          <h3>云天励飞营销部实习</h3>
-          <p>参与 AI 企业营销物料、品牌传播内容、项目资料整理和活动执行支持，把技术亮点转化为面向市场的表达。</p>
-        </article>
-        <article>
-          <time>PROJECTS</time>
-          <h3>千万级内容矩阵与 AI 视觉项目</h3>
-          <p>完成短视频选题、脚本、账号运营、AI 影像、UE5 场景和 H5 互动产品实践。</p>
-        </article>
-      </div>
     </section>
 
     <section class="works-section stage-section" id="works" data-section="works">
       <div class="works-sticky">
-        <div class="works-ghost-strip" aria-hidden="true">
-          <span>NING</span>
-          <span>NING</span>
-          <span>NING</span>
-          <span>NING</span>
-        </div>
-        <div class="works-symbol-field" aria-hidden="true">
-          <span>N</span>
-          <span>N</span>
-          <span>N</span>
-          <span>N</span>
-          <span>N</span>
-          <span>N</span>
-        </div>
-        <div class="work-track" id="workCarousel" aria-label="精选作品滚动轨道">
+        <div class="works-stage-grid">
           <div class="works-title">
             <p class="system-label">作品</p>
             <h2>作品介绍</h2>
           </div>
-          <article class="work-card" data-case="dragon" data-accent="#b78a46" data-accent-alt="#384bff">
+          <div class="work-track" id="workCarousel" aria-label="精选作品滚动轨道">
+            <article class="work-card" data-case="dragon" data-accent="#b78a46" data-accent-alt="#384bff">
             <div class="work-media">
               <video autoplay muted playsinline loop preload="metadata" poster="assets/media/dragon-poster.jpg">
                 <source src="assets/media/dragon-case-loop.mp4" type="video/mp4">
@@ -167,9 +111,9 @@
               <h3>龙影之后</h3>
               <p>AI film production pipeline</p>
             </div>
-          </article>
+            </article>
 
-          <article class="work-card" data-case="qwen" data-accent="#ff71d8" data-accent-alt="#f7f5ff">
+            <article class="work-card" data-case="qwen" data-accent="#ff71d8" data-accent-alt="#f7f5ff">
             <div class="work-media portrait-media">
               <video autoplay muted playsinline loop preload="metadata" poster="assets/media/qwen-poster.jpg">
                 <source src="assets/media/qwen-preview.mp4" type="video/mp4">
@@ -180,9 +124,9 @@
               <h3>千问有千手</h3>
               <p>AI assistant commercial</p>
             </div>
-          </article>
+            </article>
 
-          <article class="work-card" data-case="haoshi" data-accent="#f2b45b" data-accent-alt="#5aa0ff">
+            <article class="work-card" data-case="haoshi" data-accent="#f2b45b" data-accent-alt="#5aa0ff">
             <div class="work-media">
               <video autoplay muted playsinline loop preload="metadata" poster="assets/media/haoshi-poster.jpg">
                 <source src="assets/media/haoshi-preview.mp4" type="video/mp4">
@@ -193,9 +137,9 @@
               <h3>豪士工厂</h3>
               <p>Factory brand film</p>
             </div>
-          </article>
+            </article>
 
-          <article class="work-card" data-case="quanyun" data-accent="#e23d45" data-accent-alt="#4a8cff">
+            <article class="work-card" data-case="quanyun" data-accent="#e23d45" data-accent-alt="#4a8cff">
             <div class="work-media">
               <video autoplay muted playsinline loop preload="metadata" poster="assets/media/quanyun-poster.jpg">
                 <source src="assets/media/quanyun-preview.mp4" type="video/mp4">
@@ -206,9 +150,9 @@
               <h3>全运会宣传视频</h3>
               <p>Event documentary edit</p>
             </div>
-          </article>
+            </article>
 
-          <article class="work-card" data-case="marxism" data-accent="#d9232e" data-accent-alt="#f1c15b">
+            <article class="work-card" data-case="marxism" data-accent="#d9232e" data-accent-alt="#f1c15b">
             <div class="work-media">
               <video autoplay muted playsinline loop preload="metadata" poster="assets/media/marxism-poster.jpg">
                 <source src="assets/media/marxism-preview.mp4" type="video/mp4">
@@ -219,9 +163,9 @@
               <h3>马克思主义视频</h3>
               <p>Theory visual film</p>
             </div>
-          </article>
+            </article>
 
-          <article class="work-card" data-case="ue5" data-accent="#765cff" data-accent-alt="#8eeaff">
+            <article class="work-card" data-case="ue5" data-accent="#765cff" data-accent-alt="#8eeaff">
             <div class="work-media">
               <video autoplay muted playsinline loop preload="metadata" poster="assets/media/ue5-poster.jpg">
                 <source src="assets/media/ue5-preview.mp4" type="video/mp4">
@@ -232,9 +176,9 @@
               <h3>UE5 视觉实验</h3>
               <p>Unreal Engine cinematic</p>
             </div>
-          </article>
+            </article>
 
-          <article class="work-card" data-case="zhitou" data-accent="#68d391" data-accent-alt="#eafff2">
+            <article class="work-card" data-case="zhitou" data-accent="#68d391" data-accent-alt="#eafff2">
             <div class="work-media">
               <img src="assets/cases/zhitou-main.jpg" alt="知投学堂投资教育产品界面" loading="lazy">
             </div>
@@ -243,9 +187,9 @@
               <h3>知投学堂</h3>
               <p>Investment education product</p>
             </div>
-          </article>
+            </article>
 
-          <article class="work-card" data-case="loan" data-accent="#345b3f" data-accent-alt="#efe8d2">
+            <article class="work-card" data-case="loan" data-accent="#345b3f" data-accent-alt="#efe8d2">
             <div class="work-media">
               <img src="assets/cases/loan-home.jpg" alt="防网贷视觉游戏界面" loading="lazy">
             </div>
@@ -254,7 +198,8 @@
               <h3>防网贷视觉游戏</h3>
               <p>Interactive risk narrative</p>
             </div>
-          </article>
+            </article>
+          </div>
         </div>
         <button class="work-hitbox" id="workHitbox" type="button" aria-label="打开当前作品详情"></button>
         <div class="works-current" aria-hidden="true">
@@ -262,6 +207,41 @@
           <strong id="worksCurrentTitle">龙影之后</strong>
         </div>
         <p class="works-hint">打开当前作品</p>
+      </div>
+    </section>
+
+    <section class="news-section stage-section" id="news" data-section="news">
+      <div class="section-copy">
+        <p class="system-label">简历</p>
+        <h2>个人简历</h2>
+      </div>
+      <div class="news-list resume-timeline" role="list" aria-label="个人简历时间线">
+        <article class="timeline-entry" role="listitem">
+          <time>EDUCATION</time>
+          <h3>深圳大学新媒体方向</h3>
+          <p>GPA 3.89，专业排名前 10%。持续把视觉表达、内容增长和产品原型整合到作品集中。</p>
+        </article>
+        <article class="timeline-entry" role="listitem">
+          <time>EXPERIENCE</time>
+          <h3>国海证券传媒行研实习</h3>
+          <p>参与传媒标的库搭建、行业资料整理、SPSS 数据清洗和研究逻辑梳理。</p>
+        </article>
+        <article class="timeline-entry" role="listitem">
+          <time>MARKETING INTERN</time>
+          <h3>云天励飞营销部实习</h3>
+          <p>参与 AI 企业营销物料、品牌传播内容、项目资料整理和活动执行支持，把技术亮点转化为面向市场的表达。</p>
+        </article>
+        <article class="timeline-entry" role="listitem">
+          <time>PROJECTS</time>
+          <h3>千万级内容矩阵与 AI 视觉项目</h3>
+          <p>完成短视频选题、脚本、账号运营、AI 影像、UE5 场景和 H5 互动产品实践。</p>
+        </article>
+      </div>
+      <div class="resume-entry" id="resume">
+        <a class="resume-link magnetic" href="新媒体运营经历-许智宁.pdf" download>
+          下载简历
+          <span>新媒体运营经历-许智宁.pdf</span>
+        </a>
       </div>
     </section>
 
@@ -306,7 +286,7 @@
           <span class="skill-pill skill-web">Product Strategy</span>
         </div>
       </div>
-      <div class="capability-matrix" aria-label="能力矩阵">
+      <div class="capability-matrix proof-matrix" aria-label="能力证明矩阵">
         <article>
           <h3>AI</h3>
           <p>Sora / Midjourney / Prompt / Keyframe / AI Film</p>
@@ -331,29 +311,6 @@
           <h3>Product Prototype</h3>
           <p>AI Q&A / CloudBase / Learning Flow / Product Strategy</p>
         </article>
-      </div>
-      <div class="experience-strip" aria-label="实习项目经历">
-        <article>
-          <span>MEDIA RESEARCH</span>
-          <h3>国海证券传媒行研实习</h3>
-          <p>围绕传媒赛道完成标的库搭建、资料整理、SPSS 数据清洗与行业逻辑梳理，把零散信息整理成可跟踪的研究材料。</p>
-        </article>
-        <article>
-          <span>CONTENT OPERATION</span>
-          <h3>千万级自媒体矩阵项目</h3>
-          <p>从选题、脚本、账号矩阵运营到直播间复盘，把内容表现、用户反馈和流量数据转化为下一轮可执行的增长策略。</p>
-        </article>
-        <article>
-          <span>FINANCE CONTENT</span>
-          <h3>财商新星内容运营</h3>
-          <p>参与财经内容生产与小红书运营，结合赛事热点和平台推荐机制完成笔记发布、数据观察与内容优化。</p>
-        </article>
-      </div>
-      <div class="resume-entry" id="resume">
-        <a class="resume-link magnetic" href="新媒体运营经历-许智宁.pdf" download>
-          下载简历
-          <span>新媒体运营经历-许智宁.pdf</span>
-        </a>
       </div>
     </section>
 
@@ -382,17 +339,11 @@
     </section>
 
     <section class="final-section stage-section" id="final" data-section="final">
-      <div class="outro-screen" aria-hidden="true">
-        <canvas id="outroCanvas" class="outro-canvas"></canvas>
-        <span class="outro-corner outro-corner-a"></span>
-        <span class="outro-corner outro-corner-b"></span>
-        <span class="outro-corner outro-corner-c"></span>
-        <span class="outro-corner outro-corner-d"></span>
-      </div>
       <div class="final-copy">
         <p class="system-label">联系</p>
         <h2>NING</h2>
         <a class="final-contact magnetic" href="mailto:anglina0514@gmail.com">联系我</a>
+        <a class="final-contact magnetic" href="#news">简历</a>
         <p class="copyright">© 2026 许智宁</p>
       </div>
     </section>
