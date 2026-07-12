@@ -3001,9 +3001,9 @@ body[data-active-section="works"] .works-sticky {
 
 .works-title {
   position: absolute;
-  z-index: 190;
-  left: var(--works-grid-left);
-  top: var(--works-grid-top);
+  z-index: 7;
+  left: 0;
+  top: 0;
   max-width: min(360px, 30vw);
   padding-top: 18px;
   pointer-events: none;
@@ -3029,7 +3029,7 @@ body[data-active-section="works"] .works-sticky {
 
 .work-card,
 .work-hitbox {
-  top: 52%;
+  top: 57%;
   left: 50%;
   width: var(--works-card-width);
   min-width: 0;
@@ -3112,7 +3112,7 @@ body[data-active-section="works"] .works-sticky {
   position: absolute;
   z-index: 190;
   left: var(--works-grid-left);
-  bottom: clamp(58px, 9vh, 92px);
+  bottom: 20px;
   display: grid;
   gap: 6px;
   opacity: var(--works-cards-visible);
@@ -3131,7 +3131,7 @@ body[data-active-section="works"] .works-sticky {
 .works-hint {
   z-index: 190;
   right: var(--works-grid-right);
-  bottom: clamp(58px, 9vh, 92px);
+  bottom: 20px;
   color: var(--stage-muted);
   font-size: 11px;
 }
@@ -3636,8 +3636,8 @@ body[data-active-section="works"] .works-sticky {
   }
 
   .works-title {
-    left: var(--stage-gutter);
-    top: 88px;
+    left: 0;
+    top: 0;
     max-width: 54vw;
     padding-top: 0;
   }
@@ -3648,7 +3648,7 @@ body[data-active-section="works"] .works-sticky {
 
   .work-card,
   .work-hitbox {
-    top: 51%;
+    top: 57%;
     width: var(--works-card-width);
   }
 
@@ -3658,7 +3658,7 @@ body[data-active-section="works"] .works-sticky {
 
   .works-current {
     left: var(--stage-gutter);
-    bottom: 56px;
+    bottom: 20px;
   }
 
   .works-current strong {
@@ -3668,7 +3668,7 @@ body[data-active-section="works"] .works-sticky {
   .works-hint {
     left: auto;
     right: var(--stage-gutter);
-    bottom: 56px;
+    bottom: 20px;
   }
 
   .about-section {

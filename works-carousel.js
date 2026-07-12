@@ -52,8 +52,8 @@ export function createWorksCarousel({ root, onOpen, onFocus }) {
         ? offset * width * 0.62
         : side * (Math.pow(abs, 0.82) * width * (offset > 0 ? 0.49 : 0.43));
       const y = mobile
-        ? -34 + depthStep * 22
-        : -34 + depthStep * 34 + Math.sin((index + focus) * 0.8) * 8 - Math.max(0, offset) * 20;
+        ? depthStep * 22
+        : depthStep * 34 + Math.sin((index + focus) * 0.8) * 8 - Math.max(0, offset) * 20;
       const z = nearCenter > 0.52
         ? -18 + nearCenter * 26
         : -boundaryEase * (mobile ? 230 : 650) - Math.max(0, offset) * (mobile ? 70 : 180);
